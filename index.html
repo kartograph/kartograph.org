@@ -16,11 +16,27 @@
 		
 		mymap.loadMap('USA-sat.svg', function() {
 			
-			console.log(mymap.proj);
+			console.log(mymap);
 			//mymap.addLayer('context');
 			mymap.addLayer('USA','bg');
 			mymap.addLayer('USA','fg');
 			
+			// load poverty data
+			$.ajax({
+				url: 'us-poverty.json',
+				success: function(poverty) {
+					
+					var data = []
+					for (var i in poverty) {
+						var state = poverty[i];
+						state.hasc = 'US.'+state.code;
+						data.push(state)
+					}
+					mymap.choropleth('fg', data, 'hasc', 'poverty');
+				}
+			});
+			
+			// load us cities
 			$.ajax({
 				url: 'cities.json',
 				success: function(cities) {
@@ -60,7 +76,8 @@
 		fill: #fff
 	}
 	svg .dotMarker {
-		stroke: #833;
+		stroke: #300;
+		stroke-opacity: .8;
 		fill: #833;
 		fill-opacity: .4;
 	}
