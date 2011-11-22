@@ -1,96 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>hello svgmap</title>
+<title>svgmap</title>
 <script src="lib/jquery.min.js"></script>
-<script src="lib/raphael-min.js"></script>
-<script src="svgmap.min.js"></script>
-
-<script>
-
-
-	$(function() {
-		
-		
-		window.mymap = new svgmap.SVGMap('#container');
-		
-		mymap.loadMap('USA-sat.svg', function() {
-			
-			console.log(mymap);
-			//mymap.addLayer('context');
-			mymap.addLayer('USA','bg');
-			mymap.addLayer('USA','fg');
-			
-			// load poverty data
-			$.ajax({
-				url: 'us-poverty.json',
-				success: function(poverty) {
-					
-					var data = []
-					for (var i in poverty) {
-						var state = poverty[i];
-						state.hasc = 'US.'+state.code;
-						data.push(state)
-					}
-					mymap.choropleth('fg', data, 'hasc', 'poverty');
-				}
-			});
-			
-			// load us cities
-			$.ajax({
-				url: 'cities.json',
-				success: function(cities) {
-					var m = svgmap.marker
-					for (var c in cities) {
-						var city = cities[c];
-						var rad = Math.sqrt(city[3]/8175133)*15+1;
-						var ll = new svgmap.LonLat(city[1], city[2]);
-						var marker = new m.DotMarker(ll,city[0],rad);
-						mymap.addMarker(marker);
-					}
-				}
-			});
-		});
-		
-		
-	
-	});
-</script>
 <style>
-	body,html { background: #fff; height:100%; }
+	body,html { background: #fff; height:100%; font-family: Lato, Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0; font-weight: 300; }
 	
-	#container {
-		background: #fff;
-		width: 100%;
-		height: 95%;
+	.page {
+		width: 1000px; margin: 0 auto;
 	}
-	svg path { stroke-linejoin: round }
-
-	svg .polygon.bg {
-		stroke: #ddd;
-		stroke-width:10px;
+	.head {
+		margin-top: 40px;
+		margin-bottom: 40px;
 	}
-	svg .polygon.fg {
-		stroke: #000;
-		stroke-width:1px;
-		fill: #fff
+	.head .title {
+		float: left;
+		font-size: 28pt;
+		font-weight: bold;
+		width: 200px;
+		padding-right: 20px;
 	}
-	svg .dotMarker {
-		stroke: #300;
-		stroke-opacity: .8;
-		fill: #833;
-		fill-opacity: .4;
+	b { font-weight: 700; }
+	.head .menu {
+		padding-top: 20px;
+		font-weight: 600;
 	}
-	svg .dotMarker:hover {
-		stroke: #000;
-		fill: #f33;
-		fill-opacity: .7;
-	}	
+	.head .menu a {
+		padding-right: 2em;
+		
+	}
+	a { text-decoration: none; color:#BF3F3F; font-weight: bold }
+	.left { width: 200px; float: left;  }
+	.left .about { font-size: 17pt; line-height: 1.3em; }
+	.main { margin-left: 200px; line-height: 1.5em; font-size: 14pt; padding-left: 20px; }
+	.main iframe { border: 0px solid #ccc; width: 100%; height: 500px; }
 </style>
 </head>
 <body>
-	<div id="container">
-	
+	<div class="page">
+		<div class="head">
+			<div class="title">svgmap</div>
+			<div class="menu">
+				<a href="">Overview</a>
+				<a href="">Examples</a>
+				<a href="">Creating Maps</a>
+				<a href="">Visualizing Maps</a>
+				<a href="">Download</a>
+			</div>
+		</div>
+		<div class="left">
+			<div class="about">
+				A free library for creating beautiful vector maps using SVG.
+			</div>
+		</div>
+		<div class="main">
+			
+			<iframe marginwidth="0" marginheight="0" scrolling="no" src="http://bl.ocks.org/d/1385552/"></iframe>
+			<p><b>svgmap</b> is a free library for thematic mapping <em>beyond</em> tile-based Mercator maps. displays pre-generated SVG maps.</p>
+			<p>The main idea behind svgmap is to divide the mapping process in two parts.</p>
+			
+			<p>At first, the Python-side of svgmap (<a href="https://github.com/svgmap/svgmap.py"><b>svgmap.py</b></a>) generates SVG map from high quality <a href="http://www.naturalearthdata.com/">Natural Earth shapefiles</a>. The SVG maps contain information on the used map projection as well as metadata for every displayed geometry, like country-codes. It allows you to literally control every parameter to get excactly the map that you want.</p>
+			
+			<p>The second part is a light-weight JavaScript library (<a href="https://github.com/svgmap/svgmap.js"><b>svgmap.js</b></a>) which loads the SVG maps and allows you to make them interactive as well as to connect it with your datasets. The appearance of the maps is highly customizable using CSS. To display the maps, no server-side components are needed, so you're completely indepentend. It's just you, your SVG map and your data.</p>
+			
+			<p><b>svgmap</b> is free software licensed under GPLv3.</p>
+		</div>
 	</div>
 </body>
 </html>
