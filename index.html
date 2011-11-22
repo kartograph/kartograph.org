@@ -27,7 +27,9 @@
 	}
 	.head .menu a {
 		padding-right: 2em;
-		
+	}
+	.head .menu a.todo {
+		color: #ddd;
 	}
 	a { text-decoration: none; color:#BF3F3F; font-weight: bold }
 	.left { width: 200px; float: left;  }
@@ -41,11 +43,11 @@
 		<div class="head">
 			<div class="title">svgmap</div>
 			<div class="menu">
-				<a href="">Overview</a>
-				<a href="">Examples</a>
-				<a href="">Creating Maps</a>
-				<a href="">Visualizing Maps</a>
-				<a href="">Download</a>
+				<a href="#">Overview</a>
+				<a class="todo">Examples</a>
+				<a class="todo">Creating Maps</a>
+				<a class="todo">Visualizing Maps</a>
+				<a class="todo">Download</a>
 			</div>
 		</div>
 		<div class="left">
@@ -56,8 +58,7 @@
 		<div class="main">
 			
 			<iframe marginwidth="0" marginheight="0" scrolling="no" src="http://bl.ocks.org/d/1385552/"></iframe>
-			<p><b>svgmap</b> is a free library for thematic mapping <em>beyond</em> tile-based Mercator maps. displays pre-generated SVG maps.</p>
-			<p>The main idea behind svgmap is to divide the mapping process in two parts.</p>
+			<p><b>svgmap</b> is a free library for thematic mapping <em>beyond tile-based Mercator maps</em>. The main idea behind svgmap is to divide the mapping process in two parts.</p>
 			
 			<p>At first, the Python-side of svgmap (<a href="https://github.com/svgmap/svgmap.py"><b>svgmap.py</b></a>) generates SVG map from high quality <a href="http://www.naturalearthdata.com/">Natural Earth shapefiles</a>. The SVG maps contain information on the used map projection as well as metadata for every displayed geometry, like country-codes. It allows you to literally control every parameter to get excactly the map that you want.</p>
 			
