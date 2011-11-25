@@ -9,45 +9,82 @@
 <link rel="stylesheet" href="style.css" />
 <script>
 
+	$.extend({
+		loadAssets: function(opt) {
+			var data = {};
+			for (var id in opt.urls) {
+				var context = { id: id };
+				$.ajax({
+					url: opt.urls[id],
+					success: function(content) {
+						data[this.id] = content;
+						for (var id2 in opt.urls) {
+							if (!data.hasOwnProperty(id2)) return;
+						}
+						opt.success(data);
+					},
+					context: context
+				});
+			}
+		}
+	});
+
 	$(function() {
 		
-		window.mymap = new svgmap.SVGMap('#map');
-		mymap.loadMap('../maps/USA-sat.svg', function() {
-
-			mymap.addLayer('USA','bg');
-			mymap.addLayer('USA','fg');
+		$.loadAssets({
+			urls: {
+				poverty: '../data/us-poverty.json',
+				cities: '../data/us-cities.json'
+			},
+			success: function(content) {
 			
-			// load poverty data
-			$.ajax({
-				url: '../data/us-poverty.json',
-				success: function(poverty) {
+				window.mymap = new svgmap.SVGMap('#map');
+				mymap.loadMap('../maps/USA-sat.svg', function() {
+		
+					mymap.addLayer('USA','bg');
+					mymap.addLayer('USA','fg');
+				
 					var data = []
-					for (var i in poverty) {
-						var state = poverty[i];
+					for (var i in content.poverty) {
+						var state = content.poverty[i];
 						state.hasc = 'US.'+state.code;
 						data.push(state)
 					}
 					var scale = new svgmap.color.Ramp('#ffffff','#772222');
 					scale.setClasses(5);
 					mymap.choropleth('fg', data, 'hasc', 'poverty', scale);
-				}
-			});
-			
-			// load us cities
-			$.ajax({
-				url: '../data/us-cities.json',
-				success: function(cities) {
+					
+					
+					
+					// update the tooltip for each region
+					$('#map .polygon.nuts').each(function(i,el) {
+						var nutsid = el.path.data['nuts-id'], income;
+						if (regionsByNuts[nutsid] && !isNaN(regionsByNuts[nutsid][yr])) {
+							income = Math.round(regionsByNuts[nutsid][yr])+' &euro;';
+								
+						} else {
+							income = 'no data';
+						}
+						var tipContent = '<b>'+content.regionMeta[nutsid]+'</b><br />'+income+'';
+						$(this).qtip({ content: { text: tipContent }, show: { delay: 20 } });
+					});
+					
+					// display cities as dot markers
+					
 					var m = svgmap.marker
-					for (var c in cities) {
-						var city = cities[c];
+					for (var c in content.cities) {
+						var city = content.cities[c];
 						var rad = Math.sqrt(city[3]/8175133)*15+1;
 						var ll = new svgmap.LonLat(city[1], city[2]);
 						var marker = new m.DotMarker(ll,city[0],rad);
 						mymap.addMarker(marker);
 					}
-				}
-			});
+					
+				});
+			
+			}
 		});
+		
 			
 	});
 </script>
