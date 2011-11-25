@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>svgmap</title>
+<script src="../js/lib/jquery.min.js"></script>
+<script src="../js/lib/jquery.qtip.min.js"></script>
+<script src="../js/lib/raphael-min.js"></script>
+<script src="../js/svgmap.min.js"></script>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="jquery.qtip.css" />
+<script>
+
+	// some useful jquery extensions
+
+	$.extend({
+		getUrlVars: function() {
+			var vars = {},
+			parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) { vars[key] = value; });
+			return vars;
+		}
+	});
+	
+	$.extend({
+		loadAssets: function(opt) {
+			var data = {};
+			for (var id in opt.urls) {
+				var context = { id: id };
+				$.ajax({
+					url: opt.urls[id],
+					success: function(content) {
+						data[this.id] = content;
+						for (var id2 in opt.urls) {
+							if (!data.hasOwnProperty(id2)) return;
+						}
+						opt.success(data);
+					},
+					context: context
+				});
+			}
+		}
+	});
+	
+	$.extend({
+		parseCSV: function(opt) {
+			if (opt.sepChar == null) opt.sepChar = "\t";
+			if (opt.header == null) opt.header = true;
+			if (opt.trim == null) opt.trim = true;
+			if (opt.map == null) opt.map = false;
+			if (opt.numberize == null) opt.numberize = true;
+
+			var i,j,res = { rows: [] };
+			var rows = opt.csv.split("\n");
+			if (opt.header) res.header = rows[0].split(opt.sepChar);
+			rows = rows.slice(1);
+			for (i in rows) {
+				res.rows.push(rows[i].split(opt.sepChar));
+			}
+			// clear whitespaces
+			if (opt.trim) {
+				for (i in res.header) {
+					res.header[i] = res.header[i].trim();
+				}
+				for (i in res.rows) {
+					for (j in res.rows[i]) {
+						res.rows[i][j] = res.rows[i][j].trim();
+					}
+				}
+			}
+			// convert to numbers
+			if (opt.numberize) {
+				for (i in res.header) {
+					if (res.header[i] == Number(res.header[i])) 
+						res.header[i] = Number(res.header[i]);
+				}
+				for (i in res.rows) {
+					for (j in res.rows[i]) {
+						if (res.rows[i][j] == Number(res.rows[i][j]))
+							res.rows[i][j] = Number(res.rows[i][j]);
+					}
+				}
+			}
+			// store rows as dictionaries
+			if (opt.map) {
+				for (i in res.rows) {
+					var altrow = {};
+					for (j in res.rows[i]) {
+						altrow[res.header[j]] = res.rows[i][j];
+					}
+					res.rows[i] = altrow;
+				}
+			}
+			return res;
+		}
+	});
+</script>
+<script>
+
+	$(function() {
+		
+		var urls = {
+			regionMeta: '../data/nuts-regions.json',
+			incomes: '../data/eu-disposable-incomes.csv'
+		};
+		
+		$.loadAssets({
+			urls: urls, 
+			success: function(content) {
+		
+				window.map = new svgmap.SVGMap('#map');
+				var proj = $.getUrlVars()['proj'];
+				if (proj == null) proj = 'lcc';
+				$('#proj li.'+proj).addClass('selected');
+
+				map.loadMap('../maps/eu-nuts-'+proj+'.svg', function() {
+		
+					map.addLayer('countries','bg');
+					map.addLayer('graticule');
+					map.addLayer('layer','nuts');
+							
+					var incomes = $.parseCSV({
+						csv: content.incomes, 
+						map: true
+					});
+					
+					var data = [], regionsByNuts = {}, i,j;
+					
+					for (j in incomes.header) {
+						if (j>0) {
+							$('ul#years').append('<li class="'+incomes.header[j]+'">'+String(incomes.header[j]).substr(2)+'</li>');
+						}
+					}
+					
+					$('ul#years li').click(function(evt) {
+						setYear(evt.target.className);
+					});
+					
+					data = incomes.rows;
+					
+					var Color = svgmap.color.Color,
+						colorscale = new svgmap.color.Diverging(
+							new Color(30,1,.6,'hsl'), 
+							'#ffffff', 
+							new Color(220,1,.6,'hsl'), 
+							'mean'
+						);
+					
+					
+					colorscale.setClasses(10);
+					
+					window.setYear = function(yr) {
+						
+						// update map colors
+						map.choropleth('nuts', data, 'nuts-id', yr, colorscale);
+						
+						// update the tooltip for each region
+						$('#map .polygon.nuts').each(function(i,el) {
+							var nutsid = el.path.data['nuts-id'], income;
+							if (regionsByNuts[nutsid] && !isNaN(regionsByNuts[nutsid][yr])) {
+								income = Math.round(regionsByNuts[nutsid][yr])+' &euro;';
+									
+							} else {
+								income = 'no data';
+							}
+							var tipContent = '<b>'+content.regionMeta[nutsid]+'</b><br />'+income+'';
+							$(this).qtip({ content: { text: tipContent }, show: { delay: 20 } });
+						});
+						
+						// update time controls
+						$('ul#years li').removeClass('selected');
+						$('ul#years li.'+yr).addClass('selected');
+					};
+					
+					map.addLayerEvent('nuts', 'click', function(evt) {
+						var nutsid = evt.target.path.data['nuts-id'];
+						var income = regionsByNuts[nutsid]['2007'];
+					});
+					
+					setYear('2007','median');
+				});
+				
+			}
+		});
+		
+	});
+	
+</script>
+</head>
+<body>
+	<div id="about">
+		<h1>Private Incomes across European Regions</h1>
+		<p>This map shows the disposable incomes of private households of European NUTS-2 regions. The data is taken from <a href="http://epp.eurostat.ec.europa.eu/tgm/table.do?tab=table&init=1&plugin=1&language=en&pcode=tgs00026">Eurostat</a>. It's intended as a showcase for svgmap framework.</p>
+		
+		<h2>Select year:</h2>
+		<ul id="years"></ul>
+		
+		<h2>Change map projection:</h2>
+		<ul id="proj">
+			<li class="lcc"><a href="?proj=lcc">Lambert Conformal Conic</a><br />the gold standard for EU maps</li>
+			<li class="laea"><a href="?proj=laea">Lambert Azimuthal Equal Area</a><br />almost the same as above</li>
+			<li class="mollweide"><a href="?proj=mollweide">Mollweide</a><br />another beautiful equal area projection</li>
+			<li class="loximuthal"><a href="?proj=loximuthal">Loximuthal, centered on Brussels</a><br />if you want to compare distances to Brussels</li>
+			<li class="satellite"><a href="?proj=satellite">Satellite view from 3000km above Tunesia</a><br />reminds us that the Earth's not flat</li>
+			<li class="cea"><a href="?proj=cea">Cylindrical Equal Area</a><br />if you really need a rectangular projection</li>
+			<li class="mercator"><a href="?proj=mercator">Mercator</a><br />if you're not really into maps<a href="http://xkcd.com/977/">*</a></li>
+		</ul>
+	</div>
+	
+	<div id="mapc"><div id="map">
+		
+	</div></div>
+</body>
+</html>
