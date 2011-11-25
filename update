@@ -1,7 +1,0 @@
-#!/bin/sh
-# pushes website to github rep
-git add . > /dev/null
-git commit -a -m 'website update'  > /dev/null
-git push > /devnull
-ssh datadriven@vis4.net /home/datadriven/pull_svgmap
-
