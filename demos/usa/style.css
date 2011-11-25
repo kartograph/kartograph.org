@@ -1,0 +1,33 @@
+body,html { background: #fff; height:100%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0;}
+
+#map {
+	background: #fff;
+	width: 100%;
+	height: 99%;
+}
+svg path { stroke-linejoin: round }
+
+svg .polygon.bg {
+	stroke: #ddd;
+	stroke-width:10px;
+}
+svg .polygon.fg {
+	stroke: #000;
+	stroke-width:0.5px;
+	fill: #fff
+}
+svg .polygon.fg:hover {
+	stroke-width:1.5px;
+}
+
+svg .dotMarker {
+	stroke: #330;
+	stroke-opacity: .8;
+	fill: #ff7;
+	fill-opacity: .2;
+}
+svg .dotMarker:hover {
+	stroke: #000;
+	fill: #ff3;
+	fill-opacity: .7;
+}	

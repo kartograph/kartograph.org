@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>hello svgmap</title>
+<script src="../js/lib/jquery.min.js"></script>
+<script src="../js/lib/jquery.qtip.min.js"></script>
+<script src="../js/lib/raphael-min.js"></script>
+<script src="../js/svgmap.min.js"></script>
+<link rel="stylesheet" href="style.css" />
+<script>
+
+	$(function() {
+		
+		window.mymap = new svgmap.SVGMap('#map');
+		mymap.loadMap('../maps/USA-sat.svg', function() {
+
+			mymap.addLayer('USA','bg');
+			mymap.addLayer('USA','fg');
+			
+			// load poverty data
+			$.ajax({
+				url: '../data/us-poverty.json',
+				success: function(poverty) {
+					var data = []
+					for (var i in poverty) {
+						var state = poverty[i];
+						state.hasc = 'US.'+state.code;
+						data.push(state)
+					}
+					var scale = new svgmap.color.Ramp('#ffffff','#772222');
+					scale.setClasses(5);
+					mymap.choropleth('fg', data, 'hasc', 'poverty', scale);
+				}
+			});
+			
+			// load us cities
+			$.ajax({
+				url: '../data/us-cities.json',
+				success: function(cities) {
+					var m = svgmap.marker
+					for (var c in cities) {
+						var city = cities[c];
+						var rad = Math.sqrt(city[3]/8175133)*15+1;
+						var ll = new svgmap.LonLat(city[1], city[2]);
+						var marker = new m.DotMarker(ll,city[0],rad);
+						mymap.addMarker(marker);
+					}
+				}
+			});
+		});
+			
+	});
+</script>
+</head>
+<body>
+	<div id="map">
+		
+	</div>
+</body>
+</html>
