@@ -14,6 +14,12 @@ svg .polygon.bg {
 	fill: #ddd;
 	stroke: none;
 }
+svg .polygon.outlines {
+	fill: none;
+	stroke: #000;
+	stroke-opacity: .05;
+	stroke-width: 2px;
+}
 svg .polygon.nuts {
 	stroke: #000;
 	stroke-width:.5px;

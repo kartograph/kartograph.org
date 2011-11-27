@@ -106,7 +106,11 @@
 			urls: urls, 
 			success: function(content) {
 		
-				window.map = new svgmap.SVGMap('#map');
+				// import some classes
+				var SVGMap = svgmap.SVGMap, 
+					Color = svgmap.color.Color;
+		
+				window.map = new SVGMap('#map');
 				var proj = $.getUrlVars()['proj'];
 				if (proj == null) proj = 'lcc';
 				$('#proj li.'+proj).addClass('selected');
@@ -115,54 +119,59 @@
 		
 					map.addLayer('countries','bg');
 					map.addLayer('graticule');
-					map.addLayer('layer','nuts');
+					map.addLayer('layer','nuts','nuts-id');
+					map.addLayer('countries','outlines');
 							
+					// parse CSV data
 					var incomes = $.parseCSV({
 						csv: content.incomes, 
 						map: true
 					});
 					
-					var data = [], regionsByNuts = {}, i,j;
-					
+					// set up UI for year selection
 					for (j in incomes.header) {
 						if (j>0) {
 							$('ul#years').append('<li class="'+incomes.header[j]+'">'+String(incomes.header[j]).substr(2)+'</li>');
 						}
 					}
-					
 					$('ul#years li').click(function(evt) {
 						setYear(evt.target.className);
 					});
 					
-					data = incomes.rows;
 					
-					var Color = svgmap.color.Color,
-						colorscale = new svgmap.color.Diverging(
-							new Color(30,1,.6,'hsl'), 
-							'#ffffff', 
-							new Color(220,1,.6,'hsl'), 
-							'mean'
-						);
+					// wrangle the data
 					
 					
-					colorscale.setClasses(10);
+					var data = {}, nutsid, i,j;
+					
+					for (j in incomes.rows) {
+						// big problem: multiple polygons per ID
+						// really need to fix this
+						// 
+						nutsid = incomes.rows[j]['nuts-id'];
+						data[nutsid] = incomes.rows[j];
+						data[nutsid].name = content.regionMeta[nutsid]
+					}
 					
 					window.setYear = function(yr) {
 						
 						// update map colors
-						map.choropleth('nuts', data, 'nuts-id', yr, colorscale);
+						map.choropleth({
+							layer: 'nuts', 
+							data: data,
+							prop: yr,
+							colorscale: svgmap.color.scale.BWO
+						});
 						
-						// update the tooltip for each region
-						$('#map .polygon.nuts').each(function(i,el) {
-							var nutsid = el.path.data['nuts-id'], income;
-							if (regionsByNuts[nutsid] && !isNaN(regionsByNuts[nutsid][yr])) {
-								income = Math.round(regionsByNuts[nutsid][yr])+' &euro;';
-									
-							} else {
-								income = 'no data';
+						map.tooltips({
+							layer: 'nuts',
+							content: function(id, path) {
+								if (data[id] == null) return 'null';
+								var title = data[id].name,
+									hasData = !isNaN(data[id][yr]),
+									body = hasData ? Math.round(data[id][yr])+' &euro;' : 'no data'
+								return [title,body];
 							}
-							var tipContent = '<b>'+content.regionMeta[nutsid]+'</b><br />'+income+'';
-							$(this).qtip({ content: { text: tipContent }, show: { delay: 20 } });
 						});
 						
 						// update time controls
@@ -170,10 +179,7 @@
 						$('ul#years li.'+yr).addClass('selected');
 					};
 					
-					map.addLayerEvent('nuts', 'click', function(evt) {
-						var nutsid = evt.target.path.data['nuts-id'];
-						var income = regionsByNuts[nutsid]['2007'];
-					});
+					
 					
 					setYear('2007','median');
 				});

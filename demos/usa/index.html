@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>hello svgmap</title>
-<script src="../js/lib/jquery.min.js"></script>
-<script src="../js/lib/jquery.qtip.min.js"></script>
-<script src="../js/lib/raphael-min.js"></script>
-<script src="../js/svgmap.min.js"></script>
-<link rel="stylesheet" href="style.css" />
+	<title>hello svgmap</title>
+	<script src="../js/lib/jquery.min.js"></script>
+	<script src="../js/lib/jquery.qtip.min.js"></script>
+	<script src="../js/lib/raphael-min.js"></script>
+	<script src="../js/svgmap.js"></script>
+	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="tooltips.css" />
 <script>
 
 	$.extend({
@@ -30,45 +31,64 @@
 	});
 
 	$(function() {
-		
+
 		$.loadAssets({
 			urls: {
 				poverty: '../data/us-poverty.json',
 				cities: '../data/us-cities.json'
 			},
 			success: function(content) {
-			
-				window.mymap = new svgmap.SVGMap('#map');
-				mymap.loadMap('../maps/USA-sat.svg', function() {
 		
-					mymap.addLayer('USA','bg');
-					mymap.addLayer('USA','fg');
+				// import some classes
+				var SVGMap = svgmap.SVGMap, 
+					Color = svgmap.color.Color,
+					Ramp = svgmap.color.scale.Ramp;
+		
+				window.map = new SVGMap('#map');
 				
-					var data = []
+				map.loadMap('../maps/USA.svg', function() {
+		
+					map.addLayer('USA', 'bg');
+					map.addLayer('USA', 'fg', 'hasc');
+				
+					var states = {}, tooltips = {};
+					
 					for (var i in content.poverty) {
 						var state = content.poverty[i];
-						state.hasc = 'US.'+state.code;
-						data.push(state)
+						states['US.'+state.code] = state;
+						tooltips['US.'+state.code] = [state.name, 
+							'<table>'
+							+'<tr><th>Poverty rate:</th><td>'+state.poverty+'%</td></tr>'
+							+'<tr><th>People w/o health care:</th><td>'+state.wohealthins+'%</td></tr>'
+							+'<tr><th>Median income:</th><td>$'+state.medincome+'</td></tr>'
+							+'</table>'];
 					}
-					var scale = new svgmap.color.Ramp('#ffffff','#772222');
+					
+					var scale = new Ramp('#fedddd', '#660000', 'rgb');
+					//var scale = new Ramp('#feeeee', '#662222', 'hsl');
 					scale.setClasses(5);
-					mymap.choropleth('fg', data, 'hasc', 'poverty', scale);
+					//scale.setClasses(5, 'custom', [9,12,15,18]);
+					//scale.setClasses(8, 'custom', [8,10,12,14,16,18,20]);
 					
+					window.scale = scale;
 					
-					
-					// update the tooltip for each region
-					$('#map .polygon.nuts').each(function(i,el) {
-						var nutsid = el.path.data['nuts-id'], income;
-						if (regionsByNuts[nutsid] && !isNaN(regionsByNuts[nutsid][yr])) {
-							income = Math.round(regionsByNuts[nutsid][yr])+' &euro;';
-								
-						} else {
-							income = 'no data';
-						}
-						var tipContent = '<b>'+content.regionMeta[nutsid]+'</b><br />'+income+'';
-						$(this).qtip({ content: { text: tipContent }, show: { delay: 20 } });
+					map.choropleth({
+						data: states,
+						prop: 'poverty',
+						colorscale: scale
 					});
 					
+					map.tooltips({
+						content: tooltips
+					});
+					
+					// debug scale
+					for (i=0; i<100; i++) {
+						var v = scale.min + (i/99)*(scale.max - scale.min);
+						$('#debug').append('<div style="float:left;width:4px;border:0'+(i>0 ? ';border-left:0': '')+';height:20px;background:'+scale.getColor(v)+'" />');
+					}
+									
+					/*
 					// display cities as dot markers
 					
 					var m = svgmap.marker
@@ -76,9 +96,10 @@
 						var city = content.cities[c];
 						var rad = Math.sqrt(city[3]/8175133)*15+1;
 						var ll = new svgmap.LonLat(city[1], city[2]);
-						var marker = new m.DotMarker(ll,city[0],rad);
-						mymap.addMarker(marker);
+						var marker = new m.DotMarker(ll,city[0],3);
+						map.addMarker(marker);
 					}
+					*/
 					
 				});
 			
@@ -92,6 +113,9 @@
 <body>
 	<div id="map">
 		
+	</div>
+	<div id="debug" style="position:absolute;top:0;left:0;width:100%;height:50px">
+	
 	</div>
 </body>
 </html>

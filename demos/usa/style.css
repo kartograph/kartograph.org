@@ -1,4 +1,4 @@
-body,html { background: #fff; height:100%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0;}
+body,html { background: #000; height:100%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0;}
 
 #map {
 	background: #fff;
@@ -8,7 +8,8 @@ body,html { background: #fff; height:100%; font-family: Helvetica Neue, Helvetic
 svg path { stroke-linejoin: round }
 
 svg .polygon.bg {
-	stroke: #ddd;
+	stroke: #999;
+	opacity: .5;
 	stroke-width:10px;
 }
 svg .polygon.fg {
