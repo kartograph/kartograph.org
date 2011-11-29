@@ -46,10 +46,12 @@
 		
 				window.map = new SVGMap('#map');
 				
-				map.loadMap('../maps/USA.svg', function() {
+				map.loadMap('../maps/USA.svg', function(map) {
 		
 					map.addLayer('USA', 'bg');
 					map.addLayer('USA', 'fg', 'hasc');
+				
+					
 				
 					var states = {}, tooltips = {};
 					
@@ -74,7 +76,7 @@
 					
 					map.choropleth({
 						data: states,
-						prop: 'poverty',
+						key: 'poverty',
 						colorscale: scale
 					});
 					
@@ -100,6 +102,10 @@
 						map.addMarker(marker);
 					}
 					*/
+					
+					map.addLayerEvent('click', function(evt) {
+						console.log(evt.target);
+					}, 'fg');
 					
 				});
 			

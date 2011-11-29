@@ -4,6 +4,7 @@
 <title>svgmap</title>
 <script src="../js/lib/jquery.min.js"></script>
 <script src="../js/lib/jquery.qtip.min.js"></script>
+<script src="../js/lib/jquery.parsecsv.js"></script>
 <script src="../js/lib/raphael-min.js"></script>
 <script src="../js/svgmap.min.js"></script>
 <link rel="stylesheet" href="style.css" />
@@ -159,7 +160,7 @@
 						map.choropleth({
 							layer: 'nuts', 
 							data: data,
-							prop: yr,
+							key: yr,
 							colorscale: svgmap.color.scale.BWO
 						});
 						

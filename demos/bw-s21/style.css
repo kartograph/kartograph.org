@@ -1,0 +1,128 @@
+body,html { background: #fff; height:100%; min-height: 600px; font-family: Lato,Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0;}
+
+#title {
+	width: 150px;
+	position: absolute;
+	left: 0; top: 0;
+	height: 99%;
+	color: #000;
+}
+#title div {
+	text-align: center;
+	font-weight: 300;
+	margin: 7px 20px;
+	font-size: 12px;
+}
+#title .v {
+	font-weight: bold;
+	cursor: pointer;
+	color: #444;
+}
+#title .v .pro { color: #387bff; }
+#title .v .contra { color: #ffa042; }
+#title #cdu { color: #000; }
+#title #gruene { color: #6c6; }
+#title #spd { color: #c33; }
+#title #fdp { color: #993; }
+#title #linke { color: #939; }
+
+.bar.cdu { background: #000; }
+.bar.gruene { background: #6c6; }
+.bar.spd { background: #c33; }
+.bar.fdp { background: #993; }
+.bar.linke { background: #939; }
+
+.barchart { margin-top: 9px; }
+.barchart .col {
+	width: 40px;
+	float: left;
+}
+.barchart .col .lbl {
+	font-size: 9px;
+	text-align: center;
+}
+.barchart .col .bar {
+	border-left: 5px solid #fff;
+	border-right: 5px solid #fff;
+	color: #fff;
+}
+
+#title .v.inactive:hover, #title .v.inactive:hover span {
+	font-weight: bold;
+}
+#title .v.inactive, #title .v.inactive span {
+	color: #999!important;
+	font-weight: 300;
+}
+#title .l1 {
+	font-weight: bold;
+	font-size: 27px;
+	margin: 15px 20px 0;
+}
+#title .l2 {
+	font-weight: bold;
+	font-size: 99px;
+	line-height: 85px;
+	margin: 0 20px 10px;
+}
+#title .d {
+	margin: 30px 20px 15px;
+	font-weight: 300;
+	padding-bottom: 8px;
+	font-size: 13px;
+	border-bottom:1px solid #000;
+}
+#title .intro {
+	font-style: italic;
+	margin-bottom:25px;
+	font-size: 13px;
+}
+
+#credits {
+	position: absolute;
+	bottom: 20px;
+	text-align: right;
+	line-height: 18px;
+	right: 20px;
+	font-size: 12px;
+	font-weight: 300;
+}
+.ui-tooltip-content td { font-weight: 300; } 
+.ui-tooltip-content td.lbl { color: #000; text-decoration: underline; }
+.ui-tooltip-content th { color: #444; padding-right: 1em; font-weight: 300; font-style: italic; }
+.ui-tooltip-content td.l2 {
+	padding-top: 6px;
+}
+#map {
+	background: #fff;
+	width: 50%;
+	min-width: 500px;
+	height: 99%;
+	margin-left: 140px;
+}
+svg path { stroke-linejoin: round }
+
+svg .polygon.bg {
+	stroke: #ddd;
+	stroke-width:10px;
+}
+svg .polygon.gemeinden {
+	stroke: #000;
+	stroke-width:0.2px;
+	fill: #fff
+}
+svg .polygon.gemeinden:hover {
+	stroke-width:1.5px;
+}
+
+svg .dotMarker {
+	stroke: #330;
+	stroke-opacity: .8;
+	fill: #ff7;
+	fill-opacity: .2;
+}
+svg .dotMarker:hover {
+	stroke: #000;
+	fill: #ff3;
+	fill-opacity: .7;
+}	
