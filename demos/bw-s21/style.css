@@ -94,6 +94,31 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	padding-top: 6px;
 }
 
+#legend {
+	position: absolute;
+	top: 144px;
+	left: 180px;
+}
+
+#legend .c {
+	width: 23px;
+	height: 18px;
+	margin: 0 5px 5px 0;
+	float: none;
+	border: 1px solid #f0f0f0;
+	position: static;
+	background: #fff;
+}
+#legend .c .v {
+	position: relative;
+	left: 28px;
+	font-size: 12px;
+	font-weight: 300;
+	top: 1px;
+	color: #777;
+	font-style: italic;
+}
+
 #plot {
 	position: absolute;
 	top: 100px;

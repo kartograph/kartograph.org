@@ -178,17 +178,30 @@ $(function() {
 					
 					console.log(scales[id]);
 					
-					
+					var i,f,v,legend = $('#legend .c');
+					if (id == "ltmaj") {
+						v = ['cdu','gruene','spd','fdp','linke'];
+						f = ['CDU','GRÜNE','SPD','FDP','DIE&nbsp;LINKE'];
+						for (i=0; i<legend.length; i++) {
+							$(legend[i]).css({ background: scales[id].getColor(v[i]) });
+							$('.v', legend[i]).html(f[i]);
+						}
+					} else {
+						for (i=0; i<legend.length; i++) {
+							f = 1- i/(legend.length-1);
+							v = scales[id].min + f * (scales[id].max - scales[id].min);
+							$(legend[i]).css({ background: scales[id].getColor(v) });
+							$('.v', legend[i]).html(Math.round(v*100)+'%');
+						}
+					}
 				};
 				
 				$('#title .v').click(function(evt) {
-					id = evt.target.getAttribute('id');
+					var id = evt.target.getAttribute('id');
 					if (id == null) {
 						id = evt.target.parentNode.getAttribute('id');
 					}
 					showMap(id);
-					
-					
 				});
 				
 				showMap('s21pc');
