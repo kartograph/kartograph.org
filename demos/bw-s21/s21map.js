@@ -244,11 +244,11 @@ $(function() {
 				
 				window.plot = plot;
 				
-				map.addLayerEvent('mouseover', function(e) {
+				/*map.addLayerEvent('mouseover', function(e) {
 					var id = e.target.path.data.key;
 					$('#plot .dot').addClass('hidden');
 					$('#plot .dot.'+id).removeClass('hidden');
-				});
+				});*/
 				
 			}, { padding: -50, halign: 'left', valign: 'center' }); // end map.loadSVG() ...
 		
