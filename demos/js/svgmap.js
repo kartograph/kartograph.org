@@ -286,8 +286,12 @@
       }
     }
 
-    Color.prototype.toString = function() {
+    Color.prototype.hex = function() {
       return Color.rgb2hex(this.rgb);
+    };
+
+    Color.prototype.toString = function() {
+      return this.hex();
     };
 
     Color.prototype.hsl = function() {
@@ -669,7 +673,7 @@
 
   svgmap.color.scale.HOT = new ColorScale(['#000000', '#ff0000', '#ffff00', '#ffffff'], [0, .25, .75, 1], 'rgb');
 
-  svgmap.color.scale.BWO = new Diverging(Color.hsl(30, 1, .6), '#ffffff', new Color(220, 1, .6));
+  svgmap.color.scale.BWO = new Diverging(Color.hsl(30, 1, .55), '#ffffff', new Color(220, 1, .55));
 
   svgmap.color.scale.GWP = new Diverging(Color.hsl(120, .8, .4), '#ffffff', new Color(280, .8, .4));
 
@@ -2172,7 +2176,7 @@
     };
 
     SVGMap.prototype.choropleth = function(opts) {
-      var col, colorscale, data, data_col, id, layer_id, me, no_data_color, path, pathData, paths, row, v, _ref15, _ref16, _ref17, _ref18, _results;
+      var col, colorscale, data, data_col, id, layer_id, me, no_data_color, path, pathData, paths, row, v, _i, _len, _ref15, _ref16, _ref17, _ref18;
       me = this;
       layer_id = (_ref15 = opts.layer) != null ? _ref15 : me.layerIds[me.layerIds.length - 1];
       if (!me.layers.hasOwnProperty(layer_id)) {
@@ -2190,26 +2194,19 @@
         pathData[id] = row[data_col];
       }
       _ref18 = me.layers[layer_id].pathsById;
-      _results = [];
       for (id in _ref18) {
         paths = _ref18[id];
-        _results.push((function() {
-          var _i, _len, _results2;
-          _results2 = [];
-          for (_i = 0, _len = paths.length; _i < _len; _i++) {
-            path = paths[_i];
-            if ((pathData[id] != null) && colorscale.validValue(pathData[id])) {
-              v = pathData[id];
-              col = colorscale.getColor(v);
-              _results2.push(path.svgPath.node.setAttribute('style', 'fill:' + col));
-            } else {
-              _results2.push(path.svgPath.node.setAttribute('style', 'fill:' + no_data_color));
-            }
+        for (_i = 0, _len = paths.length; _i < _len; _i++) {
+          path = paths[_i];
+          if ((pathData[id] != null) && colorscale.validValue(pathData[id])) {
+            v = pathData[id];
+            col = colorscale.getColor(v);
+            path.svgPath.node.setAttribute('style', 'fill:' + col);
+          } else {
+            path.svgPath.node.setAttribute('style', 'fill:' + no_data_color);
           }
-          return _results2;
-        })());
+        }
       }
-      return _results;
     };
 
     SVGMap.prototype.tooltips = function(opts) {

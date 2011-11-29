@@ -54,19 +54,26 @@ $(function() {
 					row = ltag.rows[j];
 					key = "0" + row['id'];
 					if (data.hasOwnProperty(key)) {
+					
+						var total = row['Gueltige Stimmen'];
+					
 						data[key]['ltwb'] = row['Gueltige Stimmen'] / row['Wahlberechtigte'];
-						data[key]['cdu'] = row['CDU'] / row['Gueltige Stimmen'];
-						data[key]['gruene'] = row['GRUENE'] / row['Gueltige Stimmen'];
-						data[key]['spd'] = row['SPD'] / row['Gueltige Stimmen'];
-						data[key]['fdp'] = row['FDP'] / row['Gueltige Stimmen'];
-						data[key]['linke'] = row['DIE LINKE'] / row['Gueltige Stimmen'];
+						data[key]['cdu'] = row['CDU'] / total;
+						data[key]['gruene'] = row['GRUENE'] / total;
+						data[key]['spd'] = row['SPD'] / total;
+						data[key]['fdp'] = row['FDP'] / total;
+						data[key]['linke'] = row['DIE LINKE'] / total;
+						data[key]['rep'] = row['REP'] / total;
 						
-						var max = Math.max(row['CDU'],row['GRUENE'],row['SPD'],row['FDP'],row['DIE LINKE']);
-						if (max == row["CDU"]) data[key]['ltmaj'] = 'cdu';
-						if (max == row["GRUENE"]) data[key]['ltmaj'] = 'gruene';
-						if (max == row["SPD"]) data[key]['ltmaj'] = 'spd';
-						if (max == row["FDP"]) data[key]['ltmaj'] = 'fdp';
-						if (max == row["DIE LINKE"]) data[key]['ltmaj'] = 'linke';
+						var t = .35, t2 = .4,
+							max = Math.max(row['CDU'],row['GRUENE'],row['SPD'],row['FDP'],row['DIE LINKE']),
+							c = (max/total >= .5 ? '3' : max/total >= .42 ? '2' : max/total >= .35 ? '1' : '');	
+						if (max == row["CDU"]) data[key]['ltmaj'] = 'cdu'+c;
+						if (max == row["GRUENE"]) data[key]['ltmaj'] = 'gruene'+c;
+						if (max == row["SPD"]) data[key]['ltmaj'] = 'spd'+c;
+						if (max == row["FDP"]) data[key]['ltmaj'] = 'fdp'+c;
+						if (max == row["DIE LINKE"]) data[key]['ltmaj'] = 'linke'+c;
+						
 					}
 					// data[key] = ltag.rows[j];
 				}
@@ -110,8 +117,10 @@ $(function() {
 				scales['s21wb'] = new Ramp(Color.hsl(180,.65,.98), Color.hsl(230,1,.1));
 				scales['s21wb'].setClasses(7);
 				scales['ltwb'] = scales['s21wb'];
+				scales['pro'] = new Ramp('#ffffff',Color.hsl(220,1,.55));
+				scales['contra'] = new Ramp('#ffffff',Color.hsl(30,1,.55));
 				
-				scales['cdu'] = new Ramp(Color.hsl(220,.05,.98), '#222222');
+				scales['cdu'] = new Ramp('#eeeeee', '#000000');
 				scales['cdu'].setClasses(7);
 				scales['gruene'] = new Ramp(Color.hsl(120,.61,.98), Color.hsl(120,.62,.25));
 				scales['gruene'].setClasses(7);
@@ -121,13 +130,28 @@ $(function() {
 				scales['fdp'].setClasses(7);
 				scales['linke'] = new Ramp(Color.hsl(320,.61,.98), Color.hsl(320,.62,.15));
 				scales['linke'].setClasses(7);
+				scales['rep'] = new Ramp('#ffffff', Color.hsl(35,.42,.25));
+				scales['rep'].setClasses(7);
 				
 				scales['ltmaj'] = new Categories({
-					cdu: '#555',
+					cdu: '#777',
 					gruene: '#4DD34D',
 					spd: '#CC3333',
 					fdp: '#EEEEBB',
-					linke: '#dd44dd'
+					linke: '#dd44dd',
+					cdu1: '#666',
+					gruene1: '#6c6',
+					spd1: '#c33',
+					fdp1: '#ddddaa',
+					linke1: '#cc33cc',
+					cdu2: '#444',
+					gruene2: '#38CB38',
+					spd2: '#cc1111',
+					fdp2: '#cc9',
+					linke2: '#b2b',
+					cdu3: '#222',
+					gruene3: '#2b2',
+					spd3: '#a00'
 				});
 				
 				map.tooltips({
@@ -153,6 +177,8 @@ $(function() {
 					});
 					
 					console.log(scales[id]);
+					
+					
 				};
 				
 				$('#title .v').click(function(evt) {
@@ -165,7 +191,7 @@ $(function() {
 					
 				});
 				
-				showMap('s21wb');
+				showMap('s21pc');
 				
 					
 			}, { padding: -50, halign: 'left', valign: 'center' }); // end map.loadSVG() ...
