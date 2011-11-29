@@ -165,6 +165,7 @@ $(function() {
 				}, 'fg');
 				*/
 					
+				var currentScale, currentKey;
 				
 				var showMap = function(id) {
 					$('#title .v').addClass('inactive');
@@ -176,7 +177,8 @@ $(function() {
 						colorscale: scales[id]
 					});
 					
-					console.log(scales[id]);
+					currentScale = scales[id];
+					currentKey = id;
 					
 					var i,f,v,legend = $('#legend .c');
 					if (id == "ltmaj") {
@@ -194,6 +196,10 @@ $(function() {
 							$('.v', legend[i]).html(Math.round(v*100)+'%');
 						}
 					}
+					
+					if (plot != null) {
+						plot.setScale(currentScale, currentKey);
+					}
 				};
 				
 				$('#title .v').click(function(evt) {
@@ -206,7 +212,44 @@ $(function() {
 				
 				showMap('s21pc');
 				
-					
+				console.log(plotjs, data);
+				var plot = new plotjs.ScatterPlot('#plotc');
+				plot.setData(data);
+				plot.setScale(currentScale, currentKey);
+				
+				var setXaxis = function(id) {
+					console.log(plot);
+					plot.xAxis(id);
+					$('#plot .xmenu').addClass('inactive');
+					$('#plot .xmenu#'+id).removeClass('inactive');
+				};
+				var setYaxis = function(id) {
+					plot.yAxis(id);
+					$('#plot .ymenu').addClass('inactive');
+					$('#plot .ymenu#'+id).removeClass('inactive');
+				};
+				
+				setXaxis('cdu');
+				setYaxis('pro');
+				
+				$('#plot .xmenu').click(function (e) {
+					var id = e.target.getAttribute('id');
+					setXaxis(id);
+				});
+
+				$('#plot .ymenu').click(function (e) {
+					var id = e.target.getAttribute('id');
+					setYaxis(id);
+				});
+				
+				window.plot = plot;
+				
+				map.addLayerEvent('mouseover', function(e) {
+					var id = e.target.path.data.key;
+					$('#plot .dot').addClass('hidden');
+					$('#plot .dot.'+id).removeClass('hidden');
+				});
+				
 			}, { padding: -50, halign: 'left', valign: 'center' }); // end map.loadSVG() ...
 		
 		} // end success: function() { ..	

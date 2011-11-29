@@ -80,10 +80,10 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 
 #credits {
 	position: absolute;
-	bottom: 20px;
+	bottom: 30px;
 	text-align: right;
 	line-height: 18px;
-	right: 20px;
+	right: 30px;
 	font-size: 12px;
 	font-weight: 300;
 }
@@ -113,6 +113,7 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	position: relative;
 	left: 28px;
 	font-size: 12px;
+	white-space:nowrap;
 	font-weight: 300;
 	top: 1px;
 	color: #777;
@@ -121,9 +122,9 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 
 #plot {
 	position: absolute;
-	top: 100px;
-	right: 20px;
-	width: 450px;
+	bottom: 130px;
+	right: 30px;
+	width: 440px;
 	height: 400px;
 }
 #plotc {
@@ -131,13 +132,45 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	width: 100%;
 	border: 1px solid #ddd;
 }
-#plot .dot {
-	width: 6px;
-	height: 6px;
-	border-radius: 3px;
-	background: #ccc;
-	position: absolute;
+#xmenu .xmenu, #ymenu .ymenu {
+	font-weight: bold;
+	cursor: pointer;
+	display: inline;
+	padding: 0 1ex;
 }
+#xmenu .xmenu.inactive, #ymenu .ymenu.inactive {
+	color: #999!important;
+	font-weight: 300;
+}
+#xmenu { text-align: center; margin-top: 5px; } 
+#ymenu { 
+	position: absolute;
+	left: -220px;
+	top: 200px;
+	height: 30px;
+	width: 400px;
+	text-align: center;
+	-webkit-transform: rotate(-90deg); 
+	-moz-transform: rotate(-90deg);	
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+.scatterplot {
+	position: relative;
+}
+.scatterplot .dot {
+	background: rgba(0,0,0,.3);
+	position: absolute;
+	left: 10px;
+	height: 10px;
+}
+.scatterplot .dot.hidden {
+	background: #ddd!important;
+}
+.scatterplot .dot.r2 { width: 4px; height: 4px; border-radius: 2px; }
+.scatterplot .dot.r3 { width: 6px; height: 6px; border-radius: 3px; }
+.scatterplot .dot.r4 { width: 8px; height: 8px; border-radius: 4px; }
+.scatterplot .dot.r5 { width: 10px; height: 10px; border-radius: 5px; }
 
 #map {
 	background: #fff;
