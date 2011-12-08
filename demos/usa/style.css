@@ -8,8 +8,7 @@ body,html { background: #000; height:100%; font-family: Helvetica Neue, Helvetic
 svg path { stroke-linejoin: round }
 
 svg .polygon.bg {
-	stroke: #999;
-	opacity: .5;
+	stroke: #ccc;
 	stroke-width:10px;
 }
 svg .polygon.fg {

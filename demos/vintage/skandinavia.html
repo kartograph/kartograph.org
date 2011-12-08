@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Kartograf - rethinking maps</title>
+	<script src="../js/lib/jquery.min.js"></script>
+	<script src="../js/lib/jquery.qtip.min.js"></script>
+	<script src="../js/lib/raphael-min.js"></script>
+	<script src="../js/svgmap.js"></script>
+	<link rel="stylesheet" href="style.css" />
+	
+<script>
+	$(function() {
+		
+		// import some classes
+		window.map = new svgmap.SVGMap('#map');
+		
+		var resize = function() {
+			var c = $('#map');
+			var ratio = map.viewAB.width / map.viewAB.height;
+			c.height( c.width() / ratio );
+			map.resize();
+		};
+		
+		// $(window).resize(resize);
+		
+		map.loadMap('../maps/skandinavia-land.svg', function(map) {
+
+			map.addLayer('graticule', 'g1');
+			map.addLayer('land', 'bg');
+			map.addLayer('land', 'bgstroke');
+			map.addLayer('context');
+			map.addLayer('countries', 'fg');
+			
+			map.addFilter('glow', 'glow', { size: 4, color: '#D1BEB0' });
+			map.applyFilter('bg', 'glow');
+			
+			resize();
+		
+			var cities = [
+				['Stockholm', 18.06, 59.333],
+				['Malmö', 13.02, 55.585],
+				
+				['Oslo', 10.746, 59.9127],
+				['Helsinki', 24.935, 60.16952]
+			];
+			
+			for (var i in cities) {
+				map.addMarker(new svgmap.marker.LabeledIconMarker({
+					label: cities[i][0],
+					icon: 'star.png',
+					ll: new svgmap.LonLat(cities[i][1], cities[i][2]),
+					className: 'city2',
+					dx: -7, dy: -11
+				}));
+			}
+		
+		}, { padding: -4 });
+			
+			
+	});	
+</script>
+</head>
+<body>
+	<div id="head">
+		<img src="kartograf.logo.png" />
+	</div>
+	<div id="map">
+		
+	</div>
+	<div id="tutorial">
+	
+		<div class="code"><pre>
+map.loadMap('../maps/skandinavia-land.svg', function(map) {
+
+	// setup map layer
+	map.addLayer('graticule', 'g1');
+	map.addLayer('land', 'bg');
+	map.addLayer('land', 'bgstroke');
+	map.addLayer('context');
+	map.addLayer('countries', 'fg');
+	
+	// add glow filter for bg layer
+	map.addFilter('glow', 'glow', { size: 4, color: '#D1BEB0' });
+	map.applyFilter('bg', 'glow');
+	
+	resize();
+
+	// display some cities
+	
+	var cities = [
+		['Stockholm', 18.06, 59.333],
+		['Malmö', 13.02, 55.585],	
+		['Oslo', 10.746, 59.9127],
+		['Helsinki', 24.935, 60.16952]
+	];
+	
+	for (var i in cities) {
+		map.addMarker(new svgmap.marker.LabeledIconMarker({
+			label: cities[i][0],
+			icon: 'star.png',
+			ll: new svgmap.LonLat(cities[i][1], cities[i][2]),
+			className: 'city2',
+			dx: -7, dy: -11
+		}));
+	}
+
+}, { padding: -4 });		
+		</pre></div>
+	</div>
+	<!--
+svgmap countries NOR,SWE,FIN --proj satellite --lon0 31 --lat0 54 --dist 1.6 --up 19 -g2 -q95 -p8 -w800 --tilt -20 -o skandinavia.svg -h470
+svgmap layer skandinavia.svg data/shp/10m_land --layer-id land -o ../website/demos/maps/skandinavia-land.svg
+
+-->
+</body>
+</html>

@@ -22,7 +22,7 @@ svg .polygon.outlines {
 }
 svg .polygon.nuts {
 	stroke: #000;
-	stroke-width:.5px;
+	stroke-width:0px;
 	fill: #ccc;
 }
 svg .polygon.nuts:hover {
@@ -55,7 +55,7 @@ svg .graticule {
 	background: #fff
 }
 #about h1 { font-size:24px; margin-top:0 }	
-#about h2 { font-size:14px; margin:25px 0 10px; color: #888; }	
+#about h2 { font-size:14px; margin:25px 0 10px; color: #888; clear:both; }	
 #about p { font-size: 12px; line-height: 17px; }
 ul {
 	margin: 0;

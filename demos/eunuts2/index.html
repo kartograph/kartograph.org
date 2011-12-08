@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>svgmap</title>
+<title>Kartograf - rehinking maps</title>
 <script src="../js/lib/jquery.min.js"></script>
 <script src="../js/lib/jquery.qtip.min.js"></script>
 <script src="../js/lib/jquery.parsecsv.js"></script>
+<script src="../js/lib/jquery.assets.js"></script>
 <script src="../js/lib/raphael-min.js"></script>
-<script src="../js/svgmap.min.js"></script>
+<script src="../js/lib/raphael.zpd.js"></script>
+
+<script src="../js/svgmap.js"></script>
 <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="../css/colorbrewer.css" />
 <link rel="stylesheet" href="jquery.qtip.css" />
+
 <script>
 
 	// some useful jquery extensions
@@ -21,78 +26,6 @@
 		}
 	});
 	
-	$.extend({
-		loadAssets: function(opt) {
-			var data = {};
-			for (var id in opt.urls) {
-				var context = { id: id };
-				$.ajax({
-					url: opt.urls[id],
-					success: function(content) {
-						data[this.id] = content;
-						for (var id2 in opt.urls) {
-							if (!data.hasOwnProperty(id2)) return;
-						}
-						opt.success(data);
-					},
-					context: context
-				});
-			}
-		}
-	});
-	
-	$.extend({
-		parseCSV: function(opt) {
-			if (opt.sepChar == null) opt.sepChar = "\t";
-			if (opt.header == null) opt.header = true;
-			if (opt.trim == null) opt.trim = true;
-			if (opt.map == null) opt.map = false;
-			if (opt.numberize == null) opt.numberize = true;
-
-			var i,j,res = { rows: [] };
-			var rows = opt.csv.split("\n");
-			if (opt.header) res.header = rows[0].split(opt.sepChar);
-			rows = rows.slice(1);
-			for (i in rows) {
-				res.rows.push(rows[i].split(opt.sepChar));
-			}
-			// clear whitespaces
-			if (opt.trim) {
-				for (i in res.header) {
-					res.header[i] = res.header[i].trim();
-				}
-				for (i in res.rows) {
-					for (j in res.rows[i]) {
-						res.rows[i][j] = res.rows[i][j].trim();
-					}
-				}
-			}
-			// convert to numbers
-			if (opt.numberize) {
-				for (i in res.header) {
-					if (res.header[i] == Number(res.header[i])) 
-						res.header[i] = Number(res.header[i]);
-				}
-				for (i in res.rows) {
-					for (j in res.rows[i]) {
-						if (res.rows[i][j] == Number(res.rows[i][j]))
-							res.rows[i][j] = Number(res.rows[i][j]);
-					}
-				}
-			}
-			// store rows as dictionaries
-			if (opt.map) {
-				for (i in res.rows) {
-					var altrow = {};
-					for (j in res.rows[i]) {
-						altrow[res.header[j]] = res.rows[i][j];
-					}
-					res.rows[i] = altrow;
-				}
-			}
-			return res;
-		}
-	});
 </script>
 <script>
 
@@ -100,7 +33,9 @@
 		
 		var urls = {
 			regionMeta: '../data/nuts-regions.json',
-			incomes: '../data/eu-disposable-incomes.csv'
+			incomes: '../data/eu-disposable-incomes.csv',
+			lifeexp: '../data/eu-life-exp.csv',
+			deathrates: '../data/eu-death-rates.tsv'
 		};
 		
 		$.loadAssets({
@@ -143,7 +78,7 @@
 					// wrangle the data
 					
 					
-					var data = {}, nutsid, i,j;
+					var data = {}, nutsid, i,j, colsc;
 					
 					for (j in incomes.rows) {
 						// big problem: multiple polygons per ID
@@ -161,7 +96,8 @@
 							layer: 'nuts', 
 							data: data,
 							key: yr,
-							colorscale: svgmap.color.scale.BWO
+							colorscale: new svgmap.color.scale.CSSColors('Greys')
+								.setClasses(9)
 						});
 						
 						map.tooltips({
@@ -170,7 +106,7 @@
 								if (data[id] == null) return 'null';
 								var title = data[id].name,
 									hasData = !isNaN(data[id][yr]),
-									body = hasData ? Math.round(data[id][yr])+' &euro;' : 'no data'
+									body = hasData ? Math.round(data[id][yr])+'&euro;' : 'no data'
 								return [title,body];
 							}
 						});
@@ -182,7 +118,9 @@
 					
 					
 					
-					setYear('2007','median');
+					setYear('2007','mean');
+					
+					
 				});
 				
 			}
@@ -195,7 +133,7 @@
 <body>
 	<div id="about">
 		<h1>Private Incomes across European Regions</h1>
-		<p>This map shows the disposable incomes of private households of European NUTS-2 regions. The data is taken from <a href="http://epp.eurostat.ec.europa.eu/tgm/table.do?tab=table&init=1&plugin=1&language=en&pcode=tgs00026">Eurostat</a>. It's intended as a showcase for svgmap framework.</p>
+		<p>This map shows the disposable incomes of private households of European NUTS-2 regions. The data is taken from <a href="http://epp.eurostat.ec.europa.eu/tgm/table.do?tab=table&init=1&plugin=1&language=en&pcode=tgs00026">Eurostat</a>. It's intended as a showcase for Kartograf framework.</p>
 		
 		<h2>Select year:</h2>
 		<ul id="years"></ul>

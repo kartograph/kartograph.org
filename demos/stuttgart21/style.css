@@ -1,7 +1,7 @@
 body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0;}
 
 #title {
-	width: 150px;
+	width: 180px;
 	position: absolute;
 	left: 0; top: 0;
 	height: 99%;
@@ -13,10 +13,10 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	margin: 7px 20px;
 	font-size: 12px;
 }
-#title .v {
+#title .v, #title .v a {
 	font-weight: bold;
 	cursor: pointer;
-	color: #444;
+	color: #29c;
 }
 #title .v .pro { color: #387bff; }
 #title .v .contra { color: #ffa042; }
@@ -25,6 +25,12 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 #title #spd { color: #c33; }
 #title #fdp { color: #993; }
 #title #linke { color: #939; }
+
+#title .v.inactive a.plot {
+	text-decoration: none;
+	font-weight: 300;
+	color: #777;
+}
 
 .bar.cdu { background: #000; }
 .bar.gruene { background: #6c6; }
@@ -51,7 +57,7 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	font-weight: bold;
 }
 #title .v.inactive, #title .v.inactive span {
-	color: #999!important;
+	color: #777!important;
 	font-weight: 300;
 }
 #title .l1 {
@@ -66,25 +72,75 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	margin: 0 20px 10px;
 }
 #title .d {
-	margin: 30px 20px 15px;
+	margin: 20px 20px 15px;
 	font-weight: 300;
 	padding-bottom: 8px;
 	font-size: 13px;
 	border-bottom:1px solid #000;
 }
-#title .intro {
-	font-style: italic;
-	margin-bottom:25px;
-	font-size: 13px;
+
+#text {
+	font-weight: 300;
+	position: absolute;
+	left: 58%;
+	right: 20px;
+	top: 30px;
+	bottom: 60px;
+	padding: 10px 30px;
+	margin: 0;
+	overflow-y: scroll;
+	box-shadow: none;
+	border-left: 1px dashed #bbb;
 }
 
+#text .intro {
+	font-style: italic;
+	margin-bottom:25px;
+	font-size: 17px;
+}
+
+#text p {
+	font-size: 13px;
+	line-height: 20px;
+	margin: 0 0 1em;
+}
+
+#text a {
+	font-weight: bold;
+	text-decoration: none;
+	color: #29c;
+	padding: 0 0.3ex;
+	text-transform: uppercase;
+} 
+#text p a.plot, a.plot {
+	font-weight: bold;
+	/*color: #c47;*/
+	text-transform: none;
+	text-decoration: none;
+} 
+
+#text blockquote {
+	font-style: italic;
+	font-size: 13px;
+	line-height: 20px;
+	margin-left: 2em;
+}
+
+#text a.extern {
+	font-weight: 300;
+	padding: 0;
+	text-transform: none;
+}
+#text a.extern:hover {
+	text-decoration: underline;
+}
 #credits {
 	position: absolute;
-	bottom: 30px;
+	bottom: 25px;
 	text-align: right;
 	line-height: 18px;
 	right: 30px;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 300;
 }
 .ui-tooltip-content td { font-weight: 300; color: #444; } 
@@ -122,38 +178,40 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 
 #plot {
 	position: absolute;
-	bottom: 130px;
-	right: 30px;
-	width: 440px;
-	height: 400px;
+	bottom: 12%;
+	top: 7%;
+	background: #fff;
+	width: 43%;
+	left: 165px;
+	
 }
+
 #plotc {
-	height: 100%;
+	height: 90%;
 	width: 100%;
-	border: 1px solid #ddd;
+	border-bottom: 1px solid #444;
+	border-left: 1px solid #444;
+	
 }
-#xmenu .xmenu, #ymenu .ymenu {
-	font-weight: bold;
-	cursor: pointer;
-	display: inline;
-	padding: 0 1ex;
-}
-#xmenu .xmenu.inactive, #ymenu .ymenu.inactive {
-	color: #999!important;
+#plotmenu {
+	
+	padding: 20px 0 0;
 	font-weight: 300;
 }
-#xmenu { text-align: center; margin-top: 5px; } 
-#ymenu { 
-	position: absolute;
-	left: -220px;
-	top: 200px;
-	height: 30px;
-	width: 400px;
-	text-align: center;
-	-webkit-transform: rotate(-90deg); 
-	-moz-transform: rotate(-90deg);	
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+#plotmenu select {
+	display: inline;
+	font-size: 14px;
+	padding: 3px 10px 3px 0;
+	font-weight: bold;
+	font-family: Lato, Helvetica Neue;
 }
+#plotmenu label {
+	display: block;
+	float: left;
+	width: 160px;
+	padding: 4px 0 0 0;
+}
+
 
 .scatterplot {
 	position: relative;
@@ -164,25 +222,32 @@ body,html { background: #fff; height:100%; min-height: 650px; font-family: Lato,
 	left: 10px;
 	height: 10px;
 }
-.scatterplot .dot.hidden {
-	/*background: #ddd!important;*/
+.scatterplot .dot.focus {
+	
 }
 .scatterplot .dot.r2 { width: 4px; height: 4px; border-radius: 2px; }
 .scatterplot .dot.r3 { width: 6px; height: 6px; border-radius: 3px; }
 .scatterplot .dot.r4 { width: 8px; height: 8px; border-radius: 4px; }
 .scatterplot .dot.r5 { width: 10px; height: 10px; border-radius: 5px; }
 
-#map {
+#map, #loading {
 	background: #fff;
-	width: 50%;
-	min-width: 500px;
+	width: 45%;
 	height: 99%;
-	margin-left: 140px;
+	min-height: 550px;
+	margin-left: 170px;
+}
+#loading {
+	z-index: 20;
+	font-weight: 300;
+	font-style: italic;
+	margin-top: 25%;
+	text-align: center;
 }
 svg path { stroke-linejoin: round }
 
 svg .polygon.bg {
-	stroke: #ddd;
+	stroke: #dbdbdb;
 	stroke-width:10px;
 }
 svg .polygon.gemeinden {
@@ -205,3 +270,18 @@ svg .dotMarker:hover {
 	fill: #ff3;
 	fill-opacity: .7;
 }	
+
+#iedisclaimer {
+	background: #ffffee;
+	position: absolute;
+	top: 0;
+	left: 10%;
+	right: 10%;
+	border: 1px solid #ddb;
+	font-size: 16px;
+	font-weight: 300;
+	font-style: italic;
+	font-family: Lato;
+	padding: 1em 2em;
+	z-index: 1000;
+}

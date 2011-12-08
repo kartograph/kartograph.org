@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kartograf - rethinking maps</title>
+	<script src="../js/lib/jquery.min.js"></script>
+	<script src="../js/lib/jquery.qtip.min.js"></script>
+	<script src="../js/lib/raphael-min.js"></script>
+	<script src="../js/svgmap.js"></script>
+	<link rel="stylesheet" href="style.css" />
+	
+<script>
+	$(function() {
+		
+		// import some classes
+		window.map = new svgmap.SVGMap('#map');
+		
+		var resize = function() {
+			var c = $('#map');
+			var ratio = map.viewAB.width / map.viewAB.height;
+			c.height( c.width() / ratio );
+			map.resize();
+		};
+		
+		// $(window).resize(resize);
+		
+		map.loadMap('../maps/italy-land.svg', function(map) {
+
+			map.addLayer('graticule', 'g1');
+			map.addLayer('land', 'bg');
+			map.addLayer('land', 'bgstroke');
+			map.addLayer('context');
+			map.addLayer('ITA', 'fg');
+			
+			map.addFilter('glow', 'glow', { size: 4, color: '#D1BEB0' });
+			map.applyFilter('bg', 'glow');
+			
+			resize();
+		
+		});
+			
+			
+	});
+</script>
+</head>
+<body>
+	<div id="head">
+		<img src="kartograf.logo.png" />
+	</div>
+	<div id="map">
+		
+	</div>
+	<!--
+svgmap regions ITA --proj satellite -c --lon0 15 --lat0 35 --dist 1.1 --up 24 -g1 -q95 -p8 -w800 --tilt -2 -o italy.svg 
+svgmap layer italy.svg data/shp/10m_land --layer-id land -o ../website/demos/maps/italy-land.svg 
+	-->
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kartograf - rethinking maps</title>
+	<script src="../js/lib/jquery.min.js"></script>
+	<script src="../js/lib/jquery.qtip.min.js"></script>
+	<script src="../js/lib/jquery.assets.js"></script>
+	<script src="../js/lib/raphael-min.js"></script>
+	<script src="../js/svgmap.js"></script>
+	<link rel="stylesheet" href="style.css" />
+	
+<script>
+	$(function() {
+		
+		// imports
+		var SVGMap = svgmap.SVGMap;
+		
+	
+		window.map = new SVGMap('#map');
+		
+		var resize = function() {
+			var c = $('#map');
+			var ratio = map.viewAB.width / map.viewAB.height;
+			c.height( c.width() / ratio );
+			map.resize();
+		};
+		
+		
+		map.loadMap('../maps/usa-land.svg', function(map) {
+
+			map.addLayer('graticule', 'g1');
+			map.addLayer('land', 'bg');
+			map.addLayer('land', 'bgstroke');
+			map.addLayer('context');
+			map.addLayer('USA', 'fg');
+			
+			map.addFilter('glow', 'glow', { size: 4, color: '#D1BEB0' });
+			map.applyFilter('bg', 'glow');
+			
+			resize();
+			
+		});
+			
+			
+	});
+</script>
+</head>
+<body>
+	<div id="head">
+		<img src="kartograf.logo.png" />
+	</div>
+	<div id="map">
+		
+	</div>
+	<!--
+svgmap regions USA --proj satellite -c -l --lon0 -95 --lat0 9.5 --dist 2.1  -g5 -q95 -p5 -w800 --tilt 0 -o usa.svg 
+svgmap layer usa.svg data/shp/10m_land --layer-id land -o ../website/demos/maps/usa-land.svg 
+	-->
+</body>
+</html>

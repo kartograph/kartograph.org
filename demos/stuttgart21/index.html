@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Stuttgart 21 - Volksbegehren vs. Landtagswahl</title>
+	<script src="js/lib/jquery.min.js"></script>
+	<script src="js/lib/jquery.qtip.min.js"></script>
+	<script src="js/lib/raphael-min.js"></script>
+	<script src="js/lib/jquery.parsecsv.js"></script>
+	<script src="js/lib/jquery.assets.js"></script>
+	<script src="js/svgmap.min.js"></script>
+	<script src="plot.js"></script>
+	
+	<script src="s21map.js"></script>
+	
+	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="tooltips.css" />
+	<link href='http://fonts.googleapis.com/css?family=Lato:300,300italic,700' rel='stylesheet' type='text/css'>
+	<script type="text/javascript">
+/* <![CDATA[ */
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
+/* ]]> */
+</script>
+	
+
+</head>
+<body>
+
+	<div id="title">
+	
+		<div class="l1">Stuttgart</div>
+		<div class="l2">21</div>
+		
+		<div class="d">VOLKSBEGEHREN</div>
+		
+		
+		<div class="v map" id="contra" ><span class="contra">FÜR AUSSTIEG</span></div>
+		<div class="v map" id="pro" ><span class="pro">GEGEN AUSSTIEG</span></div>
+		<div class="v map" id="s21pc" ><span class="pro">GEGEN</span> – <span class="contra">FÜR</span></div>
+		<div class="v map" id="s21wb" >WAHLBETEILIGUNG</div>
+		<div class="d">LANDTAGSWAHL</div>
+		<div class="v map" id="ltwb" >WAHLBETEILIGUNG</div>
+		<div class="v map" id="ltmaj" >STÄRKSTE PARTEI</div>
+		<div class="v map" id="cdu-gruene">CDU – GRÜNE</div>
+		<div class="v map" id="cdu-spd">CDU – SPD</div>
+		<div class="v map" id="gruene-spd">GRÜNE – SPD</div>
+		<div class="v map" id="cdu">CDU</div>
+		<div class="v map" id="gruene">GRÜNE</div>
+		<div class="v map" id="spd">SPD</div>
+		<!--<div class="v map" id="linke">DIE LINKE</div>-->
+		
+		<div class="d">KORRELATION</div>
+		<div class="v plot" id="plot-cdu"><a href="#" class="plot" data-x="cdu" data-y="pro">CDU – GEGEN AUSSTIEG</a></div>
+		<div class="v plot" id="plot-gruene"><a href="#" class="plot" data-x="gruene" data-y="contra">GRÜNE – FÜR AUSSTIEG</a></div>
+		<div class="v plot" id="plot-spd"><a href="#" class="plot" data-x="spd" data-y="pro">SPD – GEGEN AUSSTIEG</a></div>
+		
+		
+		<!--<div class="v map" id="rep">REP</div>-->
+		
+	</div>
+	
+	<div id="loading">
+		<img src="loading.gif" style="vertical-align: middle"/>&nbsp;&nbsp;Kartogramm wird geladen..
+	</div>
+	
+	<div id="map">
+		
+	</div>
+	<div id="text">
+		<div class="intro">
+		Wo sind die Gegner und Befürworter des Bahnhofprojektes und vor allem, wen hatten sie bei der Landtagswahl gewählt?
+		</div>
+		<p>
+			Diese Infografik untersucht den Zusammenhang zwischen dem Abstimmungsverhalten beim Volksbegehren zum Bahnhofsprojekt Stuttgart 21 und der letzten Landtagswahl in Baden-Württemberg.
+		</p>
+		<p>
+			In dem Kartogramm sind alle 1112 Gemeinden von Baden-Württemberg als Kreise dargestellt. Die Größe der Kreise ist proportional zur Einwohnerzahl, d.h. je größer ein Kreis ist, desto mehr Einwohner hat die Stadt/Gemeinde. Die räumliche Anordnung der Kreise entspricht dabei in etwa der realen geografischen Lage.
+		</p>
+		<p>
+			Bei dem Volksbegehren stand der Ausstieg aus dem Finanzierungsvertrag für den Bahnhofsumbau zum Tiefbahnhof zur Abstimmung.
+		</p>
+		<h3>Auswertung der Kartogramme</h3>
+		<p>
+			Die Kartenansichten <a href="#" class="map" data-map="contra">FÜR AUSSTIEG</a> und <a href="#" class="map" data-map="pro">GEGEN AUSSTIEG</a> zeigen zunächst einmal den Anteil der Menschen, die sich <span style="color:#387BFF">für</span> oder <span style="color:#FFA042">gegen</span> den Ausstieg aus dem Finanzierungsvertrag ausgesprochen haben. Interessanterweise gab es nicht in Stuttgart sondern in Freiburg mit 66% den größten Anteil an Ausstiegsbefürwortern. Den größten Anteil an Ausstiegsgegnern gab es in Grundsheim, einer Gemeinde mit etwa 150 Wahlberechtigten und einer absoluten CDU-Mehrheit von 82%.
+		</p>
+		<p>
+			Die Karte <a href="#" class="map" data-map="s21pc">GEGEN – FÜR</a> zeigt auf einen Blick, in welchen Gemeinden es eine deutliche Mehrheit für (orange) oder gegen (blau) den Ausstieg aus dem Finanzierungsvertrag gab. In den weiß dargestellten Gemeinden halten sich Befürworter und Gegner etwa die Waage. Wie die Karte zeigt, überwiegen die Gemeinden, in denen die Mehrheit gegen den Ausstieg sind. Weniger überraschend ist, dass die <a href="#" class="map" data-map="s21wb">Wahlbeteiligung</a> um den Bahnhof herum am größten ist und mit zunehmender Entfernung abnimmt.
+		</p>
+		<p>
+			Um weitere Erkenntnisse aus den Abstimmungsergebnissen zu gewinnen, wurden sie den Ergebnissen der letzten <a href="#" class="map" data-map="ltmaj">Landtagswahl</a> gegenübergestellt. Dazu habe ich zunächst die Einzelergebnisse der Parteien <a href="#" class="map" data-map="cdu">CDU</a>, <a href="#" class="map" data-map="gruene">GRÜNE</a>, <a href="#" class="map" data-map="spd">SPD</a> und <a href="#" class="map" data-map="fdp">FDP</a> dargestellt. Da sich die Karten allerdings nur schwer vergleichen lassen, habe ich auch in diesem Fall Gegenüberstellungen zwischen den drei stärksten Parteien ergänzt.
+			
+		<p>
+			So zeigt etwa die Karte <a href="#" class="map" data-map="cdu-gruene">CDU – GRÜNE</a> erwartungsgemäß auffällige Ähnlichkeiten zur <a href="#" class="map" data-map="s21pc">GEGEN – FÜR</a> Verteilung des Volksbegehren. Die Gegenüberstellung zwischen <a href="#" class="map" data-map="gruene-spd">GRÜNEN - SPD</a> dürfte hingegen eher für Wahlstrategen von Interesse sein.
+		</p>
+		<h3>Korrelationsanalyse mit Scatterplots</h3>
+
+		<p>
+			Zur genaueren Untersuchung des Zusammenhangs zwischen Parteipräferenz und Volksentscheid eignen sich sogenannte Scatterplots. Stellt man beispielsweise den Anteil der Bahnhofsgegner den Wahlergebnissen der GRÜNEN gegenüber, zeigt sich, dass es zwischen beiden einen starken Zusammenhang gibt: <a href="#" class="plot" data-x="gruene" data-y="contra">Grünen-Wähler vs. Ausstiegsbefürworter</a>. Umgekehrt gibt es erwartungsgemäß auch eine starke Korrelation zwischen <a href="#" class="plot" data-x="cdu" data-y="pro">CDU-Wählern und Ausstiegsgegnern</a>.
+		</p>
+		<p>
+			Besonders interessant erscheint mit in dem Zusammenhang aber die Auswertung der Korrelation zwischen <a href="#" class="plot" data-x="spd" data-y="pro">SPD-Wählern und Ausstiegsgegnern</a>. Angesichts der Zustimmung zum Bahnhofsprojekt seitens der SPD sollte man eigentlich eine Korrelation erwarten. Das ist jedoch eindeutig nicht der Fall ist, eher sieht es nach einer <a href="#" class="plot" data-x="spd" data-y="contra">Korrelation mit den Ausstiegsbefürwortern</a> aus. Dies deutet auf eine Diskrepanz zwischen Parteiführung und SPD-Wählern hin. Im Gegensatz dazu zeigt beispielsweise die Gegenüberstellung von <a href="#" class="plot" data-x="fdp" data-y="pro">FDP-Wählern und Ausstiegsgegnern</a> gar keine Korrelation.
+		</p>
+		<hr style="border:0; border-top: 1px solid #bbb;" />
+		<p>
+			UPDATE: Von der Redaktion der Webseite <a class="extern" target="_blank" href="http://www.bei-abriss-aufstand.de/">Bei Abriss Aufstand</a> wurde die folgende <a class="extern" target="_blank" href="http://www.bei-abriss-aufstand.de/2011/12/01/wo-sind-die-gegner-und-befurworter-von-stuttgart-21">Anmerkung ergänzt</a>:
+			<blockquote>
+			“Unter den deutschen Ländern hat Baden-Württemberg den höchsten Ausländeranteil, und die bundesweite regionale Verteilung zeigt, dass in diesem Bundesland die meisten Deutschen mit Migrationshintergrund leben. Rund 1,2 Millionen Menschen besitzen (laut Statistik von 2010) in <b>Baden-Württemberg</b> einen ausländischen Pass, das ist jeder neunte Einwohner. Hiervon sind rund 450 000 Wahlberechtigte <a class="extern" target="_blank" href="http://www.statistikportal.de/Europa/EUbuerger.asp">EU-Bürger</a> die zur <a class="extern" target="_blank" href="http://www.landtagswahl-bw.de/wahlrecht_faq.html">Landtagswahl</a>, nicht jedoch zur Volksabstimmung zugelassen werden - damit entspricht ein Vergleich der Landtagswahl nicht dem Ergebnis dieser Volksabstimmung.”
+			</blockquote>
+		</p>
+	</div>
+	<div id="legend">
+		<div class="c"><div class="v map"></div></div>
+		<div class="c"><div class="v map"></div></div>
+		<div class="c"><div class="v map"></div></div>
+		<div class="c"><div class="v map"></div></div>
+		<div class="c"><div class="v map"></div></div>
+	</div>
+	<div id="plot">
+		<div id="plotc">
+		
+		</div>
+		<div id="plotmenu">
+			<label for="selectx">Horizontale Achse:</label><select id="selectx"><option>CDU</option></select><br />
+			<label for="selecty">Vertikale Achse:</label><select id="selecty"></select>
+		</div>
+		
+	</div>
+	<div id="debug" style="position:absolute;top:0;left:0;width:100%;height:50px">
+	
+	</div>
+	
+	
+
+	<!--[if IE 8]>
+<div id="iedisclaimer">Diese Seite wurde bisher aus Zeitgründen noch nicht mit dem Internet Explorer getestet. Ich empfehle, solange <a href="http://www.mozilla.org/de/firefox/fx/?from=getfirefox">Firefox</a> oder <a href="http://www.google.com/chrome">Chrome</a> zu benutzen. </div>
+	<![endif]-->
+	
+	
+	<div id="credits">
+	Idee &amp; Visualisierung: <a href="http://vis4.net/blog/">Gregor Aisch</a>&nbsp;&nbsp;&nbsp;::&nbsp;&nbsp; <a title="Statistisches Landesamt Baden-Württemberg" href="http://www.statistik-bw.de/Wahlen/Volksabstimmung_2011/">Quelle</a>&nbsp;&nbsp;&nbsp;::&nbsp;&nbsp; 
+	<a href="http://vis4.net/labs/177#respond">Feedback</a>&nbsp;&nbsp;::&nbsp;&nbsp;<span style="position:relative;top:6px">
+	<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://vis4.net/labs/stuttgart21/"></a>
+<noscript><a href="http://flattr.com/thing/444388/Infografik-Stuttgart-21-Volksbegehren-vs-Landtagswahl" target="_blank">
+<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript></span>
+	</div>
+	<!-- Piwik -->
+<script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.vis4.net/" : "http://piwik.vis4.net/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="http://piwik.vis4.net/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+</body>
+</html>

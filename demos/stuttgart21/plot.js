@@ -19,6 +19,7 @@
   */
 
   var Dot, ScatterPlot, root, _ref;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   root = typeof exports !== "undefined" && exports !== null ? exports : this;
 
@@ -27,6 +28,8 @@
   ScatterPlot = (function() {
 
     function ScatterPlot(container, opts) {
+      this._unfocus = __bind(this._unfocus, this);
+      this._focus = __bind(this._focus, this);
       var me;
       me = this;
       me.container = $(container);
@@ -79,6 +82,7 @@
     ScatterPlot.prototype.layout = function() {
       var dot, id, me, x, xaxis, xf, y, yaxis, yf, _ref2;
       me = this;
+      me.resize();
       xaxis = me.xaxis;
       yaxis = me.yaxis;
       if ((xaxis != null) && (yaxis != null)) {
@@ -97,6 +101,9 @@
     ScatterPlot.prototype.setScale = function(scale, key) {
       var col, dot, id, me, _ref2, _results;
       me = this;
+      me.lastScale = scale;
+      me.lastKey = key;
+      scale.parseData(me.table, key);
       _ref2 = me.dots;
       _results = [];
       for (id in _ref2) {
@@ -105,6 +112,57 @@
         _results.push(dot.setColor(col));
       }
       return _results;
+    };
+
+    ScatterPlot.prototype.focus = function(ids) {
+      var me;
+      me = this;
+      me.lastFocusIds = ids;
+      clearTimeout(me.focusTimer);
+      me.focusTimer = setTimeout(me._focus, 500);
+      return clearTimeout(me.unfocusTimer);
+    };
+
+    ScatterPlot.prototype._focus = function(ids) {
+      var dot, id, me, _ref2, _results;
+      me = this;
+      _ref2 = me.dots;
+      _results = [];
+      for (id in _ref2) {
+        dot = _ref2[id];
+        if (me.lastFocusIds.indexOf(id) < 0) {
+          _results.push(dot.unfocus('#eee'));
+        } else {
+          _results.push(dot.focus('#c03'));
+        }
+      }
+      return _results;
+    };
+
+    ScatterPlot.prototype.unfocus = function() {
+      var me;
+      me = this;
+      clearTimeout(me.focusTimer);
+      return me.unfocusTimer = setTimeout(me._unfocus, 100);
+    };
+
+    ScatterPlot.prototype._unfocus = function() {
+      var dot, id, me, _ref2, _results;
+      me = this;
+      _ref2 = me.dots;
+      _results = [];
+      for (id in _ref2) {
+        dot = _ref2[id];
+        _results.push(dot.unfocus(me.lastScale.getColor(dot.data[me.lastKey])));
+      }
+      return _results;
+    };
+
+    ScatterPlot.prototype.resize = function() {
+      var me;
+      me = this;
+      me.width = me.container.width();
+      return me.height = me.container.height();
     };
 
     return ScatterPlot;
@@ -119,7 +177,7 @@
       var div, me;
       me = this;
       me.data = data;
-      me.radius = 3;
+      me.radius = 4;
       div = $('<div class="dot r' + me.radius + ' ' + id + '"></div>');
       container.append(div);
       me.div = div;
@@ -138,6 +196,32 @@
       var me;
       me = this;
       return me.div.css({
+        background: col
+      });
+    };
+
+    Dot.prototype.focus = function(col) {
+      var me, s;
+      me = this;
+      s = (me.radius + 1) * 2 + 'px';
+      me.setColor(col);
+      return me.div.css({
+        'z-index': 10,
+        width: s,
+        height: s,
+        'border-radius': (me.radius + 1) + 'px'
+      });
+    };
+
+    Dot.prototype.unfocus = function(col) {
+      var me, s;
+      me = this;
+      s = me.radius * 2 + 'px';
+      return me.div.css({
+        'z-index': 0,
+        width: s,
+        height: s,
+        'border-radius': me.radius + 'px',
         background: col
       });
     };

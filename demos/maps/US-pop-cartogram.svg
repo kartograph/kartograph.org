@@ -1,0 +1,125 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg style="stroke-width:0.7pt; stroke-linejoin: round; stroke:#444; fill:#eee;" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, FreeSans, Sans, sans, sans-serif" height="370px" viewBox="0 0 700 370" width="700px" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 700 370">
+
+<metadata>
+
+<views>
+
+<view padding="80" h="370.388058785" w="700">
+
+<proj lon0="-98.6" id="laea" lat0="40" />
+
+<bbox y="885.8" h="239.15" w="451.97" x="796.1" />
+
+</view>
+
+</views>
+
+</metadata>
+
+<g id="states">
+
+<circle cy="272.020493846" cx="451.933732218" r="17.9319186725" data-key="US.AL" data-population="4802982.0" />
+
+<circle cy="90.3496846893" cx="615.121578867" r="20.9561460323" data-key="US.MA" data-population="6559644.0" />
+
+<circle cy="89.5687315079" cx="367.465477919" r="18.8633130335" data-key="US.MN" data-population="5314879.0" />
+
+<circle cy="74.3128136854" cx="220.254134958" r="8.15934567635" data-key="US.MT" data-population="994416.0" />
+
+<circle cy="75.1337765707" cx="307.338791169" r="6.72688666258" data-key="US.ND" data-population="675905.0" />
+
+<circle cy="103.117989644" cx="166.108015428" r="10.2637134036" data-key="US.ID" data-population="1573499.0" />
+
+<circle cy="50.0" cx="121.414512589" r="21.2633418301" data-key="US.WA" data-population="6753369.0" />
+
+<circle cy="248.018609405" cx="174.964959764" r="20.7200950138" data-key="US.AZ" data-population="6412700.0" />
+
+<circle cy="195.570087599" cx="85.9044909256" r="50.0" data-key="US.CA" data-population="37341989.0" />
+
+<circle cy="190.163596015" cx="249.80288983" r="18.184896834" data-key="US.CO" data-population="4939456.0" />
+
+<circle cy="163.454143464" cx="140.647361669" r="13.46822642" data-key="US.NV" data-population="2709432.0" />
+
+<circle cy="253.383840184" cx="238.616172079" r="11.7644112352" data-key="US.NM" data-population="2067273.0" />
+
+<circle cy="96.4930441305" cx="107.571679894" r="16.0517729211" data-key="US.OR" data-population="3848606.0" />
+
+<circle cy="178.207947513" cx="184.595025619" r="13.6198124593" data-key="US.UT" data-population="2770765.0" />
+
+<circle cy="132.605827104" cx="233.860920127" r="6.16822360542" data-key="US.WY" data-population="568300.0" />
+
+<circle cy="247.84792415" cx="395.476306368" r="13.9966929679" data-key="US.AR" data-population="2926229.0" />
+
+<circle cy="143.520399592" cx="367.835532105" r="14.2985056718" data-key="US.IA" data-population="3053787.0" />
+
+<circle cy="200.262971852" cx="327.427838004" r="13.8466147487" data-key="US.KS" data-population="2863813.0" />
+
+<circle cy="207.520471555" cx="384.812213711" r="20.0614311675" data-key="US.MO" data-population="6011478.0" />
+
+<circle cy="157.696474338" cx="312.436370073" r="11.0742231863" data-key="US.NE" data-population="1831825.0" />
+
+<circle cy="240.592641341" cx="337.395818688" r="15.876214776" data-key="US.OK" data-population="3764882.0" />
+
+<circle cy="117.035963763" cx="308.74672481" r="7.40823768052" data-key="US.SD" data-population="819761.0" />
+
+<circle cy="301.727293801" cx="403.085802642" r="17.4608741512" data-key="US.LA" data-population="4553962.0" />
+
+<circle cy="297.569903024" cx="316.01731235" r="41.1301513168" data-key="US.TX" data-population="25268418.0" />
+
+<circle cy="116.291144397" cx="584.520905152" r="15.4850110384" data-key="US.CT" data-population="3581628.0" />
+
+<circle cy="72.4151872039" cx="590.622564982" r="9.40580188664" data-key="US.NH" data-population="1321445.0" />
+
+<circle cy="119.64417424" cx="613.141211504" r="8.4052056557" data-key="US.RI" data-population="1055247.0" />
+
+<circle cy="81.6353176547" cx="577.666406334" r="6.49617448227" data-key="US.VT" data-population="630337.0" />
+
+<circle cy="327.355891129" cx="525.355090102" r="35.5722277418" data-key="US.FL" data-population="18900773.0" />
+
+<circle cy="274.149848523" cx="495.333015937" r="25.5195712762" data-key="US.GA" data-population="9727566.0" />
+
+<circle cy="275.074376781" cx="420.027094446" r="14.1205342034" data-key="US.MS" data-population="2978240.0" />
+
+<circle cy="255.146537212" cx="534.079773566" r="17.6363908644" data-key="US.SC" data-population="4645975.0" />
+
+<circle cy="163.246616428" cx="406.769043714" r="29.347135083" data-key="US.IL" data-population="12864380.0" />
+
+<circle cy="186.843086353" cx="451.089284984" r="20.8631943241" data-key="US.IN" data-population="6501582.0" />
+
+<circle cy="205.223589867" cx="484.267950561" r="17.0665665358" data-key="US.KY" data-population="4350606.0" />
+
+<circle cy="228.573616763" cx="567.813567292" r="25.3064658215" data-key="US.NC" data-population="9565781.0" />
+
+<circle cy="147.153015642" cx="479.297504665" r="27.8297761193" data-key="US.OH" data-population="11568495.0" />
+
+<circle cy="234.296788929" cx="460.072689648" r="20.6597972862" data-key="US.TN" data-population="6375431.0" />
+
+<circle cy="191.052003191" cx="537.07582356" r="23.1973379648" data-key="US.VA" data-population="8037736.0" />
+
+<circle cy="110.470170864" cx="409.938173324" r="19.5317550194" data-key="US.WI" data-population="5698230.0" />
+
+<circle cy="177.940345014" cx="505.320373385" r="11.1585086404" data-key="US.WV" data-population="1859815.0" />
+
+<circle cy="179.892171956" cx="591.089393362" r="7.76611881524" data-key="US.DE" data-population="900877.0" />
+
+<circle cy="170.572619725" cx="549.861682028" r="0.0" data-key="US.DC" data-population="0.0" />
+
+<circle cy="162.959015025" cx="569.478920976" r="19.6882855735" data-key="US.MD" data-population="5789929.0" />
+
+<circle cy="152.316861467" cx="612.142668718" r="24.2827367443" data-key="US.NJ" data-population="8807501.0" />
+
+<circle cy="64.5595036369" cx="536.630941482" r="36.0585027868" data-key="US.NY" data-population="19421055.0" />
+
+<circle cy="129.746896898" cx="533.605121199" r="29.1990778346" data-key="US.PA" data-population="12734905.0" />
+
+<circle cy="55.2481306235" cx="605.504512984" r="9.44709777151" data-key="US.ME" data-population="1333074.0" />
+
+<circle cy="99.9189307984" cx="453.983638366" r="25.7598739822" data-key="US.MI" data-population="9911626.0" />
+
+</g>
+
+</svg>
+
