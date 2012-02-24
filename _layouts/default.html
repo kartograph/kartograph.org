@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>{{ page.title }}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="description" content="">
+   <meta name="author" content="">
+
+	<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+   <!-- Le fav and touch icons -->
+   <link rel="shortcut icon" href="images/favicon.ico">
+   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+   <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+   <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<h1>Header</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span9 offset3">
+				<div class="hero-unit">                                                                                                                                     
+   				<h1>{{ page.headline }}</h1>
+   				<p>{{ page.tagline }}</p>                                                                                                                           
+				</div> 
+			</div>
+		</div>
+		<div class="row">
+			<div class="span3 menu">
+				<ul class="nav nav-tabs nav-stacked">
+					<li><a href="index.html">Hello Kartograph</a></li>
+					<li><a href="showcase.html">Showcase</a></li>
+					<li><a href="http://github.com/kartograph/">Download</a></li>
+				</ul>
+			</div>
+			<div class="span9">
+				{{ content }}
+			</div>
+		</div>
+	</div> <!-- /container -->
+
+</body>
+</html>
+

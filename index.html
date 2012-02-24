@@ -1,74 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>svgmap</title>
-<script src="lib/jquery.min.js"></script>
-<style>
-	body,html { background: #fff; height:100%; font-family: Lato, Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0; font-weight: 300; }
-	
-	.page {
-		width: 1000px; margin: 0 auto;
-	}
-	.head {
-		margin-top: 40px;
-		margin-bottom: 40px;
-	}
-	.head .title {
-		float: left;
-		font-size: 28pt;
-		font-weight: bold;
-		width: 200px;
-		padding-right: 20px;
-	}
-	b { font-weight: 700; }
-	.head .menu {
-		padding-top: 20px;
-		font-weight: 600;
-	}
-	.head .menu a {
-		padding-right: 2em;
-	}
-	.head .menu a.todo {
-		color: #ddd;
-	}
-	a { text-decoration: none; color:#BF3F3F; font-weight: bold }
-	.left { width: 200px; float: left;  }
-	.left .about { font-size: 17pt; line-height: 1.3em; }
-	.main { margin-left: 200px; line-height: 1.5em; font-size: 14pt; padding-left: 20px; }
-	.main iframe { border: 0px solid #ccc; width: 100%; height: 500px; }
-</style>
-</head>
-<body>
-	<div class="page">
-		<div class="head">
-			<div class="title">svgmap</div>
-			<div class="menu">
-				<a href="#">Overview</a>
-				<a class="todo">Examples</a>
-				<a class="todo">Creating Maps</a>
-				<a class="todo">Visualizing Maps</a>
-				<a class="todo">Download</a>
-			</div>
-		</div>
-		<div class="left">
-			<div class="about">
-				A free library for beautiful large-scale vector maps using SVG.
-			</div>
-			<div>Follow @svgmap or The first release of svgmap is.</div>
-		</div>
-		<div class="main">
-			
-			<iframe marginwidth="0" marginheight="0" scrolling="no" src="demos/usa/"></iframe>
-			<p><b>svgmap</b> is a free library for thematic mapping <em>beyond</em> the limitations of tile-based Mercator maps.</p> 
-			
-			<p>The main idea behind svgmap is to divide the mapping process in two parts:</p>
-			
-			<p>At first, the Python-side of svgmap (<a href="https://github.com/svgmap/svgmap.py"><b>svgmap.py</b></a>) generates SVG map from high quality <a href="http://www.naturalearthdata.com/">Natural Earth shapefiles</a>. The SVG maps contain information on the used map projection as well as metadata for every displayed geometry, like country-codes. It allows you to literally control every parameter to get excactly the map that you want.</p>
-			
-			<p>The second part is a light-weight JavaScript library (<a href="https://github.com/svgmap/svgmap.js"><b>svgmap.js</b></a>) which loads the SVG maps and allows you to make them interactive as well as to connect it with your datasets. The appearance of the maps is highly customizable using CSS. To display the maps, no server-side components are needed, so you're completely indepentend. It's just you, your SVG map and your data.</p>
-			
-			<p><b>svgmap</b> is free software licensed under GPLv3.</p>
-		</div>
+---
+layout: default
+title: Kartograph
+headline: Goodbye, Mercator!
+tagline: Nope, that's not the true size of Greenland..
+---
+
+<div class="row">
+	<div class="span5">
+		<h1>Hello Kartograph</h1>
+		<p>Kartograph is a </p>
 	</div>
-</body>
-</html>
+	<div class="span4">
+		<h1>What’s in the box?</h1>
+		<p>Here’s a short list of the wonderful features included in Kartograph.</p>
+		<ul>
+			<li>13 ready to use map projections</li>
+			<li>Choropleth maps for grown-ups</li>
+			<li>3D map projection</li>
+			<li>Symbol maps</li>
+			<li>Hell, it even works in Internet Explorer 7 (at least 90%)</li>
+		</ul>
+	</div>
+</div>
+
+<div class="page-header">
+	<h1>Who is it for?</h1>
+</div>
+<p>Kartograph is made for</p>
+<ul>
+<li>Designer, who want to have the complete freedom</li>
+<li>Data Journalists, who want </li>
+</ul>
+
