@@ -1,30 +1,20 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>{{ page.title }}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta name="description" content="">
-   <meta name="author" content="">
-
-	<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
-	<link rel="stylesheet" href="css/k.css" type="text/css" />
-   <!-- Le fav and touch icons -->
-   <link rel="shortcut icon" href="images/favicon.ico">
-   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-   <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-   <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-</head>
-<body>
-
+---
+layout: core
+---
 	<div class="container">
 		<div class="row">
-			<div class="span12">
-				<h1>Header</h1>
+			<div class="span6 offset6">
+				<ul class="nav nav-tabs">
+					<li>Contact</li>
+				</ul>
 			</div>
 		</div>
 		<div class="row">
-			<div class="span9 offset3">
+			<div class="span3 k-about">
+				<a href="/"><img src="/img/logotype.png" alt="Kartograph" /></a>
+				<p class="tagline">A simple and lightweight framework for creating beautiful, interactive vector maps.</p>
+			</div>
+			<div class="span9">
 				<div class="hero-unit">                                                                                                                                     
    				<h1>{{ page.headline }}</h1>
    				<p>{{ page.tagline }}</p>                                                                                                                           
@@ -34,17 +24,15 @@
 		<div class="row">
 			<div class="span3 k-menu">
 				<ul class="nav nav-tabs nav-stacked">
-					<li><a href="index.html">Hello Kartograph</a></li>
-					<li><a href="showcase.html">Showcase</a></li>
-					<li><a href="http://github.com/kartograph/">Download</a></li>
+					<li><a href="/">Hello Kartograph</a></li>
+					<li><a href="/showcase/">Demonstration</a></li>
+					<li><a href="/tech.html">How does is work?</a></li>
+					<li><a href="http://github.com/kartograph/">Fork on Github</a></li>
+					<li><a href="http://twitter.com/#!/kartographjs/">Say Hi on Twitter</a></li>
 				</ul>
 			</div>
 			<div class="span9">
 				{{ content }}
 			</div>
 		</div>
-	</div> <!-- /container -->
-
-</body>
-</html>
-
+	</div>

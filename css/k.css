@@ -1,0 +1,25 @@
+.k-about .tagline {
+	font-style: italic;
+	font-size: 14px;
+	margin-left: 55px;
+	color: #888;
+}
+
+.k-menu ul.nav {
+	margin-left: 0;
+}
+
+.k-menu ul.nav li {
+	list-style: none;
+	font-size: 18px;
+	line-height: 20px;
+	margin-bottom: 1em;
+}
+
+.hero-unit h1 {
+	font-weight: 100;
+}
+
+.hero-unit p {
+	margin-left: 0.4em;
+}

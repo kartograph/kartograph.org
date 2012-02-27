@@ -1,0 +1,46 @@
+---
+layout: demo
+title: Vintage Map of Italy
+---
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+<script>
+	$(function() {
+		
+		// import some classes
+		window.map = $K.map('#map');
+		
+		var resize = function() {
+			var c = $('#map');
+			var ratio = map.viewAB.width / map.viewAB.height;
+			c.height( c.width() / ratio );
+			map.resize();
+		};
+		
+		$(window).resize(resize);
+		
+		map.loadMap('italy.svg', function(map) {
+
+			map.addLayer('graticule', 'g1');
+			map.addLayer('land', 'bg');
+			map.addLayer('land', 'bgstroke');
+			map.addLayer('context');
+			map.addLayer('ITA', 'fg');
+			
+			map.addFilter('glow', 'glow', { size: 4, color: '#D1BEB0', inner: true });
+			map.applyFilter('bg', 'glow');
+			
+			resize();
+		
+		}, { padding: -10 });
+			
+			
+	});
+</script>
+
+
+<div id="map">
+	
+</div>
+
