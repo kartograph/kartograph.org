@@ -1,0 +1,39 @@
+
+#map-container {
+	background: #e99;
+}
+
+#map {
+	margin: 10px;
+	background: #eee;
+	border: 1px solid #004;
+}
+
+#map svg {
+	position: static!important;
+}
+
+#map .sea {
+	stroke: none;
+	fill: #bdf;
+}
+
+#map .sea-outline {
+	stroke-width: 1.4px;
+	fill: none;
+	stroke: #459;
+}
+
+#map .countries {
+	stroke: #644;
+	stroke-width: .5px;
+	fill: #fff;
+}
+
+#map .countries:hover {
+	fill: #e88;
+}
+
+#map .graticule {
+	stroke-width: .2px;
+}
