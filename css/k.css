@@ -23,3 +23,7 @@
 .hero-unit p {
 	margin-left: 0.4em;
 }
+
+.nav-tabs.nav-stacked > li > a {
+	border: 0;	
+}

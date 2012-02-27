@@ -1,11 +1,17 @@
 {
 	"proj": {
-		"id": "robinson",
-		"flip": 1
+		"id": "naturalearth",
+		"flip": 1,
+		"lon0": 10
 	},
 	"layers": [{
+		"special": "sea"
+	}, {
 		"id": "countries",
 		"src": "../shp/naturalearth/50m-admin0-countries/ne_50m_admin_0_countries.shp",
 		"attributes": ["ISO_A3", "ISO_A2"]
-	}]
+	}],
+	"export": {
+		"round": 1
+	}
 }

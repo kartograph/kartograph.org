@@ -8,6 +8,6 @@ $(function() {
 		map.addLayer('graticule');
 		map.addLayer('countries');
 		map.addLayer('sea', 'sea-outline');
-	}, { padding:-18 });
+	});
 
 });

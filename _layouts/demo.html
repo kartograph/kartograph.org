@@ -1,0 +1,26 @@
+---
+layout: core
+---
+
+<script type="text/javascript" src="http://assets.kartograph.org/vendor/raphael.min.js"></script>
+<script type="text/javascript" src="http://assets.kartograph.org/kartograph.min.js"></script>
+<script type="text/javascript" src="http://assets.kartograph.org/chroma.min.js"></script>
+
+<div class="container">
+	<div class="row">
+		<div class="span4" style="margin-top:20px">
+			<a href="/"><img src="/img/logotype.png" alt="Kartograph" /></a>
+		</div>
+		<div class="span3 offset5" style="margin-top:30px">
+			<ul class="pager">
+				<li class="next">
+					<a href="/showcase/{{ page.next }}">Next &rarr;</a>
+				</li>
+				<li class="next">
+					<a style="margin-right:13px" href="/showcase/{{ page.prev }}">&larr; Previous</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	{{ content }}
+</div>

@@ -1,0 +1,13 @@
+---
+layout: default
+---
+
+	<ul class="thumbnails">
+	{% for item in page.showcase %}
+		<li class="span3">
+			<a href="/showcase/{{ item }}/" class="thumbnail">
+				<img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
