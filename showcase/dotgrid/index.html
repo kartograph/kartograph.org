@@ -46,7 +46,7 @@ $(function() {
 			key: 'id',
 			gridsize: 11,
 			size: dotsize,
-			duration: 300,
+			duration: $.browser.webkit ? 300 : 0,
 			style: function(d) {
 				return {
 					fill: '#804',
