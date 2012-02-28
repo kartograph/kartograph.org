@@ -28,7 +28,8 @@
 .k-intro p {
 	font-size: 15px;
 	font-weight: 300;
-	line-height: 20px;
+	line-height: 21px;
+	margin-bottom: 1em;
 }
 
 .nav-tabs.nav-stacked > li > a {
