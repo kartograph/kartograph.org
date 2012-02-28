@@ -3,6 +3,7 @@
 	font-size: 14px;
 	margin-left: 55px;
 	color: #888;
+	font-weight: 300;
 }
 
 .k-menu ul.nav {
@@ -22,6 +23,12 @@
 
 .hero-unit p {
 	margin-left: 0.4em;
+}
+
+.k-intro p {
+	font-size: 15px;
+	font-weight: 300;
+	line-height: 20px;
 }
 
 .nav-tabs.nav-stacked > li > a {

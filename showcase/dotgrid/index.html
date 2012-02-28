@@ -7,7 +7,7 @@ title: Dot Grid Maps
 
 $(function() {
 	var map, 
-		colorscale,
+		scale, max_dot_size,
 		dep_data,
 		w = $('#map').parent().width();
 	
@@ -33,26 +33,37 @@ $(function() {
 	 */
 	function updateMap() {
 		
-		
+		var 
+			scale_type = $('.scale.btn-primary').data('type'),
+			scale = kartograph.scale[scale_type](dep_data, 'density'),
+			max_dot_size = Number($('.scale.btn-primary').data('mds')),
+			dotsize = function(d) {
+				return 1+Math.sqrt(scale(d.density))*max_dot_size;
+			};
 		
 		map.dotgrid({
 			data: dep_data,
 			key: 'id',
 			gridsize: 11,
-			size: function(d) {
-				return Math.sqrt(d.density/3); 
-			},
+			size: dotsize,
+			duration: 300,
 			style: function(d) {
 				return {
 					fill: '#804',
-					'fill-opacity': 1 - (Math.sqrt(d.density/3) > 20 ? .7 : 0),
+					'fill-opacity': 1 - (dotsize(d) > 30 ? .7 : 0),
 					stroke: '#fff',
-					'stroke-width': .5
+					'stroke-width': .34
 				}
 			}
 		});
 	}
 	
+	
+	$('.btn.scale').click(function(event) {
+		$('.btn.scale').removeClass('btn-primary');
+		$(event.target).addClass('btn-primary');
+		updateMap();
+	});
 });
 </script>
 
@@ -76,9 +87,10 @@ $(function() {
 		</p>
 		<h3>Scale</h3>
 		<p>
-			<a class="scale btn btn-primary" data-value="q">Quantiles</a>
-			<a class="scale btn" data-value="e">Equidistant</a>
-			<a class="scale btn" data-value="k">k-Means</a>
+			<a class="scale btn btn-primary" data-type="linear" data-mds="60">Linear</a>
+			<a class="scale btn" data-type="quantile" data-mds="8">Quantiles</a>
+			<a class="scale btn" data-type="log" data-mds="10">Logarithmic</a>
+			
 		</p>
 	</div>
 </div>
