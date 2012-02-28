@@ -1,0 +1,18 @@
+{
+	"proj": { "id": "laea" },
+	"layers": [{
+		"id": "departments",
+		"src": "../shp/gadm/FRA/FRA_adm2.shp",
+		"attributes": {
+			"ID_2": "id"
+		}
+	}],
+	"bounds": {
+		"mode": "bbox",
+		"data": [-4.5, 42.2, 8, 51]
+	},
+	"export": {
+		"height": 500,
+		"round": 1
+	}
+}

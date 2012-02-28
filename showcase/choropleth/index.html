@@ -1,0 +1,101 @@
+---
+layout: showcase
+title: Choropleth Maps
+---
+
+<script type="text/javascript">
+
+$(function() {
+	var map, 
+		colorscale,
+		dep_data,
+		w = $('#map').parent().width();
+	
+	$.ajax({ 
+		url: 'departments.json', 
+		dataType: 'json',
+		success: function(data) {
+			dep_data = data;
+
+			map = $K.map('#map', w, w);	
+			map.loadMap('france-departments.svg', function() {	
+				map.addLayer({
+					id: 'departments',
+					key: 'id'
+				});
+				updateMap();
+			});
+		}
+	});
+	
+	/*
+	 * update map colors
+	 */
+	function updateMap() {
+		var prop = $('.measure.btn-primary').data('value'),
+			scale = $('.scale.btn-primary').data('value');	
+			
+		colorscale = new chroma.ColorScale({
+			colors: chroma.brewer.YlGnBu,
+			limits: chroma.limits(dep_data, scale, 7, prop)
+		});
+		map.choropleth({
+			data: dep_data,
+			key: 'id',
+			colors: function(d) {
+				if (d == null) return '#fff';
+				return colorscale.getColor(d[prop]);
+			},
+			duration: 300
+		});
+	}
+	
+	// init user interface
+	$('.btn.measure').click(function(event) {
+		$('.btn.measure').removeClass('btn-primary');
+		$(event.target).addClass('btn-primary');
+		updateMap();
+	});
+	
+	$('.btn.scale').click(function(event) {
+		$('.btn.scale').removeClass('btn-primary');
+		$(event.target).addClass('btn-primary');
+		updateMap();
+	});
+});
+</script>
+
+<style>
+#map path { stroke-width: 0.5px; }
+</style>
+
+<div class="row">
+	<div class="span7">
+		<div id="map">&nbsp;</div>
+	</div>
+	<div class="span5">
+		<div class="page-header">
+			<h1>Choropleth Maps</h1>
+		</div>
+		<p>
+		This choropleth map shows population data for each of the departements of metropolean France. The colors are taken from ColorBrewer.
+		</p>
+		<p>
+		In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived. 
+		</p>
+		<p>
+		Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.
+		</p>
+		<h3>Measure</h3>
+		<p>
+			<a class="measure btn btn-primary" data-value="density">Population Density</a>
+			<a class="measure btn" data-value="pop">Population</a>
+		</p>
+		<h3>Scale</h3>
+		<p>
+			<a class="scale btn btn-primary" data-value="q">Quantiles</a>
+			<a class="scale btn" data-value="e">Equidistant</a>
+			<a class="scale btn" data-value="k">k-Means</a>
+		</p>
+	</div>
+</div>

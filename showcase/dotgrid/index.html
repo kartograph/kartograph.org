@@ -1,0 +1,84 @@
+---
+layout: showcase
+title: Dot Grid Maps
+---
+
+<script type="text/javascript">
+
+$(function() {
+	var map, 
+		colorscale,
+		dep_data,
+		w = $('#map').parent().width();
+	
+	$.ajax({ 
+		url: 'departments.json', 
+		dataType: 'json',
+		success: function(data) {
+			dep_data = data;
+
+			window.m = map = $K.map('#map', w, w);	
+			map.loadMap('france-departments.svg', function() {	
+				map.addLayer({
+					id: 'departments',
+					key: 'id'
+				});
+				updateMap();
+			});
+		}
+	});
+	
+	/*
+	 * update map colors
+	 */
+	function updateMap() {
+		
+		
+		
+		map.dotgrid({
+			data: dep_data,
+			key: 'id',
+			gridsize: 11,
+			size: function(d) {
+				return Math.sqrt(d.density/3); 
+			},
+			style: function(d) {
+				return {
+					fill: '#804',
+					'fill-opacity': 1 - (Math.sqrt(d.density/3) > 20 ? .7 : 0),
+					stroke: '#fff',
+					'stroke-width': .5
+				}
+			}
+		});
+	}
+	
+});
+</script>
+
+<style>
+#map path { stroke-width: 0.3px; }
+</style>
+
+<div class="row">
+	<div class="span7">
+		<div id="map"></div>
+	</div>
+	<div class="span5">
+		<div class="page-header">
+			<h1>Dot Grid Map</h1>
+		</div>
+		<p>
+		In 1967, the French cartographer <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jaques Bertin</a> suggested the use of graduated sizes in a regular pattern as alternative to <a href="/showcase/choropleth/">chroropleth maps</a>.
+		</p>
+		<p>
+		The most notable advantage is that you no longer need to choose between showing the quantity or density of a distribution, since the regular pattern shows both at the same time. 
+		</p>
+		<h3>Scale</h3>
+		<p>
+			<a class="scale btn btn-primary" data-value="q">Quantiles</a>
+			<a class="scale btn" data-value="e">Equidistant</a>
+			<a class="scale btn" data-value="k">k-Means</a>
+		</p>
+	</div>
+</div>
