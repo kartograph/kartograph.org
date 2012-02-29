@@ -1,0 +1,92 @@
+---
+layout: showcase
+title: Bubble Map
+prev: dotgrid
+next: satellite
+---
+
+<script type="text/javascript">
+$(function() {
+	var map, c, scale, updateMap, symbols;
+
+	c = $('#map');
+	c.height(c.width()*.65);
+
+	map = window.m = $K.map('#map');
+	
+	map.loadMap('map-usa.svg', function() {
+		map.addLayer('usa');
+
+		$.getJSON('us-crime-cities.json', function(crimeCities) {
+			
+			$.each(crimeCities, function(i,city) {
+				$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
+					$.each(['2011','2010'], function(i,yr) {
+						city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+					});
+				});
+			});
+			
+			updateMap = function() {
+				
+				var prop = $('.dataset.btn-primary').data('val')
+					+ $('.year.btn-primary').html()
+					+ $('.type.btn-primary').data('val'),
+					
+				maxRad = $('.type.btn-primary').data('maxrad');
+				
+				scale = $K.scale.linear(crimeCities, prop);
+				
+				if (symbols) symbols.remove();
+				
+				symbols = new $K.SymbolGroup({
+					map: map,
+					data: crimeCities,
+					location: function(d) { return d.ll },
+					type: $K.Bubble,
+					radius: function(d) { return Math.sqrt(scale(d[prop]))*maxRad }
+				});
+			}
+			
+			updateMap();
+			
+		});
+	});
+
+	$('.btn').click(function(event) {
+		var tgt = $(event.target), par = tgt.parent();
+		$('.btn', par).removeClass('btn-primary');
+		tgt.addClass('btn-primary');
+		updateMap();
+	});
+});
+
+</script>
+<link href="style.css" rel="stylesheet" />
+<div class="row">
+
+	<div class="span9">
+		<div id="map"></div>
+	</div>
+	
+	<div class="span3">
+		<h1>Bubble Map</h1>
+		<p>This map shows selected crime data in US cities. You can choose between showing actual quantities of incidents or the rates.</p>
+		</p>
+		<h3>Dataset</h3>
+		<p>
+			<a class="dataset btn btn-primary" data-val="ViolentCrime">Violence</a>
+			<a class="dataset btn" data-val="Rape">Rape</a>
+			<a class="dataset btn" data-val="Murder">Murder</a>
+		</p>
+		<p>
+			<a class="year btn btn-primary">2011</a>
+			<a class="year btn">2010</a>
+		</p>
+		<p>
+			<a class="type btn btn-primary" data-val="" data-maxrad="50">Quantity</a>
+			<a class="type btn" data-val="Rate" data-maxrad="20">Density</a>
+		</p>
+		
+	</div>
+</div>

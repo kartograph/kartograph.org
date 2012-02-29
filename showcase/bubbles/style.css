@@ -1,0 +1,10 @@
+#map svg path.usa {
+	stroke: #fff;
+	fill: #ddd;
+}
+
+#map svg .bubble {
+	fill: #35d;
+	fill-opacity: 0.2;
+	stroke-width: 0.6px;
+}

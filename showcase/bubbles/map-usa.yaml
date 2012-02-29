@@ -1,0 +1,30 @@
+proj: 
+   id: laea
+   lon0: -98
+   
+layers:
+   - id: usa
+     src: ../shp/us-states-polygons-ms1.shp
+     filter:
+        attribute: ISO
+        equals: USA
+     attributes:
+        ISO: iso
+        NAME_1: name
+        FIPS_1: fips
+     simplify: false
+   
+   - id: lakes
+     src: ../shp/naturalearth/lakes/ne_10m_lakes.shp
+     subtract-from: usa
+     filter: 
+        attribute: ScaleRank
+        less-than: 1
+
+bounds:
+   mode: bbox
+   data: [-120.5,25,-73.5,50]
+       
+export:
+   round: 1
+   width: 800
