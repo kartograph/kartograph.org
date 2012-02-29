@@ -51,7 +51,7 @@ $(function() {
 						bar.animate({ path: map.getGeoPathStr(pts) }, 500);
 						
 					} else {
-						bar = map.addGeoPath(pts);
+						bar = map.addGeoPath([c.ll,c.ll]);
 						bar.attr({ 
 							stroke: '#346',
 							opacity: .8,
@@ -59,6 +59,7 @@ $(function() {
 							fill: 'none',
 							'stroke-linecap': 'square'
 						});
+						bar.animate({ path: map.getGeoPathStr(pts) }, 500);
 						symbols.push(bar);
 					}
 				});
