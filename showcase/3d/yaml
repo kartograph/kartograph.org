@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+import yaml,sys
+print yaml.load(open(sys.argv[1]).read())

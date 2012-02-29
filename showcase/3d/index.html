@@ -1,0 +1,112 @@
+---
+layout: showcase
+title: Bubble Map
+prev: bubbles
+next: satellite
+---
+
+<script type="text/javascript">
+$(function() {
+	var map, c, scale, updateMap, symbols = [];
+
+	c = $('#map');
+	c.height(c.width()*.5);
+
+	map = window.m = $K.map('#map');
+	
+	map.loadMap('map-usa.svg', function() {
+		map.addLayer('graticule');
+		map.addLayer('graticule_1');
+		map.addLayer('usa');
+		
+
+		$.getJSON('us-crime-cities.json', function(crimeCities) {
+			
+			$.each(crimeCities, function(i,city) {
+				$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
+					$.each(['2011','2010'], function(i,yr) {
+						city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+					});
+				});
+			});
+			
+			updateMap = function() {
+				
+				var prop = $('.dataset.btn-primary').data('val')
+					+ $('.year.btn-primary').html()
+					+ $('.type.btn-primary').data('val'),
+					
+				maxRad = $('.type.btn-primary').data('maxrad');
+				
+				scale = $K.scale.linear(crimeCities, prop);
+				
+				$.each(crimeCities, function(i, c) {
+					var bar, pts;
+					
+					pts = [c.ll, [c.ll[0], c.ll[1], scale(c[prop])*maxRad]];
+					
+					if (symbols[i]) {
+					
+						bar = symbols[i];
+						bar.animate({ path: map.getGeoPathStr(pts) }, 500);
+						
+					} else {
+						bar = map.addGeoPath(pts);
+						bar.attr({ 
+							stroke: '#346',
+							opacity: .8,
+							'stroke-width': 4, 
+							fill: 'none',
+							'stroke-linecap': 'square'
+						});
+						symbols.push(bar);
+					}
+				});
+				
+			}
+			
+			updateMap();
+			
+		});
+	}, { padding: -150 });
+
+	$('.btn').click(function(event) {
+		var tgt = $(event.target), par = tgt.parent();
+		$('.btn', par).removeClass('btn-primary');
+		tgt.addClass('btn-primary');
+		updateMap();
+	});
+});
+
+</script>
+<link href="style.css" rel="stylesheet" />
+<div class="row">
+	<div class="span12">
+		<div id="map"></div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="span5">
+		<h1>Three-dimensional mapping</h1>
+		<p>This map shows crime data for some US cities. You can choose between showing actual quantities of incidents or the rates.</p>
+		<p>Note that the purpose of this demo is not to promote 3D bar charts, but to showcase the satellite projection along with the possibility to map geo-coordinates in three dimensions. In fact, the height of the bars in this example is given in km above ground. </p>
+	</div>
+	<div class="span7" style="text-align:right">
+		
+		<span style="margin-right:1em">
+			<a class="dataset btn btn-primary" data-val="ViolentCrime">Violent Crime</a>
+			<a class="dataset btn" data-val="Rape">Rape</a>
+			<a class="dataset btn" data-val="Murder">Murder</a>
+		</span>
+		<span style="margin-right:1em">
+			<a class="year btn btn-primary">2011</a>
+			<a class="year btn">2010</a>
+		</span>
+		<span>
+			<a class="type btn btn-primary" data-val="" data-maxrad="500">Quantity</a>
+			<a class="type btn" data-val="Rate" data-maxrad="250">Density</a>
+		</span>
+		
+	</div>
+</div>

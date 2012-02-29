@@ -1,0 +1,40 @@
+proj: 
+   id: satellite
+   lon0: -98
+   lat0: 5
+   dist: 1.9
+   
+layers:
+   - id: usa
+     src: ../shp/us-states-polygons-ms1.shp
+     filter:
+        attribute: ISO
+        equals: USA
+     attributes:
+        ISO: iso
+        NAME_1: name
+        FIPS_1: fips
+     simplify: false
+   
+   - id: lakes
+     src: ../shp/naturalearth/lakes/ne_10m_lakes.shp
+     subtract-from: usa
+     filter: 
+        attribute: ScaleRank
+        less-than: 1
+
+   - special: graticule
+     latitudes: 5
+     longitudes: 5
+
+   - special: graticule
+     latitudes: 10
+     longitudes: 10
+     
+bounds:
+   mode: bbox
+   data: [-131,24,-64,62]
+       
+export:
+   round: 1
+   width: 800
