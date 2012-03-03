@@ -6,79 +6,80 @@ next: satellite
 ---
 
 <script type="text/javascript">
-$(function() {
-	var map, c, scale, updateMap, symbols = [];
-
-	c = $('#map');
-	c.height(c.width()*.5);
-
-	map = window.m = $K.map('#map');
+$script.ready(['jquery', 'kartograph'], function() {
+	$(function() {
+		var map, c, scale, updateMap, symbols = [];
 	
-	map.loadMap('map-usa.svg', function() {
-		map.addLayer('graticule');
-		map.addLayer('graticule_1');
-		map.addLayer('usa');
+		c = $('#map');
+		c.height(c.width()*.5);
+	
+		map = window.m = $K.map('#map');
 		
-
-		$.getJSON('us-crime-cities.json', function(crimeCities) {
+		map.loadMap('map-usa.svg', function() {
+			map.addLayer('graticule');
+			map.addLayer('graticule_1');
+			map.addLayer('usa');
 			
-			$.each(crimeCities, function(i,city) {
-				$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
-					$.each(['2011','2010'], function(i,yr) {
-						city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+	
+			$.getJSON('us-crime-cities.json', function(crimeCities) {
+				
+				$.each(crimeCities, function(i,city) {
+					$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
+						$.each(['2011','2010'], function(i,yr) {
+							city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+						});
 					});
 				});
-			});
-			
-			updateMap = function() {
 				
-				var prop = $('.dataset.btn-primary').data('val')
-					+ $('.year.btn-primary').html()
-					+ $('.type.btn-primary').data('val'),
+				updateMap = function() {
 					
-				maxRad = $('.type.btn-primary').data('maxrad');
-				
-				scale = $K.scale.linear(crimeCities, prop);
-				
-				$.each(crimeCities, function(i, c) {
-					var bar, pts;
-					
-					pts = [c.ll, [c.ll[0], c.ll[1], scale(c[prop])*maxRad]];
-					
-					if (symbols[i]) {
-					
-						bar = symbols[i];
-						bar.animate({ path: map.getGeoPathStr(pts) }, 500);
+					var prop = $('.dataset.btn-primary').data('val')
+						+ $('.year.btn-primary').html()
+						+ $('.type.btn-primary').data('val'),
 						
-					} else {
-						bar = map.addGeoPath([c.ll,c.ll]);
-						bar.attr({ 
-							stroke: '#346',
-							opacity: .8,
-							'stroke-width': 4, 
-							fill: 'none',
-							'stroke-linecap': 'square'
-						});
-						bar.animate({ path: map.getGeoPathStr(pts) }, 500);
-						symbols.push(bar);
-					}
-				});
+					maxRad = $('.type.btn-primary').data('maxrad');
+					
+					scale = $K.scale.linear(crimeCities, prop);
+					
+					$.each(crimeCities, function(i, c) {
+						var bar, pts;
+						
+						pts = [c.ll, [c.ll[0], c.ll[1], scale(c[prop])*maxRad]];
+						
+						if (symbols[i]) {
+						
+							bar = symbols[i];
+							bar.animate({ path: map.getGeoPathStr(pts) }, 500);
+							
+						} else {
+							bar = map.addGeoPath([c.ll,c.ll]);
+							bar.attr({ 
+								stroke: '#346',
+								opacity: .8,
+								'stroke-width': 4, 
+								fill: 'none',
+								'stroke-linecap': 'square'
+							});
+							bar.animate({ path: map.getGeoPathStr(pts) }, 500);
+							symbols.push(bar);
+						}
+					});
+					
+				}
 				
-			}
-			
+				updateMap();
+				
+			});
+		}, { padding: -150 });
+	
+		$('.btn').click(function(event) {
+			var tgt = $(event.target), par = tgt.parent();
+			$('.btn', par).removeClass('btn-primary');
+			tgt.addClass('btn-primary');
 			updateMap();
-			
 		});
-	}, { padding: -150 });
-
-	$('.btn').click(function(event) {
-		var tgt = $(event.target), par = tgt.parent();
-		$('.btn', par).removeClass('btn-primary');
-		tgt.addClass('btn-primary');
-		updateMap();
 	});
 });
-
 </script>
 <link href="style.css" rel="stylesheet" />
 <div class="row">
@@ -91,7 +92,7 @@ $(function() {
 	<div class="span5">
 		<h1>Three-dimensional mapping</h1>
 		<p>This map shows crime data for some US cities. You can choose between showing actual quantities of incidents or the rates.</p>
-		<p>Note that the purpose of this demo is not to promote 3D bar charts, but to showcase the satellite projection along with the possibility to map geo-coordinates in three dimensions. In fact, the height of the bars in this example is given in km above ground. </p>
+		<p>Note that the purpose of this demo is not to promote 3D bar charts (which are fairly ineffective), but to showcase the satellite projection along with the possibility to project three dimensional geo-coordinates. In fact, the height of the bars in this example is given in km above ground. </p>
 	</div>
 	<div class="span7" style="text-align:right">
 		

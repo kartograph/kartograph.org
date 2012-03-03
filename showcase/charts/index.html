@@ -1,0 +1,132 @@
+---
+layout: showcase
+title: Chart Maps
+plugins: [jquery.csv]
+prev: choropleth
+next: dotgrid
+---
+
+<style type="text/css">
+.map-container { position: relative; }
+#map-overlay { 
+	position: absolute; top:20px; left:0; width: 100%; z-index: 1000; height: 50px; 
+	background-image: linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+	background-image: -o-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+	background-image: -moz-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+	background-image: -ms-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+	
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, rgba(255,255,255, 0)),
+		color-stop(1, rgb(255,255,255))
+	);
+}
+#map .context { stroke: none; fill: #eee; }
+#map .spain { stroke-width: 1px; stroke: #fff; fill: #ddd; }
+</style>
+
+<script type="text/javascript">
+
+$script.ready(['jquery', 'kartograph'], function() {
+
+	$(function() {
+		var map, updateMap, symbols,
+			mc = $('#map');
+
+		mc.height(mc.width()*.8);
+
+		map = $K.map('#map');
+		map.loadMap('spain.svg', function() {
+			map.addLayer('context');
+			map.addLayer({ id: 'spain', key: 'nuts', title: function(d) { 
+				return d.nuts 
+			} });
+
+			$.get('unemployment-es.csv', function(data) {
+				data = $.parseCSV(data);
+				
+				updateMap = function() {
+					var scale, 
+						prop = $('.gender.btn-primary').data('val')+'-'+$('.age.btn-primary').data('val'),
+						type = $('.chart.btn-primary').data('val');	
+					
+					scale = $K.scale.linear(data.rows, 'AREA');
+									
+					if (symbols) symbols.remove();
+									
+					symbols = new $K.SymbolGroup({
+						map: map,
+						data: data.rows,
+						type: $K[type],
+						colors: ['#1f78b4', '#eef'],
+						values: function(d) { return [d[prop],100-d[prop]] },
+						location: function(d) { return 'spain.'+d.GEO; },
+						radius: function(d) { return Math.max(8, Math.sqrt(scale(d.AREA))*35) }
+					});
+					/* the same as choropleth
+					var colorscale;
+					colorscale = new chroma.ColorScale({
+						colors: chroma.brewer.YlGnBu,
+						limits: chroma.limits(data.rows, 'e', 7, prop)
+					});
+					map.choropleth({
+						data: data.rows,
+						key: 'GEO',
+						colors: function(d) {
+							if (d == null) return '#fff';
+							return colorscale.getColor(d[prop]);
+						},
+						duration: 300
+					});
+					*/
+				};
+				
+				updateMap();
+			});
+		});
+		
+		
+		$('.btn').click(function(event) {
+			var tgt = $(event.target), par = tgt.parent();
+			$('.btn', par).removeClass('btn-primary');
+			tgt.addClass('btn-primary');
+			updateMap();
+		});
+	});
+});
+</script>
+<div class="row">
+	<div class="span8 map-container">
+		<div id="map-overlay"></div>
+		<div id="map"></div>
+	</div>
+	<div class="span4">
+		<div class="page-header">
+			<h1>Chart Maps</h1>
+		</div>
+		<p>
+		One disadvantage of choropleth maps is that you always need to look at the legend in order to read the actual numbers. While this is inevitable for absolute quantities, there are more effective ways for visualizing percentages.
+		</p>
+		<p>
+		This map shows how unemployment rates in Spain.
+		</p>
+		<p>
+			<label>Gender: </label>
+			<a class="gender btn btn-primary" data-val="T">Total</a>
+			<a class="gender btn" data-val="M">Male</a>
+			<a class="gender btn" data-val="F">Female</a>
+		</p>
+		<p> <label>Age:</label>
+			<a class="age btn btn-primary" data-val="Y15-24">15-24</a>
+			<a class="age btn" data-val="Y-GE25">25+</a>
+		</p>
+		<p>
+			<label>Chart: </label>
+			<a class="chart btn btn-primary" data-val="PieChart">Pie</a>
+			<a class="chart btn" data-val="StackedBarChart">Bar</a>
+		</p>
+	</div>
+<div>

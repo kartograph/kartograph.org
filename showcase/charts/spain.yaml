@@ -1,0 +1,21 @@
+proj:
+  id: laea
+  lon0: -12.2
+layers:
+  - id: context
+    src: ../shp/eunuts/ESP/ESP2.shp
+    filter:
+      attribute: STAT_LEVL_
+      equals: 0
+  - id: spain
+    src: ../shp/eunuts/ESP/ESP2.shp
+    attributes:
+      NUTS_ID: nuts
+    filter:
+      attribute: STAT_LEVL_
+      equals: 2
+bounds:
+  mode: bbox
+  data: [-10,36,4.1,43.3]
+export:
+  round: 1

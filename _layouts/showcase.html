@@ -2,11 +2,20 @@
 layout: core
 ---
 
-<script type="text/javascript" src="http://assets.kartograph.org/vendor/raphael.min.js"></script>
-<!-- <script type="text/javascript" src="http://assets.kartograph.org/kartograph.min.js"></script> -->
+<script type="text/javascript" src="/js/script.min.js"></script>
+<script type="text/javascript">
+
+$script.path(location.href.indexOf('kartograph.org') > -1 ? 'http://assets.kartograph.org/' : '/js/');
+$script(['jquery.min'{% for item in page.plugins %}, '{{ item }}' {% endfor %}], 'jquery');
+$script(['raphael.min', 'kartograph', 'chroma.min'], 'kartograph');
+
+</script>
+
+<!-- <script type="text/javascript" src="http://assets.kartograph.org/vendor/raphael.min.js"></script>
+<!-- <script type="text/javascript" src="http://assets.kartograph.org/kartograph.min.js"></script> 
 <script type="text/javascript" src="/js/kartograph.js"></script>
 <script type="text/javascript" src="http://assets.kartograph.org/chroma.min.js"></script>
-
+-->
 <div class="container">
 	<div class="row">
 		<div class="span4" style="margin-top:20px">

@@ -6,61 +6,63 @@ next: 3d
 ---
 
 <script type="text/javascript">
-$(function() {
-	var map, c, scale, updateMap, symbols;
+$script.ready(['jquery', 'kartograph'], function() {
 
-	c = $('#map');
-	c.height(c.width()*.65);
-
-	map = window.m = $K.map('#map');
+	$(function() {
+		var map, c, scale, updateMap, symbols;
 	
-	map.loadMap('map-usa.svg', function() {
-		map.addLayer('usa');
-
-		$.getJSON('us-crime-cities.json', function(crimeCities) {
-			
-			$.each(crimeCities, function(i,city) {
-				$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
-					$.each(['2011','2010'], function(i,yr) {
-						city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+		c = $('#map');
+		c.height(c.width()*.65);
+	
+		map = window.m = $K.map('#map');
+		
+		map.loadMap('map-usa.svg', function() {
+			map.addLayer('usa');
+	
+			$.getJSON('us-crime-cities.json', function(crimeCities) {
+				
+				$.each(crimeCities, function(i,city) {
+					$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
+						$.each(['2011','2010'], function(i,yr) {
+							city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+						});
 					});
 				});
-			});
-			
-			updateMap = function() {
 				
-				var prop = $('.dataset.btn-primary').data('val')
-					+ $('.year.btn-primary').html()
-					+ $('.type.btn-primary').data('val'),
+				updateMap = function() {
 					
-				maxRad = $('.type.btn-primary').data('maxrad');
+					var prop = $('.dataset.btn-primary').data('val')
+						+ $('.year.btn-primary').html()
+						+ $('.type.btn-primary').data('val'),
+						
+					maxRad = $('.type.btn-primary').data('maxrad');
+					
+					scale = $K.scale.linear(crimeCities, prop);
+					
+					if (symbols) symbols.remove();
+					
+					symbols = new $K.SymbolGroup({
+						map: map,
+						data: crimeCities,
+						location: function(d) { return d.ll },
+						type: $K.Bubble,
+						radius: function(d) { return Math.sqrt(scale(d[prop]))*maxRad }
+					});
+				}
 				
-				scale = $K.scale.linear(crimeCities, prop);
+				updateMap();
 				
-				if (symbols) symbols.remove();
-				
-				symbols = new $K.SymbolGroup({
-					map: map,
-					data: crimeCities,
-					location: function(d) { return d.ll },
-					type: $K.Bubble,
-					radius: function(d) { return Math.sqrt(scale(d[prop]))*maxRad }
-				});
-			}
-			
+			});
+		});
+	
+		$('.btn').click(function(event) {
+			var tgt = $(event.target), par = tgt.parent();
+			$('.btn', par).removeClass('btn-primary');
+			tgt.addClass('btn-primary');
 			updateMap();
-			
 		});
 	});
-
-	$('.btn').click(function(event) {
-		var tgt = $(event.target), par = tgt.parent();
-		$('.btn', par).removeClass('btn-primary');
-		tgt.addClass('btn-primary');
-		updateMap();
-	});
 });
-
 </script>
 <link href="style.css" rel="stylesheet" />
 <div class="row">

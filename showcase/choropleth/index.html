@@ -2,68 +2,68 @@
 layout: showcase
 title: Choropleth Maps
 prev: satellite
-next: dotgrid
+next: charts
 ---
 
 <script type="text/javascript">
 
-$(function() {
-	var map, 
-		colorscale,
-		dep_data,
-		w = $('#map').parent().width();
-	
-	$.ajax({ 
-		url: 'departments.json', 
-		dataType: 'json',
-		success: function(data) {
-			dep_data = data;
+$script.ready(['jquery', 'kartograph'], function() {
 
-			map = $K.map('#map', w, w);	
-			map.loadMap('france-departments.svg', function() {	
-				map.addLayer({
-					id: 'departments',
-					key: 'id'
+	$(function() {
+		var map, 
+			colorscale,
+			dep_data,
+			w = $('#map').parent().width();
+		
+		$.ajax({ 
+			url: 'departments.json', 
+			dataType: 'json',
+			success: function(data) {
+				dep_data = data;
+	
+				map = $K.map('#map', w, w);	
+				map.loadMap('france-departments.svg', function() {
+					map.addLayer({
+						id: 'departments',
+						key: 'id'
+					});
+					updateMap();
 				});
-				updateMap();
+			}
+		});
+		
+		/*
+		 * update map colors
+		 */
+		function updateMap() {
+			var prop = $('.measure.btn-primary').data('value'),
+				scale = $('.scale.btn-primary').data('value');	
+				
+			colorscale = new chroma.ColorScale({
+				colors: chroma.brewer.YlGnBu,
+				limits: chroma.limits(dep_data, scale, 7, prop)
+			});
+			map.choropleth({
+				data: dep_data,
+				key: 'id',
+				colors: function(d) {
+					if (d == null) return '#fff';
+					return colorscale.getColor(d[prop]);
+				},
+				duration: 300
 			});
 		}
-	});
-	
-	/*
-	 * update map colors
-	 */
-	function updateMap() {
-		var prop = $('.measure.btn-primary').data('value'),
-			scale = $('.scale.btn-primary').data('value');	
-			
-		colorscale = new chroma.ColorScale({
-			colors: chroma.brewer.YlGnBu,
-			limits: chroma.limits(dep_data, scale, 7, prop)
+		
+		// init user interface
+		$('.btn').click(function(event) {
+			var tgt = $(event.target), par = tgt.parent();
+			$('.btn', par).removeClass('btn-primary');
+			tgt.addClass('btn-primary');
+			updateMap();
 		});
-		map.choropleth({
-			data: dep_data,
-			key: 'id',
-			colors: function(d) {
-				if (d == null) return '#fff';
-				return colorscale.getColor(d[prop]);
-			},
-			duration: 300
-		});
-	}
-	
-	// init user interface
-	$('.btn.measure').click(function(event) {
-		$('.btn.measure').removeClass('btn-primary');
-		$(event.target).addClass('btn-primary');
-		updateMap();
+		
 	});
 	
-	$('.btn.scale').click(function(event) {
-		$('.btn.scale').removeClass('btn-primary');
-		$(event.target).addClass('btn-primary');
-		updateMap();
-	});
 });
 </script>
 
