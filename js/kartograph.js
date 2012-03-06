@@ -3828,6 +3828,7 @@
       /* adds a new symbol to this group
       */
       var SymbolType, ll, p, sprops, symbol, _i, _len, _ref14;
+      me = this;
       SymbolType = me.type;
       ll = me._evaluate(me.location, data);
       if (__type(ll) === 'array') ll = new kartograph.LonLat(ll[0], ll[1]);
@@ -3894,12 +3895,14 @@
               })
       */
       var overlap, _ref14;
+      me = this;
       if ((_ref14 = me.gsymbols) == null) me.gsymbols = [];
       return overlap = true;
     };
 
     SymbolGroup.prototype.initTooltips = function() {
       var cfg, node, s, tooltips, tt, _i, _j, _len, _len2, _ref14, _ref15;
+      me = this;
       tooltips = me.tooltip;
       _ref14 = me.symbols;
       for (_i = 0, _len = _ref14.length; _i < _len; _i++) {
@@ -3935,6 +3938,7 @@
 
     SymbolGroup.prototype.remove = function() {
       var id, layer, s, _i, _len, _ref14, _ref15, _results;
+      me = this;
       _ref14 = me.symbols;
       for (_i = 0, _len = _ref14.length; _i < _len; _i++) {
         s = _ref14[_i];
@@ -3959,6 +3963,7 @@
 
     SymbolGroup.prototype.onResize = function() {
       var s, _i, _len, _ref14, _results;
+      me = this;
       me.layoutSymbols();
       _ref14 = me.symbols;
       _results = [];
@@ -4406,6 +4411,7 @@
 
     PieChart.prototype.clear = function() {
       var p, _i, _len, _ref14;
+      me = this;
       _ref14 = me.chart;
       for (_i = 0, _len = _ref14.length; _i < _len; _i++) {
         p = _ref14[_i];
