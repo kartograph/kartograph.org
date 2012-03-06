@@ -32,7 +32,7 @@ $script.ready('kartograph', function() {
 
             map.getLayer('context').applyTexture('t0.png');
 
-            map.addFilter('oglow', 'glow', { size: 1, color: '#988', strength: 3, inner: false });
+            map.addFilter('oglow', 'glow', { size: 1, color: '#988', strength: 1, inner: false });
             map.getLayer('bgback').applyFilter('oglow');
 
             map.addFilter('myglow', 'glow', { size: 2, color: '#945C1B', inner: true });
@@ -87,7 +87,7 @@ $script.ready('kartograph', function() {
                 data: cities,
                  class: 'citylbl',
                 location: function(d) { return d[0]; },
-                style: function(d) { return 'font-family: AquilineTwoRegular; fill:#544; font-size: '+(d[2] ? 22 : 16)+'px; text-anchor:start; dominant-baseline: hanging; ' },
+                style: function(d) { return 'font-family: AquilineTwoRegular; fill:#544; font-size: '+(d[2] ? 22 : 16)+'px; text-anchor:start;' },
                 text: function(d) { return d[1] },
                 offset: function(d) { return [d[2] ? 6 : 2,0] }
             });
