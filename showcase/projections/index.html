@@ -1,0 +1,224 @@
+---
+layout: showcase
+title: Map Projections
+jsplugins: ['dat.gui.js']
+---
+
+<style type="text/css">
+/* reset bootstrap styles for dat.gui */
+.dg select {
+    width: auto;
+    height: auto;
+    border: none;
+    color: #000;
+    font: 11px 'Lucida Grande', sans-serif
+}
+.dg input {
+    box-shadow: none;
+    -webkit-box-shadow: none
+    -moz-box-shadow: none;
+    border-radius: 0;
+    font: 11px 'Lucida Grande', sans-serif;
+}
+</style>
+<script type="text/javascript">
+$script.ready('kartograph', function() {
+
+    var GlobeOpt = function() {
+        this.lon0 = 20;
+        this.lat0 = 35;
+        this.lat1 = 30;
+        this.lat2 = 50;
+        this.dist = 2;
+        this.up = 0;
+        this.tilt = 0;
+        this.proj = 'ortho';
+        //this.flip = 0;
+    };
+    var globeopt = new GlobeOpt();
+    var url = location.href.split('#');
+    if (url.length>0) globeopt.proj = url[1];
+
+    $(function() {
+        var P,
+        createCanvas = function(id,w,h) {
+            if (document.getElementById(id) != null) {
+                var ctx = document.getElementById(id).getContext("2d");
+                ctx.clearRect(0,0,w,h+20);
+                return ctx;
+            }
+            var canvas = document.createElement("canvas");
+            canvas.setAttribute("id", id);
+            canvas.setAttribute("width", w+"px");
+            canvas.setAttribute("height", h+"px");
+            $('#map-parent').append(canvas);
+            var ctx = canvas.getContext("2d");
+            return ctx;
+        },
+        showMap = function(p, coastlines) {
+            P = new kartograph.proj[p](globeopt);
+            xy = P.project(13,14);
+            if (isNaN(xy[0]) || isNaN(xy[1])) {
+                console.error(p, P, xy);
+                return;
+            };
+            var
+            lon, lat, i,
+            w = $('#map-parent').width(),
+            h = 500,
+            grat = 15,
+            sea = P.sea(),
+            bbox = P.world_bbox(),
+            view,
+            ctx = createCanvas("proj", w,h+20),
+            len = ctx.measureText(p.toUpperCase()).width;
+            ctx.beginPath();
+            ctx.fillStyle ="#fff";
+            view = new kartograph.View(bbox, w, h, 10);
+            for (i=0;i<sea.length;i++) {
+                xy = view.project(sea[i]);
+                if (i==0) ctx.moveTo(xy[0], xy[1]);
+                else ctx.lineTo(xy[0], xy[1]);
+            }
+            ctx.stroke();
+            ctx.fill();
+            ctx.lineWidth = 0.2;
+            ctx.beginPath();
+            for (lat=0;lat<90;lat+=grat) {
+                var lats = lat == 0 ? [0] : [lat,-lat];
+                for (var l in lats) {
+                    var lat_ = lats[l];
+                    var line = [];
+                    for (lon=-180;lon<180;lon++) {
+                        line.push([lon,lat_]);
+                    }
+                    for (var i=0;i<line.length-1;i++) {
+                        p0 = line[i];
+                        p1 = line[i+1];
+                        d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
+                        if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 100) {
+                            p0 = view.project(P.project(p0[0],p0[1]));
+                            p1 = view.project(P.project(p1[0],p1[1]));
+                            ctx.moveTo(p0[0],p0[1]);
+                            ctx.lineTo(p1[0],p1[1]);
+                        }
+                    }
+                }
+            }
+            for (lon=0;lon<181;lon+=grat) {
+                var lons = lon == 0 || lon == 180 ? [lon] : [lon,-lon];
+                for (var l in lons) {
+                    var lon_ = lons[l];
+                    var line = [];
+                    for (lat=-90+(lon % 90 == 0 ? 0 : grat);lat<90-(lon%90 == 0 ? 0 : grat)+1;lat++) {
+                        line.push([lon_,lat]);
+                    }
+                    for (var i=0;i<line.length-1;i++) {
+                        p0 = line[i];
+                        p1 = line[i+1];
+                        d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
+                        if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 100) {
+                            p0 = view.project(P.project(p0[0],p0[1]));
+                            p1 = view.project(P.project(p1[0],p1[1]));
+                            ctx.moveTo(p0[0],p0[1]);
+                            ctx.lineTo(p1[0],p1[1]);
+                        }
+                    }
+                //ctx.stroke();
+                }
+            }
+            ctx.stroke();
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            var cl,line,p0,p1,d;
+            for (cl=0; cl<coastlines.length; cl++) {
+                line = coastlines[cl];
+                for (i=0;i<line.length-1;i++) {
+                    p0 = line[i];
+                    p1 = line[i+1];
+                    d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
+                    if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 100) {
+                        p0 = view.project(P.project(p0[0],p0[1]));
+                        p1 = view.project(P.project(p1[0],p1[1]));
+                        ctx.moveTo(p0[0],p0[1]);
+                        ctx.lineTo(p1[0],p1[1]);
+                    }
+                }
+            }
+            ctx.stroke();
+        },
+        frame = 0,
+        renderFrame = function() {
+            showMap(globeopt.proj, coastlines);
+            // Iterate over all controllers
+        };
+        $.getJSON('coastline.json', function(coastlines) {
+                window.coastlines = coastlines;
+                //window.mozRequestAnimationFrame(renderFrame);
+                //animLoop(renderFrame, this );
+                renderFrame();
+        });
+        window.gui = new dat.GUI({ 
+            autoPlace: false,
+            width: 330,
+            hideable: false,
+            resizable: false
+        });
+        $('.k-gui').append(gui.domElement);
+
+        gui.remember(globeopt);
+        var proj = [];
+        for (var p in kartograph.proj) proj.push(p);
+        proj = proj.sort();
+        window.projopts = {
+            lon0: [-180,180, 1],
+            lat0: [-90, 90],
+            lat1: [-90, 90],
+            dist: [1.01, 10, 0.01],
+            up: [-180,180],
+            tilt: [-40,0]
+        };
+
+        var updateGUI = function() {
+            // reset gui
+            try {
+                for (var i=gui.__controllers.length-1; i>=0; i--) {
+                    gui.remove(gui.__controllers[i]);
+                }
+            } catch (e) {}
+            gui.add(globeopt, 'proj', proj).onChange(function() {
+                updateGUI();
+                renderFrame();
+            });
+            $.each(projopts, function(key, val) {
+                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                    var s = gui.add(globeopt, key, val[0], val[1]);
+                    if (val.length == 3) s.step(val[2]);
+                    s.onChange(renderFrame);
+                }
+            });
+            $('#k-proj-title').html(kartograph.proj[globeopt.proj].title);
+            var url = location.href.split('#');
+            location.href = url[0]+'#'+globeopt.proj;
+        };
+
+        updateGUI();
+
+    });
+});
+</script>
+
+<div class="row">
+    <div class="span12" id="map-parent">
+    </div>
+</div>
+
+<div class="row">
+    <div class="span7">
+        <div class="page-header" style="margin-top:0"><h1 id="k-proj-title">Map Projection Showcase</h1></div>
+        <p>This showcase is not really showing Kartograph but gives you a simple interface to play around with all available map projections and their parameters.</p>
+    </div>
+    <div class="span5">
+        <div class="k-gui"></div>
+    </div>
+</div>

@@ -1516,7 +1516,7 @@
   };
 
   /*
-      kartograph - a svg mapping library 
+      kartograph - a svg mapping library
       Copyright (C) 2011  Gregor Aisch
   
       This program is free software: you can redistribute it and/or modify
@@ -1548,6 +1548,10 @@
   };
 
   Proj = (function() {
+
+    Proj.parameters = [];
+
+    Proj.title = "Projection";
 
     function Proj(opts) {
       var me, _ref10, _ref11;
@@ -1643,7 +1647,7 @@
 
   Proj.fromXML = function(xml) {
     /*
-    	reconstructs a projection from xml description
+        reconstructs a projection from xml description
     */
     var attr, i, id, opts, proj, _ref10;
     id = xml.getAttribute('id');
@@ -1664,8 +1668,12 @@
     __extends(Cylindrical, Proj);
 
     /*
-    	Base class for cylindrical projections
+        Base class for cylindrical projections
     */
+
+    Cylindrical.parameters = ['lon0', 'flip'];
+
+    Cylindrical.title = "Cylindrical Projection";
 
     function Cylindrical(opts) {
       var me, _ref10;
@@ -1710,8 +1718,10 @@
     }
 
     /*
-    	Equirectangular Projection aka Lonlat aka Plate Carree
+        Equirectangular Projection aka Lonlat aka Plate Carree
     */
+
+    Equirectangular.title = "Equirectangular Projection";
 
     Equirectangular.prototype.project = function(lon, lat) {
       var _ref10;
@@ -1730,6 +1740,10 @@
 
     __extends(CEA, Cylindrical);
 
+    CEA.parameters = ['lon0', 'lat1', 'flip'];
+
+    CEA.title = "Cylindrical Equal Area";
+
     function CEA(opts) {
       var _ref10;
       CEA.__super__.constructor.call(this, opts);
@@ -1738,7 +1752,7 @@
     }
 
     /*
-    	Cylindrical Equal Area Projection
+        Cylindrical Equal Area Projection
     */
 
     CEA.prototype.project = function(lon, lat) {
@@ -1762,8 +1776,10 @@
     __extends(GallPeters, CEA);
 
     /*
-    	Gall-Peters Projection
+        Gall-Peters Projection
     */
+
+    GallPeters.title = "Gall-Peters Projection";
 
     function GallPeters(lon0, lat0) {
       GallPeters.__super__.constructor.call(this, lon0, 45);
@@ -1780,8 +1796,10 @@
     __extends(HoboDyer, CEA);
 
     /*
-    	Hobo-Dyer Projection
+        Hobo-Dyer Projection
     */
+
+    HoboDyer.title = "Hobo-Dyer Projection";
 
     function HoboDyer(opts) {
       opts.lat0 = 37.7;
@@ -1799,8 +1817,10 @@
     __extends(Behrmann, CEA);
 
     /*
-    	Behrmann Projection
+        Behrmann Projection
     */
+
+    Behrmann.title = "Behrmann Projection";
 
     function Behrmann(opts) {
       opts.lat0 = 30;
@@ -1818,8 +1838,10 @@
     __extends(Balthasart, CEA);
 
     /*
-    	Balthasart Projection
+        Balthasart Projection
     */
+
+    Balthasart.title = "Balthasart Projection";
 
     function Balthasart(opts) {
       opts.lat0 = 50;
@@ -1837,8 +1859,10 @@
     __extends(Mercator, Cylindrical);
 
     /*
-    	# you're not really into maps..
+        # you're not really into maps..
     */
+
+    Mercator.title = "Mercator Projection";
 
     function Mercator(opts) {
       Mercator.__super__.constructor.call(this, opts);
@@ -1873,8 +1897,10 @@
     }
 
     /*
-    	Base class for pseudo cylindrical projections
+        Base class for pseudo cylindrical projections
     */
+
+    PseudoCylindrical.title = "Pseudo-Cylindrical Projection";
 
     return PseudoCylindrical;
 
@@ -1885,9 +1911,11 @@
     __extends(NaturalEarth, PseudoCylindrical);
 
     /*
-    	Natural Earth Projection
-    	see here http://www.shadedrelief.com/NE_proj/
+        Natural Earth Projection
+        see here http://www.shadedrelief.com/NE_proj/
     */
+
+    NaturalEarth.title = "Natural Earth Projection";
 
     function NaturalEarth(opts) {
       var s;
@@ -1937,8 +1965,10 @@
     __extends(Robinson, PseudoCylindrical);
 
     /*
-    	Robinson Projection
+        Robinson Projection
     */
+
+    Robinson.title = "Robinson Projection";
 
     function Robinson(opts) {
       var s;
@@ -1989,8 +2019,10 @@
     __extends(EckertIV, PseudoCylindrical);
 
     /*
-    	Eckert IV Projection
+        Eckert IV Projection
     */
+
+    EckertIV.title = "Eckert IV Projection";
 
     function EckertIV(opts) {
       var me;
@@ -2048,8 +2080,10 @@
     }
 
     /*
-    	Sinusoidal Projection
+        Sinusoidal Projection
     */
+
+    Sinusoidal.title = "Sinusoidal Projection";
 
     Sinusoidal.prototype.project = function(lon, lat) {
       var lam, me, phi, x, y, _ref10;
@@ -2073,8 +2107,10 @@
     __extends(Mollweide, PseudoCylindrical);
 
     /*
-    	Mollweide Projection
+        Mollweide Projection
     */
+
+    Mollweide.title = "Mollweide Projection";
 
     function Mollweide(opts, p, cx, cy, cp) {
       var me, p2, r, sp;
@@ -2139,8 +2175,10 @@
     __extends(WagnerIV, Mollweide);
 
     /*
-    	Wagner IV Projection
+        Wagner IV Projection
     */
+
+    WagnerIV.title = "Wagner IV Projection";
 
     function WagnerIV(opts) {
       WagnerIV.__super__.constructor.call(this, opts, 1.0471975511965976);
@@ -2157,8 +2195,10 @@
     __extends(WagnerV, Mollweide);
 
     /*
-    	Wagner V Projection
+        Wagner V Projection
     */
+
+    WagnerV.title = "Wagner V Projection";
 
     function WagnerV(opts) {
       WagnerV.__super__.constructor.call(this, opts, null, 0.90977, 1.65014, 3.00896);
@@ -2182,6 +2222,10 @@
     minLat = -89;
 
     maxLat = 89;
+
+    Loximuthal.parameters = ['lon0', 'lat0', 'flip'];
+
+    Loximuthal.title = "Loximuthal Projection (equidistant)";
 
     Loximuthal.prototype.project = function(lon, lat) {
       var lam, math, me, phi, x, y, _ref10;
@@ -2211,8 +2255,12 @@
     __extends(Azimuthal, Proj);
 
     /*
-    	Base class for azimuthal projections
+        Base class for azimuthal projections
     */
+
+    Azimuthal.parameters = ['lon0', 'lat0'];
+
+    Azimuthal.title = "Azimuthal Projection";
 
     function Azimuthal(opts, rad) {
       var me;
@@ -2286,10 +2334,12 @@
     }
 
     /*
-    	Orthographic Azimuthal Projection
-    	
-    	implementation taken from http://www.mccarroll.net/snippets/svgworld/
+        Orthographic Azimuthal Projection
+    
+        implementation taken from http://www.mccarroll.net/snippets/svgworld/
     */
+
+    Orthographic.title = "Orthographic Projection";
 
     Orthographic.prototype.project = function(lon, lat) {
       var azimuth, elevation, math, me, x, xo, y, yo;
@@ -2315,11 +2365,13 @@
     __extends(LAEA, Azimuthal);
 
     /*
-    	Lambert Azimuthal Equal-Area Projection
-    	
-    	implementation taken from 
-    	Snyder, Map projections - A working manual
+        Lambert Azimuthal Equal-Area Projection
+    
+        implementation taken from
+        Snyder, Map projections - A working manual
     */
+
+    LAEA.title = "Lambert Azimuthal Equal-Area Projection";
 
     function LAEA(opts) {
       LAEA.__super__.constructor.call(this, opts);
@@ -2362,11 +2414,13 @@
     }
 
     /*
-    	Stereographic projection
-    	
-    	implementation taken from 
-    	Snyder, Map projections - A working manual
+        Stereographic projection
+    
+        implementation taken from
+        Snyder, Map projections - A working manual
     */
+
+    Stereographic.title = "Stereographic Projection";
 
     Stereographic.prototype.project = function(lon, lat) {
       var cos, k, k0, lam, math, phi, sin, x, xo, y, yo;
@@ -2395,14 +2449,18 @@
     __extends(Satellite, Azimuthal);
 
     /*
-    	General perspective projection, aka Satellite projection
-    	
-    	implementation taken from 
-    	Snyder, Map projections - A working manual
-    	
-    	up .. angle the camera is turned away from north (clockwise)
-    	tilt .. angle the camera is tilted
+        General perspective projection, aka Satellite projection
+    
+        implementation taken from
+        Snyder, Map projections - A working manual
+    
+        up .. angle the camera is turned away from north (clockwise)
+        tilt .. angle the camera is tilted
     */
+
+    Satellite.parameters = ['lon0', 'lat0', 'tilt', 'dist', 'up'];
+
+    Satellite.title = "Satellite Projection";
 
     function Satellite(opts) {
       var lat, lon, xmax, xmin, xy, _ref10, _ref11, _ref12;
@@ -2492,11 +2550,13 @@
     }
 
     /*
-    	Equidistant projection
-    	
-    	implementation taken from 
-    	Snyder, Map projections - A working manual
+        Equidistant projection
+    
+        implementation taken from
+        Snyder, Map projections - A working manual
     */
+
+    EquidistantAzimuthal.title = "Equidistant Azimuthal Projection";
 
     EquidistantAzimuthal.prototype.project = function(lon, lat) {
       var c, cos, cos_c, k, lam, math, phi, sin, x, xo, y, yo;
@@ -2534,11 +2594,13 @@
     }
 
     /*
-    	Aitoff projection
-    	
-    	implementation taken from 
-    	Snyder, Map projections - A working manual
+        Aitoff projection
+    
+        implementation taken from
+        Snyder, Map projections - A working manual
     */
+
+    Aitoff.title = "Aitoff Projection";
 
     Aitoff.prototype.project = function(lon, lat) {
       return [x, y];
@@ -2557,6 +2619,10 @@
   Conic = (function() {
 
     __extends(Conic, Proj);
+
+    Conic.title = "Conic Projection";
+
+    Conic.parameters = ['lon0', 'lat0', 'lat1'];
 
     function Conic(opts) {
       var self, _ref10, _ref11;
@@ -2594,7 +2660,11 @@
 
     __extends(LCC, Conic);
 
-    "Lambert Conformal Conic Projection (spherical)";
+    /*
+        Lambert Conformal Conic Projection (spherical)
+    */
+
+    LCC.title = "Lambert Conformal Conic Projection (spherical)";
 
     function LCC(opts) {
       var abs, c, cos, cosphi, m, n, pow, secant, self, sin, sinphi, tan, _ref10;
@@ -2640,8 +2710,6 @@
     return LCC;
 
   })();
-
-  __proj['lcc'] = LCC;
 
   PseudoConic = (function() {
 
@@ -3817,6 +3885,13 @@
     SymbolGroup.prototype.groupLayout = function() {
       /*
               layouts symbols in this group, eventually adds new 'grouped' symbols
+              map.addSymbols({
+                  layout: "group",
+                  group: function(data) {
+                      // compresses a list of data objects into a single one
+                      // typically you want to calculate the mean position, sum value or something here
+                  }
+              })
       */
       var overlap, _ref14;
       if ((_ref14 = me.gsymbols) == null) me.gsymbols = [];

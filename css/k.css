@@ -119,3 +119,32 @@ h1 {
 	background: #69d;
 	line-height: 50px;
 }
+.k-gui .dg {
+	color: #000;
+	text-shadow: 0 1px 0 #ccc;
+}
+.k-gui .dg .c input[type="text"] {
+	background-color: #DDD;
+}
+.k-gui .dg .cr.number input[type="text"] {
+	color: #356;
+}
+.k-gui .dg .c .slider {
+	background-color: #ddd;
+}
+.k-gui .dg .c:hover .slider {
+	background-color: #fff;
+}
+.k-gui .dg .close-button {
+	display: none;
+}
+.k-gui .dg li:not(.folder) {
+	background: #eee;
+	border-bottom: 1px solid #ccc;
+}
+.k-gui .dg .save-row {
+	border-radius: 6px 6px 0 0;
+}
+.k-gui .dg .save-row select {
+	margin-top: 6px;
+}
