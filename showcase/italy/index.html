@@ -123,16 +123,16 @@ $script.ready('kartograph', function() {
                 };
             }; 
             function run() {
-                e.animate({along: 1}, 20000, function () {
+                e.animate({along: 1}, 20000, '<>', function () {
                     setTimeout(function() {
-                        e.animate({along: 0}, 20000, function () {
+                        e.animate({along: 0}, 20000, '<>',function () {
                             setTimeout(run, 4000);
                         });
                     }, 3000);
                 });
             }
-            e.attr('along',0);
-            run();
+            e.attr('along',0.2);
+            setTimeout(run, 4000);
 
         }, { padding: -6 });
 
