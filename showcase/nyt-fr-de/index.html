@@ -1,0 +1,43 @@
+---
+layout: showcase
+title: French German Border
+plugins: [jquery.csv]
+---
+
+<script type="text/javascript">
+$script.ready('kartograph', function() {
+
+    $(function() {
+        window.map = $K.map('#map');
+        map.loadMap('map.svg', function() {
+            map.addLayer({
+                id: 'nuts',
+                key: 'nuts'
+            });
+            $.ajax({
+                url: 'eurostat.csv',
+                success: function(data) {
+
+                    data = $.parseCSV(data);
+
+                    var prop = 'T-Y15-24',
+                        colsc = new chroma.ColorScale({
+                            colors: chroma.brewer.Reds,
+                            limits: chroma.limits(data.rows, 'q', 7, prop, function(d) {
+                                return map.layers.nuts.pathsById.hasOwnProperty(d.GEO); 
+                            })
+                        });
+                    map.choropleth({
+                        data: data.rows,
+                        key: 'GEO',
+                        colors: function(d) { console.log(d); return d !== null ? colsc.getColor(d[prop]) : '#ccc' }
+                    })
+
+                }
+            })
+        })
+    });
+
+})
+</script>
+<div id="map"></div>
