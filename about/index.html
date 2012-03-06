@@ -10,6 +10,8 @@ tagline: It's all SVG
 	<div class="span9  k-intro">
 		<h1>The magic behind Kartograph</h1>
 		
+
+		<p>The core concept of Kartograph is to separate the mapping process in the map generation and map rendering part. The client-side library <a href="/about/kartograph.js/">kartograph.js</a> renders pre-generated maps stored in SVG files. You can chose among hundrets of ready-to-use maps or simply generate your own using <a href="/about/kartograph.py/">kartograph.py</a>, the open source Python SVG map generator.</p>
 		<p>The Kartograph framework essentially consists of two major parts. The first is a Python library to generate SVG maps from various geodata sources (shapefiles, KML, GeoJson). By '<em>generate</em>' we mean that the geodata is filtered, projected, generalized, joined, cropped and finally stored as vector graphics.</p>
 		<p>The second part is a JavaScript library that will load and render the SVG map in any web browser. </p>
 		<p>Kartograph is written in Python and JavaScript (CoffeeScript, acutally). </p>

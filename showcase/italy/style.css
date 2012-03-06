@@ -53,6 +53,10 @@ svg .dotMarker:hover {
 	fill: #ff3;
 	fill-opacity: .7;
 }
+svg .ferry {
+	stroke-opacity: .5;
+	stroke-dasharray: 3,4;
+}
 
 @font-face {
     font-family: 'AquilineTwoRegular';

@@ -1,0 +1,44 @@
+---
+title: kartograph.py
+layout: default
+headline: Kartograph.py
+tagline: SVG Map Generator
+scripts: [[prettify, '/js/prettify.js']]
+styles: [/css/prettify.css]
+---
+
+<script type="text/javascript">
+$script.ready('prettify', function() {
+    prettyPrint();
+});
+</script>
+<div class="row">
+    <div class="span9">
+        <div class="page-headr"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="span5">
+        <h1>How to use</h1>
+        <p>Kartograph.py is a Python library for generating SVG maps. It is built on top of <a href="http://jquery.com/">jQuery</a> and <a href="http://raphaeljs.com/">Raphaël</a> and provides a powerful API for</p>
+        <p>Essentially, you don't have to write a single line of Python code to generate a map. Instead, every parameter is controlled by a configuration file.</p>
+    </div>
+    <div class="span4">
+        <pre class="prettyprint lang-python">
+import kartograph
+
+opts = {
+    "layers": [{
+        "src": "countries.shp",
+        "filter": ["ISO", "is", "USA"]
+    }],
+    "bounds": {
+        "mode": "bbox",
+        "data": [-100,30,-60,60]
+    }
+}
+
+k.generate(opts)
+</pre>
+    </div>
+</div>

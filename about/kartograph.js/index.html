@@ -1,0 +1,34 @@
+---
+title: kartograph.js
+layout: default
+headline: Kartograph.js
+tagline: Rendering SVG maps since 2012
+scripts: [[prettify, '/js/prettify.js']]
+styles: [/css/prettify.css]
+---
+
+<script type="text/javascript">
+$script.ready('prettify', function() {
+    prettyPrint();
+});
+</script>
+<div class="row">
+    <div class="span9">
+        <div class="page-headr"><h1>How to use</h1></div>
+    </div>
+</div>
+<div class="row">
+    <div class="span5">
+        <p>Kartograph.js is a JavaScript library for rendering SVG maps. It is built on top of <a href="http://jquery.com/">jQuery</a> and <a href="http://raphaeljs.com/">Raphaël</a> and provides a powerful API for</p>
+    </div>
+    <div class="span4">
+        <pre class="prettyprint lang-javascript">
+map = new $K.map('#mymap');
+map.loadMap('italy.svg', function() {
+    map.addLayer({
+        id: 'provinces',
+        key: 'pid'
+    });
+});</pre>
+    </div>
+</div>

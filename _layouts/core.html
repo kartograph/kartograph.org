@@ -23,8 +23,10 @@
       $script(['{{ page.jsplugins[0] }}'{% for item in page.jsplugins offset:1 %}, '{{ item }}'{% endfor %}]);
    {% endif %}
    </script>
-
 {% endif %}
+{% for style in page.styles %}
+   <link rel="stylesheet" href="{{ style }}" type="text/css" />
+{% endfor %}
 </head>
 <body>
 

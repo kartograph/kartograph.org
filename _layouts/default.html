@@ -35,18 +35,15 @@ layout: core
 		<div class="row">
 			<div class="span3 k-menu">
 				<ul class="nav nav-tabs nav-stacked">
-					
 					<li{% if page.url == "/index.html" %} class="active" {% endif %}><a href="/">Hello Kartograph</a></li>
-					<li{% if page.url == "/showcase/index.html" %} class="active" {% endif %}><a href="/showcase/">Showcase</a></li>
-					<li{% if page.url == "/tech.html" %} class="active" {% endif %}><a href="/tech.html">How does it work?</a></li>
+					<li{% if page.url contains "/showcase/" %} class="active" {% endif %}><a href="/showcase/">Showcase</a></li>
+					<li{% if page.url contains "/about/" %} class="active" {% endif %}><a href="/about/">How does it work?</a></li>
 					<li><a target="_blank" href="http://github.com/kartograph/">Fork on Github</a></li>
 					<li><a target="_blank" href="http://twitter.com/#!/kartographjs/">Say Hi on Twitter</a></li>
 				</ul>
 				<div class="k-donate">
 
-					<h2>Support Kartograph</h2>
-
-					<p>If you would like to support the development of Kartograph, here is how you can make donations:</p>
+					<p>Every donation supports the development of Kartograph:</p>
 					<div class="k-donate-buttons">
 						<a href="https://flattr.com/donation/give/to/gka" class="k-flattr"><span>Flattr</span></a>
 
