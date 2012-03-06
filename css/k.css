@@ -6,6 +6,10 @@
 	font-weight: 300;
 }
 
+.nav-tabs.nav-stacked > li > a:hover {
+	border: none!important;
+}
+
 .k-menu ul.nav {
 	margin-left: 0;
 }
@@ -46,4 +50,72 @@ h1 {
 .page-header h1 {
 	margin: 0;
 	font-weight: 300;
+}
+
+.k-footer div {
+	text-align: right;
+	color: #888;
+	font-size: 12px;
+	margin: 1.5em 0;
+	padding: 1ex 0;
+}
+
+.k-donate {
+	margin: 40px 0 0 12px;
+}
+
+.k-donate h2 {
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+.k-donate .k-donate-buttons {
+	margin-top: 20px;
+}
+
+.k-flattr {
+	background-image: url(/img/donate.png);
+	background-position: 0px 0px;
+	width: 86px;
+	height: 22px;
+	display: block;
+	cursor: pointer;
+	float: left;
+	margin-right: 10px;
+}
+.k-flattr:hover {
+	background-position: 0 -22px;
+}
+.k-flattr span {
+	display: none;
+}
+.k-paypal {
+	background-image: url(/img/donate.png);
+	background-position: -86px 0px;
+	width: 80px!important;
+	height: 22px!important;
+	display: block;
+	border: none!important;
+	border-radius: 0;
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+}
+.k-paypal:hover {
+	background-position: -86px -22px;
+}
+
+.k-howto {
+	margin-bottom: 2em;
+}
+.k-big-number span {
+	font-size: 30px;
+	border-radius: 25px;
+	width: 50px;
+	height: 50px;
+	text-align: center;
+	font-weight: 100;
+	color: #fff;
+	display: block;
+	background: #69d;
+	line-height: 50px;
 }

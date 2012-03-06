@@ -1,46 +1,144 @@
 ---
 layout: showcase
-title: Vintage Map of Italy
+title: Bella Italia
 ---
 
-<link rel="stylesheet" href="style.css" type="text/css" />
 
 <script>
-	$(function() {
-		
-		// import some classes
-		window.map = $K.map('#map');
-		
-		var resize = function() {
-			var c = $('#map');
-			var ratio = map.viewAB.width / map.viewAB.height;
-			c.height( c.width() / ratio );
-			map.resize();
-		};
-		
-		$(window).resize(resize);
-		
-		map.loadMap('italy.svg', function(map) {
+$script.ready('kartograph', function() {
 
-			map.addLayer('graticule', 'g1');
-			map.addLayer('land', 'bg');
-			map.addLayer('land', 'bgstroke');
-			map.addLayer('context');
-			map.addLayer('ITA', 'fg');
-			
-			map.addFilter('glow', 'glow', { size: 4, color: '#D1BEB0', inner: true });
-			map.applyFilter('bg', 'glow');
-			
-			resize();
-		
-		}, { padding: -10 });
-			
-			
-	});
+    $(function() {
+        // import some classes
+        window.map = $K.map('#map');
+
+        var resize = function() {
+            var c = $('#map');
+            var ratio = map.viewAB.width / map.viewAB.height;
+            c.height( c.width() / ratio );
+            map.resize();
+        };
+
+        $(window).resize(resize);
+
+        map.loadMap('tmp.svg', function(map) {
+
+            map
+                .addLayer('graticule')
+                .addLayer('land', 'bgback')
+                .addLayer('land', 'bg')
+                .addLayer('land', 'bgstroke')
+                .addLayer('context')
+                .addLayer('ITA', 'fg');
+
+            map.getLayer('context').applyTexture('t0.png');
+
+            map.addFilter('oglow', 'glow', { size: 1, color: '#988', strength: 3, inner: false });
+            map.getLayer('bgback').applyFilter('oglow');
+
+            map.addFilter('myglow', 'glow', { size: 2, color: '#945C1B', inner: true });
+            map.getLayer('bg').applyFilter('myglow');
+
+            resize();
+
+            var cities = [
+                [new $K.LonLat(12.469482,41.869561), 'Roma', true],
+                [new $K.LonLat(11.3598, 44.4808), 'Bologna'],
+                [new $K.LatLon(40.86368,14.241028), 'Napoli'],
+                [new $K.LatLon(38.08269,13.359375), 'Palermo'],
+                [new $K.LatLon(45.444717,9.162598), 'Milano'],
+                [new $K.LatLon(45.448571, 12.340393), 'Venezia'],
+                [new $K.LonLat(15.500586,38.169114), 'Messina']
+            ];
+
+            var regions = [
+                [new $K.LatLon(40.128491,9.030762), 'Sardegna', 18],
+                [new $K.LatLon(42.265607,9.052734), 'Corse', 18],
+                [new $K.LatLon(35.613561,9.824023), 'Tunisia', 22],
+                [new $K.LatLon(44.245199,17.819824), 'Bosnia', 20],
+                [new $K.LatLon(45.996962,14.589844), 'Slovenia', 19],
+                [new $K.LatLon(45.721522,16.413574), 'Croatia', 19],
+                [new $K.LatLon(46.845164,17.709961), 'Hungary', 17],
+                [new $K.LatLon(47.323931,14.172363), 'Austria', 17],
+                [new $K.LatLon(45.640219,5.088672), 'France', 20]
+            ];
+
+            map.addSymbols({
+                type: $K.Label,
+                data: regions,
+                class: 'clblbg',
+                location: function(d) { return d[0]; },
+                style: function(d) { return 'font-family: AquilineTwoRegular; stroke: #fff; stroke-width: 2px; fill:#fff; opacity: .3; font-size: '+d[2]+'px;' },
+                text: function(d) { return d[1] }
+            });
+
+            map.addSymbols({
+                type: $K.Label,
+                data: regions,
+                 class: 'clblfg',
+                location: function(d) { return d[0]; },
+                style: function(d) { return 'font-family: AquilineTwoRegular; fill:#511; fill-opacity: .35; font-size: '+d[2]+'px;' },
+                text: function(d) { return d[1] }
+            });
+
+            map.addSymbols({
+                type: $K.Label,
+                data: cities,
+                 class: 'citylbl',
+                location: function(d) { return d[0]; },
+                style: function(d) { return 'font-family: AquilineTwoRegular; fill:#544; font-size: '+(d[2] ? 22 : 16)+'px; text-anchor:start; dominant-baseline: hanging; ' },
+                text: function(d) { return d[1] },
+                offset: function(d) { return [d[2] ? 6 : 2,0] }
+            });
+
+            map.addSymbols({
+                type: $K.Icon,
+                data: cities,
+                class: 'cityico',
+                location: function(d) { return d[0]; },
+                offset: [-5,-5],
+                icon: function(d) { return d[2] ? 'star.png' : 'dot.png' }
+            });
+
+        }, { padding: -6 });
+
+
+    });
+
+    $('.k-layer-toggle input').change(function(evt) {
+        var paths = $('#map .'+evt.target.value);
+        if (evt.target.checked) paths.show();
+        else paths.hide();
+    })
+});
 </script>
 
+<div class="row">
+    <div class="span4">
+        <div class="page-header">
+            <h1>Bella Italia</h1>
+        </div>
+        <p>This example map of Italy showcases some ways you can style Kartograph maps. The base colors are defined in CSS. Then a glow filter is applied to, image textures and SVG filters.</p>
+        <p>Also you can see heavy use of map symbols here, namely labels and icons. The labels are set in the free web font <a href="http://www.fontsquirrel.com/fonts/Aquiline" target="_blank">Aquiline</a>, created by Manfred Klein.</p>
 
-<div id="map">
-	
+        <div class="k-layer-toggle">
+            <h2>Toggle Layer Visibility</h2>
+            <label class="checkbox"><input type="checkbox" checked value="graticule"> Graticule</label>
+            <label class="checkbox"><input type="checkbox" checked value="bgback"> Land Outer Glow</label>
+            <label class="checkbox"><input type="checkbox" checked value="bg"> Land Inner Glow</label>
+            <label class="checkbox"><input type="checkbox" checked value="bgstroke"> Land Outline</label>
+            <label class="checkbox"><input type="checkbox" checked value="context"> Surrounding Countries</label>
+            <label class="checkbox"><input type="checkbox" checked value="fg"> Italian Provinces</label>
+            <label class="checkbox"><input type="checkbox" checked value="citylbl"> City Label</label>
+            <label class="checkbox"><input type="checkbox" checked value="cityico"> City Icons</label>
+            <label class="checkbox"><input type="checkbox" checked value="clblbg"> Country Label Background</label>
+            <label class="checkbox"><input type="checkbox" checked value="clblfg"> Country Label Foreground</label>
+            
+        </div>
+    </div>
+    <div class="span8">
+        <div id="map"></div>
+    </div>
 </div>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
 

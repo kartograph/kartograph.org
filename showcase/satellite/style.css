@@ -1,59 +1,24 @@
-body,html { background: #fff; height:100%; font-family: Helvetica Neue, Helvetica, Arial, sans-serif; padding: 0; margin: 0;}
-
-#head {
-	margin: 20px auto 5px;
-	width: 1000px;
-}
 #map {
-	margin: 0 auto 30px;
-	width: 100%;
-	border: 6px solid #D1BEB0;
-	height: 50%;
-	position: relative;
+	border: 2px solid #745C1B;
+	background: #fff url(/img/noise.png);
+	border-radius: 5px;
 }
-.city2 .label {
-	font-family: Georgia;
-	font-size: 12px;
-	text-transform: uppercase;
-	font-style: italic;
-	color: #000;
-	opacity: 1;
-	padding-left: 1px;
-	text-shadow: 1px 1px 1px #fff;
-	display: inline;
-}
-.city .label {
-	font-family: Georgia;
-	font-size: 12px;
-	color: #411;
-	opacity: .8;
-	padding-left: 1px;
-	text-shadow: 1px 1px 1px #fff;
-	display: none;
-	background: #fff;
-}
-.city:hover .label {
-	display: inline;
-}
-svg .flight {
-	stroke-width: .4px;
-	stroke: #922;
-}
+
 svg path { stroke-linejoin: round }
-svg .sea { fill: #fff;stroke-width: .25px; }
-svg .g1 {
+
+svg .sea { 
+	fill: #fff;
+	stroke-width: .25px; 
+}
+
+svg .graticule {
 	fill: none;
 	stroke-width: .2px;
 }
-svg .g2 {
-	fill: none;
-	stroke-width: .2px;
-	stroke-opacity: .1;
-}
-svg .bg {
+svg .bg, svg .bgback {
 	stroke: none;
 	fill: #fff;
-	fill-opacity: 0.75;
+	fill-opacity: 1;
 }
 svg .bgstroke {
 	stroke: #7C5B27;
@@ -64,7 +29,7 @@ svg .context {
 	stroke: #D1BEB0;
 	stroke-opacity: .3;
 	fill: #D1BEB0;
-	fill-opacity: .2;
+	fill-opacity: .23;
 }
 svg .fg {
 	stroke: #cbb;
@@ -73,11 +38,10 @@ svg .fg {
 	fill: #fff;
 	fill-opacity: 0;
 }
-svg .polygon.fg:hover {
-	fill: #fca;
-	fill-opacity: .5;
+svg .fg:hover {
+	fill: #daa;
+	fill-opacity: .37;
 }
-
 svg .dotMarker {
 	stroke: #330;
 	stroke-opacity: .8;
@@ -88,12 +52,25 @@ svg .dotMarker:hover {
 	stroke: #000;
 	fill: #ff3;
 	fill-opacity: .7;
-}	
-#tutorial {
-	margin: 20px auto 30px;
-	width: 1000px;
-	padding: 30px;
 }
-#map svg .sea {
-	background: lightblue;
+
+@font-face {
+    font-family: 'AquilineTwoRegular';
+    src: url('AquilineTwo-webfont.eot');
+    src: url('AquilineTwo-webfont.eot?#iefix') format('embedded-opentype'),
+         url('AquilineTwo-webfont.woff') format('woff'),
+         url('AquilineTwo-webfont.ttf') format('truetype'),
+         url('AquilineTwo-webfont.svg#AquilineTwoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }
+
+.k-layer-toggle h2 {
+	margin: 20px 0 10px;
+	font-size: 20px;
+}
+.k-layer-toggle label {
+	margin-left: 3px;
+}
+

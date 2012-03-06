@@ -10,13 +10,24 @@
 	<link rel="stylesheet" href="/css/bootstrap.css" type="text/css" />
 	<link rel="stylesheet" href="/css/k.css" type="text/css" />
    <!-- Le fav and touch icons -->
-   <link rel="shortcut icon" href="/images/favicon.ico">
-   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-   <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-touch-icon-72x72.png">
-   <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-touch-icon-114x114.png">
-   <script type="text/javascript" src="http://assets.kartograph.org/vendor/jquery.min.js"></script>
+   <link rel="shortcut icon" href="/favicon.ico">
+   <link rel="apple-touch-icon" href="/img/apple-touch-57.png">
+   <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-touch-72.png">
+   <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-touch-114.png">
+{% if page.scripts %}
+   <script type="text/javascript" src="/js/script.min.js"></script>
+   <script type="text/javascript">
+   {% for scripts in page.scripts %}
+      $script(['{{ scripts[1] }}'{% for s in scripts offset:2 %}, '{{ s }}'{% endfor %}], '{{ scripts[0] }}');
+   {% endfor %}{% if page.jsplugins %}
+      $script(['{{ page.jsplugins[0] }}'{% for item in page.jsplugins offset:1 %}, '{{ item }}'{% endfor %}]);
+   {% endif %}
+   </script>
+
+{% endif %}
 </head>
 <body>
+
 
 	{{ content }}
 
