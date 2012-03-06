@@ -2,7 +2,8 @@
 layout: default
 title: Technical Details
 headline: Look Ma’, no tiles!
-tagline: It's all SVG
+tagline: 100% vector mapping, 0% tiles. Promised.
+headbg: /img/notiles.jpg
 ---
 
 <div class="row">
@@ -12,29 +13,21 @@ tagline: It's all SVG
 		
 
 		<p>The core concept of Kartograph is to separate the mapping process in the map generation and map rendering part. The client-side library <a href="/about/kartograph.js/">kartograph.js</a> renders pre-generated maps stored in SVG files. You can chose among hundrets of ready-to-use maps or simply generate your own using <a href="/about/kartograph.py/">kartograph.py</a>, the open source Python SVG map generator.</p>
-		<p>The Kartograph framework essentially consists of two major parts. The first is a Python library to generate SVG maps from various geodata sources (shapefiles, KML, GeoJson). By '<em>generate</em>' we mean that the geodata is filtered, projected, generalized, joined, cropped and finally stored as vector graphics.</p>
-		<p>The second part is a JavaScript library that will load and render the SVG map in any web browser. </p>
-		<p>Kartograph is written in Python and JavaScript (CoffeeScript, acutally). </p>
 
-	</div>
-</div>
-
-<div class="row">
-	<div class="span3" style="height:200px">
-	– put pretty sketch here –
-	</div>
-	<div class="span6">
-	<h2>1. Create your map</h2>
 		
-	</div>
+    </div>
 </div>
 <div class="row">
-	
-	<div class="span5">
-	<h2>2. Make it interactive</h2>
-		<p> A typical process of creating a map using Kartograph looks like this: The first thing you do is to generate a SVG map from the source geo data, which is mostly boundary shapefiles. You can choose a map projection and tweak on a few parameters. Once you're done with that you go one and load the SVG into your web application. That's where the Kartograph JavaScript library comes in.</p>
-	</div>
-	<div class="span4">
-	– put pretty sketch here –
+    <div class="span3"><img src="/img/3d.png" alt="" /></div>
+    <div class="span6 k-intro">
+        <h2 style="margin-bottom:10px">From ideas to maps</h2>
+        <ol>
+            <li>Choose which map you want to display and which <a href="/showcase/projections/">projection</a> should be used. Currently you can create maps from ESRI shapefiles only, but more formats will be supported in the future.</li>
+            <li>Generate the map SVG using <a href="/about/kartograph.py/">kartograph.py</a>. Customize the map, filter or join features, add a graticule.</li>
+            <li>Load the generated SVG into your website using <a href="/about/kartograph.js/">kartograph.js</a>. Specify which layers to add and add some decent styling to them using CSS. You can even add more advanced styling using <a href="/showcase/itala/">SVG filters</a>.</li>
+            <li>Visualize your data using map <a href="/showcase/charts/">symbols</a>, <a href="/showcase/choropleth/">choropleth</a> maps or <a href="/showcase/dotgrid/">dot grids</a>.</li>
+        </ol>
+    	
 	</div>
 </div>
+

@@ -29,7 +29,7 @@
 	margin-left: 0.4em;
 }
 
-.k-intro p {
+.k-intro p, .k-intro li {
 	font-size: 15px;
 	font-weight: 300;
 	line-height: 21px;
