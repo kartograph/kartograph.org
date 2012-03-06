@@ -37,7 +37,7 @@ $script.ready('kartograph', function() {
     };
     var globeopt = new GlobeOpt();
     var url = location.href.split('#');
-    if (url.length>0) globeopt.proj = url[1];
+    if (url.length>1) globeopt.proj = url[1];
 
     $(function() {
         var P,
