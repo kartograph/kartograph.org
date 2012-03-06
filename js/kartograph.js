@@ -47,9 +47,9 @@
 
   kartograph = root.$K = (_ref = root.kartograph) != null ? _ref : root.kartograph = {};
 
-  kartograph.version = "0.0.0";
+  kartograph.version = "0.1.0";
 
-  __verbose__ = true && (typeof console !== "undefined" && console !== null);
+  __verbose__ = false && (typeof console !== "undefined" && console !== null);
 
   warn = function(s) {
     if (__verbose__) {
@@ -3938,7 +3938,11 @@
       _ref14 = me.symbols;
       for (_i = 0, _len = _ref14.length; _i < _len; _i++) {
         s = _ref14[_i];
-        s.clear();
+        try {
+          s.clear();
+        } catch (error) {
+          warn('error: symbolgroup.remove');
+        }
       }
       _ref15 = me.layers;
       _results = [];
