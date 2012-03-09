@@ -6,28 +6,6 @@ prev: choropleth
 next: dotgrid
 ---
 
-<style type="text/css">
-.map-container { position: relative; }
-#map-overlay {
-    position: absolute; top:20px; left:0; width: 100%; z-index: 1000; height: 50px;
-    background-image: linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
-    background-image: -o-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
-    background-image: -moz-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
-    background-image: -ms-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
-
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0, rgba(255,255,255, 0)),
-        color-stop(1, rgb(255,255,255))
-    );
-}
-#map .context { stroke: none; fill: #eee; }
-#map .spain { stroke-width: 1px; stroke: #fff; fill: #ddd; }
-</style>
-
 <script type="text/javascript">
 
 $script.ready(['jquery','kartograph'], function() {
@@ -39,56 +17,60 @@ $script.ready(['jquery','kartograph'], function() {
         mc.height(mc.width()*.8);
 
         map = $K.map('#map');
-        map.loadMap('spain.svg', function() {
-            map.addLayer('context');
-            map.addLayer({ id: 'spain', key: 'nuts', title: function(d) {
-                return d.nuts
-            } });
 
-            $.get('unemployment-es.csv', function(data) {
-                data = $.parseCSV(data);
+        map.loadStyles('style.css', function() {
 
-                updateMap = function() {
-                    var scale,
-                        prop = $('.gender.btn-primary').data('val')+'-'+$('.age.btn-primary').data('val'),
-                        type = $('.chart.btn-primary').data('val');
+            map.loadMap('spain.svg', function() {
+                map.addLayer('context');
+                map.addLayer({ id: 'spain', key: 'nuts', title: function(d) {
+                    return d.nuts
+                } });
 
-                    scale = $K.scale.linear(data.rows, 'AREA');
+                $.get('unemployment-es.csv', function(data) {
+                    data = $.parseCSV(data);
 
-                    if (symbols) symbols.remove();
+                    updateMap = function() {
+                        var scale,
+                            prop = $('.gender.btn-primary').data('val')+'-'+$('.age.btn-primary').data('val'),
+                            type = $('.chart.btn-primary').data('val');
 
-                    symbols = map.addSymbols({
-                        data: data.rows,
-                        type: $K[type],
-                        colors: ['#1f78b4', '#eef'],
-                        border: '#fff',
-                        values: function(d) { return [d[prop],100-d[prop]] },
-                        location: function(d) { return 'spain.'+d.GEO; },
-                        radius: function(d) { return Math.max(8, Math.sqrt(scale(d.AREA))*35) }
-                    });
+                        scale = $K.scale.linear(data.rows, 'AREA');
 
-                    /* the same as choropleth
-                    var colorscale;
-                    colorscale = new chroma.ColorScale({
-                        colors: chroma.brewer.YlGnBu,
-                        limits: chroma.limits(data.rows, 'e', 7, prop)
-                    });
-                    map.choropleth({
-                        data: data.rows,
-                        key: 'GEO',
-                        colors: function(d) {
-                            if (d == null) return '#fff';
-                            return colorscale.getColor(d[prop]);
-                        },
-                        duration: 300
-                    });
-                    */
-                };
+                        if (symbols) symbols.remove();
 
-                updateMap();
+                        symbols = map.addSymbols({
+                            data: data.rows,
+                            type: $K[type],
+                            colors: ['#1f68b4', '#aaceff'],
+                            border: '#fff',
+                            values: function(d) { return [d[prop],100-d[prop]] },
+                            location: function(d) { return 'spain.'+d.GEO; },
+                            radius: function(d) { return Math.max(8, Math.sqrt(scale(d.AREA))*35) }
+                        });
+
+
+                        /* the same as choropleth
+                        var colorscale;
+                        colorscale = new chroma.ColorScale({
+                            colors: chroma.brewer.YlGnBu,
+                            limits: chroma.limits(data.rows, 'e', 7, prop)
+                        });
+                        map.choropleth({
+                            data: data.rows,
+                            key: 'GEO',
+                            colors: function(d) {
+                                if (d == null) return '#fff';
+                                return colorscale.getColor(d[prop]);
+                            },
+                            duration: 300
+                        });
+                        */
+                    };
+
+                    updateMap();
+                });
             });
         });
-
 
         $('.btn').click(function(event) {
             var tgt = $(event.target), par = tgt.parent();

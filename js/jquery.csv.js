@@ -3,11 +3,11 @@ $script.ready('jquery', function() {
     $.extend({
         parseCSV: function(csv, opt) {
             if (opt === undefined) opt = {};
-            if (opt.sepChar == null) opt.sepChar = "auto";
-            if (opt.header == null) opt.header = true;
-            if (opt.trim == null) opt.trim = true;
-            if (opt.map == null) opt.map = true;
-            if (opt.numberize == null) opt.numberize = true;
+            if (opt.sepChar === undefined) opt.sepChar = "auto";
+            if (opt.header === undefined) opt.header = true;
+            if (opt.trim === undefined) opt.trim = true;
+            if (opt.map === undefined) opt.map = true;
+            if (opt.numberize === undefined) opt.numberize = true;
 
             var i,j,res = { rows: [] };
             var rows = csv.split("\n");
@@ -15,50 +15,55 @@ $script.ready('jquery', function() {
                 var mc=0;
                 $.each([',','\t',';'], function(i,c) {
                     var k;
-                    if (k=rows[0].split(c).length > mc) {
+                    k = rows[0].split(c).length;
+                    if (k > mc) {
                         opt.sepChar = c;
                         mc = k;
                     }
                 });
             }
+
             if (opt.header) res.header = rows[0].split(opt.sepChar);
+
             rows = rows.slice(1);
-            for (i in rows) {
-                res.rows.push(rows[i].split(opt.sepChar));
-            }
+            $.each(rows, function(i, r) {
+                res.rows.push(r.split(opt.sepChar));
+            });
             // clear whitespaces
             if (opt.trim) {
-                for (i in res.header) {
+                $.each(res.header, function(i) {
                     res.header[i] = res.header[i].trim();
-                }
-                for (i in res.rows) {
-                    for (j in res.rows[i]) {
+                });
+                $.each(res.rows, function(i) {
+                    $.each(res.rows[i], function(j) {
                         res.rows[i][j] = res.rows[i][j].trim();
-                    }
-                }
+                    });
+                });
             }
             // convert to numbers
             if (opt.numberize) {
-                for (i in res.header) {
-                    if (res.header[i] == Number(res.header[i])) 
-                        res.header[i] = Number(res.header[i]);
-                }
-                for (i in res.rows) {
-                    for (j in res.rows[i]) {
-                        if (res.rows[i][j] == Number(res.rows[i][j]))
-                            res.rows[i][j] = Number(res.rows[i][j]);
-                    }
-                }
+                $.each(res.header, function(i) {
+                    var n = Number(res.header[i]);
+                    if (!isNaN(n) && n == res.header[i])
+                        res.header[i] = n;
+                });
+                $.each(res.rows, function(i) {
+                    $.each(res.rows[i], function(j) {
+                        var n = Number(res.rows[i][j]);
+                        if (!isNaN(n) && n == res.rows[i][j])
+                            res.rows[i][j] = n;
+                    });
+                });
             }
             // store rows as dictionaries
             if (opt.map) {
-                for (i in res.rows) {
+                $.each(res.rows, function(i) {
                     var altrow = {};
-                    for (j in res.rows[i]) {
+                    $.each(res.rows[i], function(j) {
                         altrow[res.header[j]] = res.rows[i][j];
-                    }
+                    });
                     res.rows[i] = altrow;
-                }
+                });
             }
             return res;
         }

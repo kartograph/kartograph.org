@@ -2135,7 +2135,7 @@
         me.cy = cy;
         me.cp = cp;
       } else {
-        console.error('kartograph.proj.Mollweide: either p or cx,cy,cp must be defined');
+        warn('kartograph.proj.Mollweide: either p or cx,cy,cp must be defined');
       }
     }
 
@@ -2942,7 +2942,7 @@
         path = paths[_j];
         pd = (_ref14 = pathData[id]) != null ? _ref14 : null;
         col = colors(pd);
-        if (opts.duration != null) {
+        if ((opts.duration != null) && opts.duration > 0) {
           if (__type(opts.duration) === "function") {
             dur = opts.duration(pd);
           } else {
@@ -2973,7 +2973,7 @@
   };
 
   /*
-      kartograph - a svg mapping library 
+      kartograph - a svg mapping library
       Copyright (C) 2011  Gregor Aisch
   
       This program is free software: you can redistribute it and/or modify
@@ -2991,7 +2991,7 @@
   */
 
   kartograph.Kartograph.prototype.dotgrid = function(opts) {
-    var anim, data, data_col, data_key, delay, dly, dotgrid, dotstyle, ds, dur, f, g, gridsize, id, layer, layer_id, me, path, pathData, paths, pd, row, size, sizes, x, y, _i, _j, _k, _l, _len, _len2, _len3, _len4, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref20, _ref21, _ref22, _ref23;
+    var anim, data, data_col, data_key, delay, dly, dotgrid, dotstyle, ds, dur, f, g, gridsize, id, layer, layer_id, me, path, pathData, paths, pd, row, size, sizes, x, y, _i, _j, _k, _l, _len, _len2, _len3, _len4, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref20, _ref21, _ref22, _ref23, _ref24;
     me = this;
     layer_id = (_ref12 = opts.layer) != null ? _ref12 : me.layerIds[me.layerIds.length - 1];
     if (!me.layers.hasOwnProperty(layer_id)) {
@@ -3037,7 +3037,6 @@
     }
     if (gridsize > 0) {
       if (dotgrid.grid.length === 0) {
-        console.log('initialize new grid', dotgrid.grid.length);
         for (x = 0, _ref17 = me.viewport.width; 0 <= _ref17 ? x <= _ref17 : x >= _ref17; x += gridsize) {
           for (y = 0, _ref18 = me.viewport.height; 0 <= _ref18 ? y <= _ref18 : y >= _ref18; y += gridsize) {
             g = {
@@ -3053,6 +3052,8 @@
                 path = paths[_k];
                 if (path.vpath.isInside(g.x, g.y)) {
                   f = true;
+                  pd = (_ref20 = pathData[id]) != null ? _ref20 : null;
+                  size = sizes(pd);
                   g.pathid = id;
                   g.shape = layer.paper.circle(g.x, g.y, 1);
                   break;
@@ -3064,20 +3065,20 @@
           }
         }
       }
-      _ref20 = dotgrid.grid;
-      for (_l = 0, _len4 = _ref20.length; _l < _len4; _l++) {
-        g = _ref20[_l];
+      _ref21 = dotgrid.grid;
+      for (_l = 0, _len4 = _ref21.length; _l < _len4; _l++) {
+        g = _ref21[_l];
         if (g.pathid) {
-          pd = (_ref21 = pathData[g.pathid]) != null ? _ref21 : null;
+          pd = (_ref22 = pathData[g.pathid]) != null ? _ref22 : null;
           size = sizes(pd);
-          dur = (_ref22 = opts.duration) != null ? _ref22 : 0;
-          delay = (_ref23 = opts.delay) != null ? _ref23 : 0;
+          dur = (_ref23 = opts.duration) != null ? _ref23 : 0;
+          delay = (_ref24 = opts.delay) != null ? _ref24 : 0;
           if (__type(delay) === "function") {
             dly = delay(pd);
           } else {
             dly = delay;
           }
-          if (dur > 0) {
+          if (dur > 0 && Raphael.svg) {
             anim = Raphael.animation({
               r: size * 0.5
             }, dur);
