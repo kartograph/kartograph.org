@@ -1,0 +1,19 @@
+.map-container { position: relative; }
+#map-overlay {
+    position: absolute; top:20px; left:0; width: 100%; z-index: 1000; height: 50px;
+    background-image: linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+    background-image: -o-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+    background-image: -moz-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+    background-image: -ms-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgba(255,255,255, 0)),
+        color-stop(1, rgb(255,255,255))
+    );
+}
+#map .context { stroke: none; fill: #eee; }
+#map .spain { stroke-width: 1px; stroke: #fff; fill: #ddd; }
