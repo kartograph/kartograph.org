@@ -3429,6 +3429,7 @@
       pt = points[i];
       cmd = (_ref14 = cmds[i]) != null ? _ref14 : 'L';
       xy = me.lonlat2xy(pt);
+      if (isNaN(xy[0]) || isNaN(xy[1])) continue;
       path_str += cmd + xy[0] + ',' + xy[1];
     }
     return path_str;

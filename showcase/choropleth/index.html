@@ -23,12 +23,13 @@ $script.ready(['kartograph'], function() {
 
 				map = $K.map('#map', w, w);
 				map.loadMap('france-departments.svg', function() {
-
-					map.addLayer({
-						id: 'departments',
-						key: 'id'
-					});
-					updateMap();
+					map.loadStyles('styles.css', function() {
+						map.addLayer({
+							id: 'departments',
+							key: 'id'
+						});
+						updateMap();
+					})
 				});
 			}
 		});
@@ -69,10 +70,6 @@ $script.ready(['kartograph'], function() {
 
 });
 </script>
-
-<style>
-#map path { stroke-width: 0.5px; }
-</style>
 
 <div class="row">
 	<div class="span7">
