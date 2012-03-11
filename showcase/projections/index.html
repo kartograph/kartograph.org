@@ -22,9 +22,6 @@ prev: 3d
     font: 11px 'Lucida Grande', sans-serif;
 }
 </style>
-<!--[if lt IE 9]>
-<script type="text/javascript" src="/js/flashcanvas.js"></script>
-<![endif]-->
 <script type="text/javascript">
 $script.ready('kartograph', function() {
 
@@ -154,10 +151,10 @@ $script.ready('kartograph', function() {
             showMap(globeopt.proj, coastlines);
             // Iterate over all controllers
         };
-        //$.getJSON('coastline.json', function(coastlines) {
-        //        window.coastlines = coastlines;
-                //renderFrame();
-        //});
+        $.getJSON('coastline.json', function(coastlines) {
+                window.coastlines = coastlines;
+                renderFrame();
+        });
         window.gui = new dat.GUI({ 
             autoPlace: false,
             width: 330,
@@ -204,7 +201,7 @@ $script.ready('kartograph', function() {
             location.href = url[0]+'#'+globeopt.proj;
         };
 
-        //updateGUI();
+        updateGUI();
 
     });
 });
