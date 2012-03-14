@@ -85,6 +85,7 @@ $script.ready('kartograph', function() {
             ctx.fill();
             ctx.lineWidth = 0.2;
             ctx.beginPath();
+            // graticule
             for (lat=0;lat<90;lat+=grat) {
                 var lats = lat == 0 ? [0] : [lat,-lat];
                 for (var l in lats) {
@@ -97,7 +98,7 @@ $script.ready('kartograph', function() {
                         p0 = line[i];
                         p1 = line[i+1];
                         d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
-                        if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 100) {
+                        if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 30) {
                             p0 = view.project(P.project(p0[0],p0[1]));
                             p1 = view.project(P.project(p1[0],p1[1]));
                             ctx.moveTo(p0[0],p0[1]);
@@ -106,11 +107,12 @@ $script.ready('kartograph', function() {
                     }
                 }
             }
+            // graticule
             for (lon=0;lon<181;lon+=grat) {
                 var lons = lon == 0 || lon == 180 ? [lon] : [lon,-lon];
                 $.each(lons, function(l, lon_) {
                     var line = [];
-                    for (lat=-90+(lon % 90 == 0 ? 0 : grat);lat<90-(lon%90 == 0 ? 0 : grat)+1;lat++) {
+                    for (lat=-90+(lon % 90 == 0 ? 0 : grat);lat<90-(lon%90 == 0 ? 0 : grat)+1;lat+=0.25) {
                         line.push([lon_,lat]);
                     }
                     for (var i=0;i<line.length-1;i++) {
