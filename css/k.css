@@ -128,6 +128,7 @@ h1 {
 }
 .k-gui .dg .cr.number input[type="text"] {
 	color: #356;
+	height: 12px;
 }
 .k-gui .dg .c .slider {
 	background-color: #ddd;
@@ -158,4 +159,8 @@ h1 {
 .k-gui .dg .closed li.title {
 	background-image: none;
 	background-color: #e4e4e4;
+}
+.k-gui .dg .cr.number input[type="text"]:hover,
+.k-gui .dg .cr.number input[type="text"]:focus {
+	color: #eee;
 }

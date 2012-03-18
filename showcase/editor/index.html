@@ -123,7 +123,7 @@ $script.ready('kartograph', function() {
                 var lons = lon == 0 || lon == 180 ? [lon] : [lon,-lon];
                 $.each(lons, function(l, lon_) {
                     var line = [];
-                    for (lat=-90+(lon % 90 == 0 ? 0 : grat_lon);lat<90-(lon%90 == 0 ? 0 : grat_lon)+1;lat+=0.25) {
+                    for (lat=-90+(lon % 90 == 0 ? 0 : grat_lat);lat<90-(lon%90 == 0 ? 0 : grat_lat)+1;lat+=0.25) {
                         line.push([lon_,lat]);
                     }
                     for (var i=0;i<line.length-1;i++) {
@@ -162,12 +162,14 @@ $script.ready('kartograph', function() {
         frame = 0,
         serializeConfig = function() {
             var cfg = {};
+            // projection
             cfg['proj'] = { id: globeopt.proj };
             $.each(projopts, function(key, val) {
                 if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
                     cfg.proj[key] = globeopt[key];
                 }
             });
+            // layers
             cfg['layers'] = [];
             if (globeopt.graticule) {
                 var l = { special: 'graticule' };
@@ -175,6 +177,19 @@ $script.ready('kartograph', function() {
                 if (globeopt.longitudes > 0) l.longitudes = globeopt.longitudes;
                 cfg.layers.push(l);
             }
+            if (globeopt.countries) {
+                l = { id: 'countries', src: 'shp/countries.shp' };
+                cfg.layers.push(l);
+            }
+            if (globeopt.lakes) {
+                l = { id: 'lakes', src: 'shp/lakes.shp' };
+                cfg.layers.push(l);
+            }
+            // export
+            cfg['export'] = {
+                width: globeopt.auto_width ? 'auto' : globeopt.width,
+                height: globeopt.auto_height ? 'auto': globeopt.height
+            };
             $('#cfg').html(JSON.stringify(cfg));
         },
         renderFrame = function() {
@@ -249,8 +264,8 @@ $script.ready('kartograph', function() {
             location.href = url[0]+'#'+globeopt.proj;
 
             f = grp('Layer');
-            f.add(globeopt, 'countries');
-            f.add(globeopt, 'lakes');
+            f.add(globeopt, 'countries').onChange(serializeConfig);;
+            f.add(globeopt, 'lakes').onChange(serializeConfig);;
 
 
             f = grp('Graticule');
@@ -259,14 +274,19 @@ $script.ready('kartograph', function() {
             f.add(globeopt, 'latitudes', 0, 60).step(1).onChange(renderFrame);
 
             f = grp('Bounds');
-            f.add(globeopt, 'mode');
-
+            f.add(globeopt, 'mode', ['bbox','polygon', 'points']);
+            if (globeopt.mode == 'bbox') {
+                f.add(globeopt, 'min-lat', -90, 90).step(1);
+                f.add(globeopt, 'min-lon', -180, 180).step(1);
+                f.add(globeopt, 'max-lat', -90, 90).step(1);
+                f.add(globeopt, 'min-lon', -180, 180).step(1);
+            }
 
             f = grp('Export');
-            f.add(globeopt, 'width', 100, 3000);
-            f.add(globeopt, 'auto_width');
-            f.add(globeopt, 'height', 100, 3000);
-            f.add(globeopt, 'auto_height');
+            f.add(globeopt, 'width', 100, 3000).step(1).onChange(serializeConfig);
+            f.add(globeopt, 'auto_width').onChange(serializeConfig);
+            f.add(globeopt, 'height', 100, 3000).step(1).onChange(serializeConfig);
+            f.add(globeopt, 'auto_height').onChange(serializeConfig);
 
         };
 
