@@ -148,3 +148,14 @@ h1 {
 .k-gui .dg .save-row select {
 	margin-top: 6px;
 }
+.k-gui .dg .cr.boolean:hover {
+	background: #ddd;
+}
+
+.k-gui .dg .c input[type="checkbox"] {
+	margin-top: 0;
+}
+.k-gui .dg .closed li.title {
+	background-image: none;
+	background-color: #e4e4e4;
+}
