@@ -305,7 +305,7 @@ $script.ready('kartograph', function() {
     });
 
     $('#generate').click(function() {
-        location.href = 'http://0.0.0.0:8080/1.0/svg/?config=' + $('#cfg').html();
+        window.open('http://0.0.0.0:8080/1.0/svg/?config=' + $('#cfg').html(), '_kartograph');
     });
 
 });
