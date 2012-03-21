@@ -49,7 +49,8 @@ $script.ready('jquery', function() {
                 });
                 $.each(res.rows, function(i) {
                     $.each(res.rows[i], function(j) {
-                        var n = Number(res.rows[i][j]);
+								var n = Number(res.rows[i][j]);
+								if (res.rows[i][j] == "") continue;
                         if (!isNaN(n) && n == res.rows[i][j])
                             res.rows[i][j] = n;
                     });
