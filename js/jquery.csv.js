@@ -50,7 +50,7 @@ $script.ready('jquery', function() {
                 $.each(res.rows, function(i) {
                     $.each(res.rows[i], function(j) {
 								var n = Number(res.rows[i][j]);
-								if (res.rows[i][j] == "") continue;
+								if (res.rows[i][j] == "") return;
                         if (!isNaN(n) && n == res.rows[i][j])
                             res.rows[i][j] = n;
                     });
