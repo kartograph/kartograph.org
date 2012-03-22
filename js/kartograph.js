@@ -47,7 +47,7 @@
 
   kartograph = root.$K = (_ref = root.kartograph) != null ? _ref : root.kartograph = {};
 
-  kartograph.version = "0.1.3";
+  kartograph.version = "0.1.5";
 
   __verbose__ = false && (typeof console !== "undefined" && console !== null);
 
@@ -954,6 +954,20 @@
       return (me.pathsById != null) && (me.pathsById[id] != null);
     };
 
+    MapLayer.prototype.getPathsData = function() {
+      /* returns a list of all shape data dictionaries
+      */
+      var me, path, pd, _i, _len, _ref6;
+      me = this;
+      pd = [];
+      _ref6 = me.paths;
+      for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+        path = _ref6[_i];
+        pd.push(path.data);
+      }
+      return pd;
+    };
+
     MapLayer.prototype.getPath = function(id) {
       var me;
       me = this;
@@ -1018,7 +1032,7 @@
   MapLayerPath = (function() {
 
     function MapLayerPath(svg_path, layer_id, map, titles) {
-      var attr, data, i, me, paper, path, title, uid, view, _ref6;
+      var attr, data, i, me, paper, path, title, uid, v, view, vn, _ref6;
       me = this;
       paper = map.paper;
       view = map.viewBC;
@@ -1037,7 +1051,10 @@
       for (i = 0, _ref6 = svg_path.attributes.length - 1; 0 <= _ref6 ? i <= _ref6 : i >= _ref6; 0 <= _ref6 ? i++ : i--) {
         attr = svg_path.attributes[i];
         if (attr.name.substr(0, 5) === "data-") {
-          data[attr.name.substr(5)] = attr.value;
+          v = attr.value;
+          vn = Number(v);
+          if (v.trim() !== "" && vn === v && !isNaN(vn)) v = vn;
+          data[attr.name.substr(5)] = v;
         }
       }
       me.data = data;
@@ -2359,8 +2376,8 @@
         phi -= th1;
         if (Math.abs(th1) < EPS) break;
       }
-      x = FXC * lam * Math.cos(phi *= 0.5);
-      y = Math.sin(phi) * (phi < 0.0 ? FYCS : FYCN);
+      x = 1000 * FXC * lam * Math.cos(phi *= 0.5);
+      y = 1000 * Math.sin(phi) * (phi < 0.0 ? FYCS : FYCN);
       return [x, y * -1];
     };
 
@@ -2823,7 +2840,7 @@
 
     Conic.title = "Conic Projection";
 
-    Conic.parameters = ['lon0', 'lat0', 'lat1'];
+    Conic.parameters = ['lon0', 'lat0', 'lat1', 'lat2'];
 
     function Conic(opts) {
       var self, _ref10, _ref11;
@@ -2865,7 +2882,7 @@
         Lambert Conformal Conic Projection (spherical)
     */
 
-    LCC.title = "Lambert Conformal Conic Projection (spherical)";
+    LCC.title = "Lambert Conformal Conic Projection";
 
     function LCC(opts) {
       var abs, c, cos, cosphi, m, n, pow, secant, self, sin, sinphi, tan, _ref10;
@@ -2911,6 +2928,8 @@
     return LCC;
 
   })();
+
+  __proj['lcc'] = LCC;
 
   PseudoConic = (function() {
 
@@ -3079,7 +3098,7 @@
         id = row[data_key];
         pathData[String(id)] = row;
       }
-    } else {
+    } else if (__type(data) === "object") {
       for (id in data) {
         row = data[id];
         pathData[String(id)] = row;
@@ -3090,8 +3109,13 @@
       paths = _ref13[id];
       for (_j = 0, _len2 = paths.length; _j < _len2; _j++) {
         path = paths[_j];
-        pd = (_ref14 = pathData[id]) != null ? _ref14 : null;
-        col = colors(pd);
+        if (!(data != null)) pd = path.data;
+        if (__type(data) === "function") {
+          pd = data(path.data);
+        } else {
+          pd = (_ref14 = pathData[id]) != null ? _ref14 : null;
+        }
+        col = colors(pd, path.data);
         if ((opts.duration != null) && opts.duration > 0) {
           if (__type(opts.duration) === "function") {
             dur = opts.duration(pd);
@@ -3108,7 +3132,7 @@
             delay = 0;
           }
           if (path.svgPath.attrs['fill'] === "none") {
-            ncol = colors(null);
+            ncol = colors(null, path.data);
             path.svgPath.attr('fill', ncol);
           }
           anim = Raphael.animation({
