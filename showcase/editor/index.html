@@ -1,0 +1,349 @@
+---
+layout: showcase
+title: Map Projections
+jsplugins: ['dat.gui.js']
+prev: 3d
+---
+
+<style type="text/css">
+/* reset bootstrap styles for dat.gui */
+.dg select {
+    width: auto;
+    height: auto;
+    border: none;
+    color: #000;
+    font: 11px 'Lucida Grande', sans-serif
+}
+.dg input {
+    box-shadow: none;
+    -webkit-box-shadow: none
+    -moz-box-shadow: none;
+    border-radius: 0;
+    font: 11px 'Lucida Grande', sans-serif;
+}
+</style>
+<script type="text/javascript" src="/js/zeroclipboard.js"></script>
+<script type="text/javascript">
+$script.ready(['kartograph'], function() {
+
+    var clip;
+
+    // initialize copy button
+    ZeroClipboard.setMoviePath( '/js/zeroclipboard.swf' );
+    clip = new ZeroClipboard.Client();
+    clip.setHandCursor( true );
+    clip.setText('foobar');
+    clip.glue('d_clip_button', 'd_clip_container');
+
+    var GlobeOpt = function() {
+        this.lon0 = 20;
+        this.lat0 = 35;
+        this.lat1 = 30;
+        this.lat2 = 50;
+        this.dist = 2;
+        this.up = 0;
+        this.tilt = 0;
+        this.proj = 'ortho';
+        this.width = 800;
+        this.height = 600;
+        this.auto_width = false;
+        this.auto_height = true;
+        this.graticule = true;
+        this.latitudes = 10;
+        this.longitudes = 10;
+        this.countries = true;
+        this.sea = true;
+        this.lakes = false;
+        this.mode = 'bbox';
+        //this.flip = 0;
+    };
+    var globeopt = new GlobeOpt();
+    var url = location.href.split('#');
+    if (url.length>1) globeopt.proj = url[1];
+
+    $(function() {
+        var P,
+        createCanvas = function(id,w,h) {
+            if (document.getElementById(id) != null) {
+                var ctx = document.getElementById(id).getContext("2d");
+                ctx.clearRect(0,0,w,h+20);
+                return ctx;
+            }
+            var canvas = document.createElement("canvas");
+            canvas.setAttribute("id", id);
+            canvas.setAttribute("width", w+"px");
+            canvas.setAttribute("height", h+"px");
+            $('#map-parent').append(canvas);
+            var ctx = canvas.getContext("2d");
+            return ctx;
+        },
+        showMap = function(p, coastlines) {
+            P = new kartograph.proj[p](globeopt);
+            xy = P.project(13,14);
+            if (isNaN(xy[0]) || isNaN(xy[1])) {
+                console.error(p, P, xy);
+                return;
+            };
+            var
+            lon, lat, i,
+            w = $('#map-parent').width(),
+            h = 500,
+            grat_lat = globeopt.latitudes,
+            grat_lon = globeopt.longitudes,
+            sea = P.sea(),
+            bbox = P.world_bbox(),
+            view,
+            ctx = createCanvas("proj", w,h+20),
+            len = ctx.measureText(p.toUpperCase()).width;
+            ctx.beginPath();
+            ctx.fillStyle ="#fff";
+            view = new kartograph.View(bbox, w, h, 10);
+            for (i=0;i<sea.length;i++) {
+                xy = view.project(sea[i]);
+                if (i==0) ctx.moveTo(xy[0], xy[1]);
+                else ctx.lineTo(xy[0], xy[1]);
+            }
+            ctx.stroke();
+            ctx.fill();
+            ctx.lineWidth = 0.2;
+            ctx.beginPath();
+            // graticule
+            if (globeopt.graticule && grat_lat > 0) for (lat=0;lat<90;lat+=grat_lat) {
+                var lats = lat == 0 ? [0] : [lat,-lat];
+                for (var l in lats) {
+                    var lat_ = lats[l];
+                    var line = [];
+                    for (lon=-180;lon<180;lon++) {
+                        line.push([lon,lat_]);
+                    }
+                    for (var i=0;i<line.length-1;i++) {
+                        p0 = line[i];
+                        p1 = line[i+1];
+                        d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
+                        if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 30) {
+                            p0 = view.project(P.project(p0[0],p0[1]));
+                            p1 = view.project(P.project(p1[0],p1[1]));
+                            ctx.moveTo(p0[0],p0[1]);
+                            ctx.lineTo(p1[0],p1[1]);
+                        }
+                    }
+                }
+            }
+            // graticule
+            if (globeopt.graticule && grat_lon > 0) for (lon=0;lon<181;lon+=grat_lon) {
+                var lons = lon == 0 || lon == 180 ? [lon] : [lon,-lon];
+                $.each(lons, function(l, lon_) {
+                    var line = [];
+                    for (lat=-90+(lon % 90 == 0 ? 0 : grat_lat);lat<90-(lon%90 == 0 ? 0 : grat_lat)+1;lat+=0.25) {
+                        line.push([lon_,lat]);
+                    }
+                    for (var i=0;i<line.length-1;i++) {
+                        p0 = line[i];
+                        p1 = line[i+1];
+                        d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
+                        if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 100) {
+                            p0 = view.project(P.project(p0[0],p0[1]));
+                            p1 = view.project(P.project(p1[0],p1[1]));
+                            ctx.moveTo(p0[0],p0[1]);
+                            ctx.lineTo(p1[0],p1[1]);
+                        }
+                    }
+                });
+            }
+            ctx.stroke();
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            var cl,line,p0,p1,d;
+            for (cl=0; cl<coastlines.length; cl++) {
+                line = coastlines[cl];
+                for (i=0;i<line.length-1;i++) {
+                    p0 = line[i];
+                    p1 = line[i+1];
+                    d = P.clon ? Math.abs(P.clon(p0[0])-P.clon(p1[0])) : 0;
+                    if (P._visible(p0[0],p0[1]) && P._visible(p1[0],p1[1]) && d < 100) {
+                        p0 = view.project(P.project(p0[0],p0[1]));
+                        p1 = view.project(P.project(p1[0],p1[1]));
+                        ctx.moveTo(p0[0],p0[1]);
+                        ctx.lineTo(p1[0],p1[1]);
+                    }
+                }
+            }
+            ctx.stroke();
+        },
+        frame = 0,
+        serializeConfig = function() {
+            var cfg = {};
+            // projection
+            cfg['proj'] = { id: globeopt.proj };
+            $.each(projopts, function(key, val) {
+                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                    cfg.proj[key] = globeopt[key];
+                }
+            });
+            // layers
+            cfg['layers'] = [];
+            if (globeopt.sea) {
+                cfg.layers.push({ special: 'sea', styles: { fill: 'lightblue' } });
+            }
+            if (globeopt.graticule) {
+                var l = { special: 'graticule' };
+                if (globeopt.latitudes > 0) l.latitudes = globeopt.latitudes;
+                if (globeopt.longitudes > 0) l.longitudes = globeopt.longitudes;
+                l.styles = { 'stroke-width': '0.4px' };
+                cfg.layers.push(l);
+            }
+            if (globeopt.countries) {
+                l = { id: 'countries', src: 'shp/naturalearth/50m-admin0-countries/ne_50m_admin_0_countries.shp', attributes: { 'ISO_A3': 'iso', NAME: 'name', 'POP_EST': 'population', 'GDP_MD_EST': 'gdp' } };
+                cfg.layers.push(l);
+            }
+            if (globeopt.lakes) {
+                l = { id: 'lakes', src: 'shp/lakes.shp' };
+                cfg.layers.push(l);
+            }
+            // export
+            cfg['export'] = {
+                width: globeopt.auto_width ? 'auto' : globeopt.width,
+                height: globeopt.auto_height ? 'auto': globeopt.height
+            };
+            cfg['bounds'] = { padding: 0.02 };
+
+            var jsn = JSON.stringify(cfg, undefined, 2);
+            $('#cfg').html(jsn);
+            clip.setText(jsn);
+        },
+        renderFrame = function() {
+            showMap(globeopt.proj, coastlines);
+            serializeConfig();
+        };
+        $.getJSON('coastline.json', function(coastlines) {
+            window.coastlines = coastlines;
+            renderFrame();
+        });
+        window.gui = new dat.GUI({ 
+            autoPlace: false,
+            width: 330,
+            hideable: false,
+            resizable: false
+        });
+        $('.k-gui').append(gui.domElement);
+
+        gui.remember(globeopt);
+        var proj = [];
+        $.each(kartograph.proj, function(p) {
+            proj.push(p);
+        })
+        proj = proj.sort();
+        window.projopts = {
+            lon0: [-180,180, 1],
+            lat0: [-90, 90],
+            lat1: [-90, 90],
+            dist: [1.01, 10, 0.01],
+            up: [-180,180],
+            tilt: [-40,0]
+        };
+
+        var updateGUI = function() {
+            // reset gui
+            try {
+                var i, keys = [];
+                $.each(gui.__folders, function(key, folder) {
+                    keys.push(key);
+                    folder = gui.__folders[key];
+                    try {
+                        for (i=folder.__controllers.length-1; i>=0; i--) {
+                            folder.remove(folder.__controllers[i]);
+                        }
+                        folder.destroy();
+                    } catch (e) {}
+                });
+                for (i=gui.__controllers.length-1; i>=0; i--) {
+                    gui.remove(gui.__controllers[i]);
+                }
+            } catch (e) {}
+            // add projection selector
+            var grp = function(id) { return gui.__folders[id] !== undefined ? gui.__folders[id] : gui.addFolder(id);
+            };
+
+            var f = grp('Projection');
+            f.add(globeopt, 'proj', proj).onChange(function() {
+                updateGUI();
+                renderFrame();
+            });
+            $.each(projopts, function(key, val) {
+                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                    var s = f.add(globeopt, key, val[0], val[1]);
+                    if (val.length == 3) s.step(val[2]);
+                    s.onChange(renderFrame);
+                }
+            });
+            // $('#k-proj-title').html(kartograph.proj[globeopt.proj].title);
+            var url = location.href.split('#');
+            location.href = url[0]+'#'+globeopt.proj;
+
+            f = grp('Layer');
+            f.add(globeopt, 'sea').onChange(serializeConfig);;
+            f.add(globeopt, 'countries').onChange(serializeConfig);;
+            f.add(globeopt, 'lakes').onChange(serializeConfig);;
+
+
+            f = grp('Graticule');
+            f.add(globeopt, 'graticule').onChange(renderFrame);
+            f.add(globeopt, 'longitudes', 0, 60).step(1).onChange(renderFrame);
+            f.add(globeopt, 'latitudes', 0, 60).step(1).onChange(renderFrame);
+
+            f = grp('Bounds');
+            f.add(globeopt, 'mode', ['bbox','country', 'points']);
+            /*if (globeopt.mode == 'bbox') {
+                f.add(globeopt, 'min-lat', -90, 90).step(1);
+                f.add(globeopt, 'min-lon', -180, 180).step(1);
+                f.add(globeopt, 'max-lat', -90, 90).step(1);
+                f.add(globeopt, 'min-lon', -180, 180).step(1);
+            } else if (globeopt.mode == 'country') {
+
+            }*/
+
+            f = grp('Export');
+            f.add(globeopt, 'width', 100, 3000).step(1).onChange(serializeConfig);
+            f.add(globeopt, 'auto_width').onChange(serializeConfig);
+            f.add(globeopt, 'height', 100, 3000).step(1).onChange(serializeConfig);
+            f.add(globeopt, 'auto_height').onChange(serializeConfig);
+
+        };
+
+        updateGUI();
+
+    });
+
+    if (location.href.substr(0, 22) != 'http://localhost:4000/') {
+        $('#generate').hide();
+    } else {
+        $('#generate').click(function() {
+            window.open('http://0.0.0.0:8080/1.0/svg/?config=' + $('#cfg').html(), '_kartograph');
+        });
+    }
+
+});
+</script>
+
+<div class="row">
+    <div class="span12" id="map-parent">
+    </div>
+</div>
+
+<div class="row">
+    <div class="span7">
+        <div class="page-header" style="margin-top:0"><h1 id="k-proj-title">Visual Map Configurator</h1></div>
+        <p>Here's the JSON config that you can pass to Kartograph. Note that you probably need to update the path of the shapefile. This example uses the <a href="http://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/">admin0 countries</a> of the natural earth project.</p>
+        <p>
+            <div id="d_clip_container" style="position:relative; float: left; margin-right: 1ex">
+               <a class="btn" id="d_clip_button">copy json</a>
+            </div>
+            <a class="btn btn-primary" id="generate">generate svg map</a></p>
+        <pre id="cfg">
+
+        </pre>
+    </div>
+    <div class="span5">
+        <div class="k-gui"></div>
+    </div>
+</div>
