@@ -22,8 +22,18 @@ prev: 3d
     font: 11px 'Lucida Grande', sans-serif;
 }
 </style>
+<script type="text/javascript" src="/js/zeroclipboard.js"></script>
 <script type="text/javascript">
-$script.ready('kartograph', function() {
+$script.ready(['kartograph'], function() {
+
+    var clip;
+
+    // initialize copy button
+    ZeroClipboard.setMoviePath( '/js/zeroclipboard.swf' );
+    clip = new ZeroClipboard.Client();
+    clip.setHandCursor( true );
+    clip.setText('foobar');
+    clip.glue('d_clip_button', 'd_clip_container');
 
     var GlobeOpt = function() {
         this.lon0 = 20;
@@ -173,7 +183,7 @@ $script.ready('kartograph', function() {
             // layers
             cfg['layers'] = [];
             if (globeopt.sea) {
-                cfg.layers.push({ special: 'sea' });
+                cfg.layers.push({ special: 'sea', styles: { fill: 'lightblue' } });
             }
             if (globeopt.graticule) {
                 var l = { special: 'graticule' };
@@ -197,13 +207,13 @@ $script.ready('kartograph', function() {
             };
             cfg['bounds'] = { padding: 0.02 };
 
-            $('#cfg').html(JSON.stringify(cfg));
+            var jsn = JSON.stringify(cfg, undefined, 2);
+            $('#cfg').html(jsn);
+            clip.setText(jsn);
         },
         renderFrame = function() {
             showMap(globeopt.proj, coastlines);
-
             serializeConfig();
-            // Iterate over all controllers
         };
         $.getJSON('coastline.json', function(coastlines) {
             window.coastlines = coastlines;
@@ -304,9 +314,13 @@ $script.ready('kartograph', function() {
 
     });
 
-    $('#generate').click(function() {
-        window.open('http://0.0.0.0:8080/1.0/svg/?config=' + $('#cfg').html(), '_kartograph');
-    });
+    if (location.href.substr(0, 22) != 'http://localhost:4000/') {
+        $('#generate').hide();
+    } else {
+        $('#generate').click(function() {
+            window.open('http://0.0.0.0:8080/1.0/svg/?config=' + $('#cfg').html(), '_kartograph');
+        });
+    }
 
 });
 </script>
@@ -319,10 +333,15 @@ $script.ready('kartograph', function() {
 <div class="row">
     <div class="span7">
         <div class="page-header" style="margin-top:0"><h1 id="k-proj-title">Visual Map Configurator</h1></div>
+        <p>Here's the JSON config that you can pass to Kartograph. Note that you probably need to update the path of the shapefile. This example uses the <a href="http://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/">admin0 countries</a> of the natural earth project.</p>
+        <p>
+            <div id="d_clip_container" style="position:relative; float: left; margin-right: 1ex">
+               <a class="btn" id="d_clip_button">copy json</a>
+            </div>
+            <a class="btn btn-primary" id="generate">generate svg map</a></p>
         <pre id="cfg">
 
         </pre>
-        <a class="btn primary" id="generate">generate svg map</a>
     </div>
     <div class="span5">
         <div class="k-gui"></div>
