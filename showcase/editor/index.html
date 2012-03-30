@@ -1,6 +1,6 @@
 ---
 layout: showcase
-title: Map Projections
+title: Visual Map Configurator
 jsplugins: ['dat.gui.js']
 prev: 3d
 ---
@@ -22,17 +22,16 @@ prev: 3d
     font: 11px 'Lucida Grande', sans-serif;
 }
 </style>
-<script type="text/javascript" src="/js/zeroclipboard.js"></script>
+<script type="text/javascript" src="zeroclipboard.js"></script>
 <script type="text/javascript">
 $script.ready(['kartograph'], function() {
 
     var clip;
 
     // initialize copy button
-    ZeroClipboard.setMoviePath( '/js/zeroclipboard.swf' );
+    ZeroClipboard.setMoviePath( 'zeroclipboard.swf' );
     clip = new ZeroClipboard.Client();
     clip.setHandCursor( true );
-    clip.setText('foobar');
     clip.glue('d_clip_button', 'd_clip_container');
 
     var GlobeOpt = function() {
