@@ -1,0 +1,130 @@
+{
+  "proj": {
+    "id": "satellite",
+    "lon0": -76,
+    "lat0": 34.50435523955831,
+    "dist": 1.1,
+    "up": -32.122944029340516,
+    "tilt": -3.002581776358639
+  },
+  "layers": [
+    { "special": "graticule", "latitudes": 3, "longitudes": 3, "styles": { "stroke-width": "0.3px" } },
+    {
+      "id": "countries",
+      "src": "shp/naturalearth/ne_10m_admin_0_countries.shp",
+      "simplify": false,
+      "styles": {
+        "stroke": "none",
+        "fill": "#f5f3f2"
+      }
+    },{
+      "id": "depth",
+      "src": "shp/vmap0/DepthContours.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "none",
+        "stroke": "#223366",
+        "stroke-width": "0.4px",
+        "stroke-opacity": 0.4
+      }
+    },{
+      "id": "trees",
+      "src": "shp/custom/useast/trees.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "#b1bfb1",
+        "fill-opacity": 0.4,
+        "stroke": "none",
+        "stroke-width": "0.4px",
+        "stroke-opacity": 0.4
+      }
+    },{
+      "id": "lakes",
+      "src": "shp/custom/useast/lakes.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "#A1BCCF",
+        "stroke": "none"
+      }
+    },{
+      "id": "lakes2",
+      "src": "shp/custom/useast/lakes2.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "#A1BCCF",
+        "stroke": "none"
+      }
+    },{
+      "id": "lakes3",
+      "src": "shp/custom/useast/lakes3.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "#A1BCCF",
+        "stroke": "none"
+      }
+    },{
+      "id": "rivers",
+      "src": "shp/custom/useast/rivers.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "none",
+        "stroke": "#A1BCCF",
+        "stroke-width": "0.5px"
+      }
+    },{
+      "id": "rivers2",
+      "src": "shp/custom/useast/rivers2.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "none",
+        "stroke": "#A1BCCF",
+        "stroke-width": "0.3px"
+      }
+    },{
+      "id": "roads",
+      "src": "shp/custom/useast/roads.shp",
+      "styles": {
+        "fill": "none",
+        "stroke": "#888582",
+        "stroke-width": "0.3px"
+      }
+    },{
+      "id": "urban",
+      "src": "shp/custom/useast/urbanareas.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "#553344",
+        "fill-opacity": 0.6,
+        "stroke": "none"
+      }
+    },{
+      "id": "cities",
+      "src": "shp/custom/useast/cities.shp",
+      "simplify": false,
+      "styles": {
+        "fill": "#553344",
+        "stroke": "none"
+      }
+    },{
+      "id": "states",
+      "src": "shp/usgs/state_bounds.shp",
+      "styles": {
+        "stroke": "#844",
+        "stroke-dasharray": "4,4",
+        "stroke-width": "1px",
+        "stroke-opacity": 0.6,
+        "fill": "none"
+      }
+    }
+  ],
+  "export": {
+    "width": 800,
+    "round": 2
+  },
+  "bounds": {
+    "padding": 0.02,
+    "mode": "bbox",
+    "data": [-80.85, 32.12, -71.69, 41.9],
+    "crop": [-90.85, 28.12, -65.69, 51.9]
+  }
+}
