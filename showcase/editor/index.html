@@ -192,7 +192,7 @@ $script.ready(['kartograph'], function() {
                 cfg.layers.push(l);
             }
             if (globeopt.countries) {
-                l = { id: 'countries', src: 'shp/naturalearth/50m-admin0-countries/ne_50m_admin_0_countries.shp', attributes: { 'ISO_A3': 'iso', NAME: 'name', 'POP_EST': 'population', 'GDP_MD_EST': 'gdp' } };
+                l = { id: 'countries', src: 'shp/naturalearth/ne_50m_admin_0_countries.shp', attributes: { 'ISO_A3': 'iso', NAME: 'name', 'POP_EST': 'population', 'GDP_MD_EST': 'gdp' } };
                 cfg.layers.push(l);
             }
             if (globeopt.lakes) {

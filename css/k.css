@@ -89,19 +89,12 @@ h1 {
 	display: none;
 }
 .k-paypal {
-	background-image: url(/img/donate.png);
-	background-position: -86px 0px;
-	width: 80px!important;
-	height: 22px!important;
 	display: block;
 	border: none!important;
 	border-radius: 0;
 	cursor: pointer;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
-}
-.k-paypal:hover {
-	background-position: -86px -22px;
 }
 
 .k-howto {
