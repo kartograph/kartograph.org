@@ -1,0 +1,36 @@
+---
+layout: default
+title: License Issues
+headline: Reading the fine print
+tagline: Why on earth have you chosen the GPLv3?
+headbg: /img/notiles.jpg
+---
+
+<div class="row">
+
+	<div class="span9  k-intro">
+		<h1>Can I use Kartograph in proprietary software?</h1>
+
+        <p>A lot of people asked. I chose the GNU Public License because I really like the idea of free software. I spent a lot of time into developing Kartograph and I'd really love to see other people using Kartograph. In fact, that's why I decided to release it open source. The GPL is not a non-commercial license. You're totally free to build your business on top of it. If you modify Kartograph in any way, you're required to publish your modified version under GPL again.</p>
+
+        <p>In the following sections I will try to break down a few use cases.</p>
+
+        <h2>Kartograph.js</h2>
+
+        <p>The major use case of Kartograph.js is to be loaded into a website to display a map and allow the user to interact with it. It does not matter what kind of website you're working on, may it be a dashboard, a web shop or whatever. You never ever need to open source your entire website. This is what the GPL refers to as distribution of non-modified versions.</p>
+
+        <p>Now let's say you found a bug in Kartograph.js and fixed in in your local version. If you now want to distribute it along with your website, the GPL requires you to publish the modified version of Kartograph.js under GPL again. Just fork it on Github, push your bugfix to your fork and everything is fine. The same is true if you added a new, awesome feature to Kartograph.js. Just share the new feature with the world and be happy to have contributed to a free software.</p>
+
+
+        <h2>Kartograph.py</h2>
+
+        <p>The most typical use case of Kartograph.py is to generate a nice SVG map, and you're free to do that. The resulting SVG files do <em>not</em> have to be licensed under GPL, but depending on the source geodata you have used to generate them, there might be other license issues to consider.</p>
+
+        <p>If you modify your local version of Kartograph, you're still free to generate SVG maps and use them in any website, since that's not considered as redistribution of Kartograph.py. However, if you release Kartograph.py.</p>
+
+        <p>The AGPL (under which Kartograph.py is licensed) makes sure that . So if you create a nice web service which generates SVG maps (which would be awesome) and use a modified version of Kartograph.py, then you would be required to release the modified version under GPL.</p>
+
+    </div>
+</div>
+
+
