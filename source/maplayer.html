@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>maplayer.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>maplayer.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">layersource</span> <span class="kn">import</span> <span class="n">handle_layer_source</span>
+<span class="kn">from</span> <span class="nn">filter</span> <span class="kn">import</span> <span class="n">filter_record</span>
+
+
+<span class="n">_verbose</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <h2>MapLayer</h2>
+<p>Represents a layer in the map which contains a list of map features</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">MapLayer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">_map</span><span class="p">,</span> <span class="n">cache</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Store layer properties as instance properties</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="n">_map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Make sure that the layer id is unique within the map.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">layersById</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">+=</span> <span class="s">&quot;_&quot;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>Instantiate the layer source which will generate features from the source
+geo data such as shapefiles or virtual sources such as graticule lines.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">handle_layer_source</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <h3>get_features()</h3>
+<p>Returns a list of projected and filtered features of a layer.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">get_features</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">min_area</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">opts</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">options</span>
+        <span class="n">is_projected</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Let's see if theres a better bounding box than this..</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">bbox</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">90</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Use the clipping mode defined in the map configuration</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;bbox&quot;</span><span class="p">:</span>
+            <span class="n">bbox</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>The 'crop' property overrides the clipping settings</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="s">&#39;crop&#39;</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;crop&#39;</span><span class="p">]:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>If crop is set to "auto", which is the default behaviour, Kartograph
+will use the actual bounding geometry to compute the bounding box</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;crop&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;auto&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">_unprojected_bounds</span><span class="p">:</span>
+                    <span class="n">bbox</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">_unprojected_bounds</span>
+                    <span class="n">bbox</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="n">inflate</span><span class="o">=</span><span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;padding&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="s">&#39;could not compute bounding box for auto-cropping&#39;</span>
+            <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>otherwise it will use the user defined bbox in the format
+[minLon, minLat, maxLon, maxLat]</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">bbox</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;crop&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>If the layer has the "src" property, it is a <strong>regular map layer</strong> source, which
+means that there's an exernal file that we load the geometry and meta data from.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="s">&#39;src&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+                <span class="nb">filter</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">filter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Now we ask the layer source to generate the features that will be displayed
+in the map.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">features</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span>
+                <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span>
+                <span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">,</span>
+                <span class="n">ignore_holes</span><span class="o">=</span><span class="s">&#39;ignore-holes&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;ignore-holes&#39;</span><span class="p">],</span>
+                <span class="n">charset</span><span class="o">=</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;charset&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">_verbose</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&#39;loaded </span><span class="si">%d</span><span class="s"> features from shapefile </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>In contrast to regular layers, the geometry for <strong>special (or virtual) layers</strong> is generated
+by Kartograph itself, based on some properties defined in the layer config.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">elif</span> <span class="s">&#39;special&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>The graticule layer generates line features for longitudes and latitudes</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;special&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;graticule&quot;</span><span class="p">:</span>
+                <span class="n">lats</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;latitudes&#39;</span><span class="p">]</span>
+                <span class="n">lons</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;longitudes&#39;</span><span class="p">]</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">lats</span><span class="p">,</span> <span class="n">lons</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">proj</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <p>The "sea" layer generates a MultiPolygon that represents the entire boundary
+of the map. Especially useful for non-cylindrical map projections.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">elif</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;special&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;sea&quot;</span><span class="p">:</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">proj</span><span class="p">)</span>
+                <span class="n">is_projected</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>If the features are not projected yet, we project them now.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_projected</span><span class="p">:</span>
+                <span class="n">feature</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">proj</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>Transform features to view coordinates.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">feature</span><span class="o">.</span><span class="n">project_view</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">view</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Remove features that don't intersect our clipping polygon</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">view_poly</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span>
+            <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">geometry</span> <span class="ow">and</span> <span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">view_poly</span><span class="p">)]</span>
+        <span class="n">layer</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

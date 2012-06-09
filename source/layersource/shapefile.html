@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>shapefile.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>shapefile.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>shapefile.py
+Provides read and write support for ESRI Shapefiles.
+author: jlawhead<at>geospatialpython.com
+date: 20110927
+version: 1.1.4
+Compatible with Python versions 2.4-3.x</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">calcsize</span><span class="p">,</span> <span class="n">error</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">array</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Constants for shape types</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">NULL</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">POINT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">POLYLINE</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">POLYGON</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">MULTIPOINT</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">POINTZ</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">POLYLINEZ</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">POLYGONZ</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">MULTIPOINTZ</span> <span class="o">=</span> <span class="mi">18</span>
+<span class="n">POINTM</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="n">POLYLINEM</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="n">POLYGONM</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">MULTIPOINTM</span> <span class="o">=</span> <span class="mi">28</span>
+<span class="n">MULTIPATCH</span> <span class="o">=</span> <span class="mi">31</span>
+
+<span class="n">PYTHON3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">b</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">PYTHON3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>For python 3 encode str to bytes.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>Already bytes.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">return</span> <span class="n">v</span>
+        <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Error.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;Unknown input type&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>For python 2 assume str passed in and return str.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">v</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">u</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">PYTHON3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>For python 3 decode bytes to str.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Already str.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">return</span> <span class="n">v</span>
+        <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <p>Error.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;Unknown input type&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>For python 2 assume str passed in and return str.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">v</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">is_string</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">PYTHON3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Converts python tuples to lits of the appropritate type.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">_Array</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Used to unpack different shapefile header parts."""
+def <strong>repr</strong>(self):
+    return str(self.tolist())</p>
+<p>s _Shape:
+def <strong>init</strong>(self, shapeType=None):
+Stores the geometry of the different shape types</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">specified</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Shapefile</span> <span class="n">spec</span><span class="o">.</span> <span class="n">Shape</span> <span class="n">types</span> <span class="n">are</span>
+        <span class="n">usually</span> <span class="n">point</span><span class="p">,</span> <span class="n">polyline</span><span class="p">,</span> <span class="ow">or</span> <span class="n">polygons</span><span class="o">.</span> <span class="n">Every</span> <span class="n">shape</span> <span class="nb">type</span>
+        <span class="k">except</span> <span class="n">the</span> <span class="s">&quot;Null&quot;</span> <span class="nb">type</span> <span class="n">contains</span> <span class="n">points</span> <span class="n">at</span> <span class="n">some</span> <span class="n">level</span> <span class="k">for</span>
+        <span class="n">example</span> <span class="n">verticies</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">polygon</span><span class="o">.</span> <span class="n">If</span> <span class="n">a</span> <span class="n">shape</span> <span class="nb">type</span> <span class="n">has</span>
+        <span class="n">multiple</span> <span class="n">shapes</span> <span class="n">containing</span> <span class="n">points</span> <span class="n">within</span> <span class="n">a</span> <span class="n">single</span>
+        <span class="n">geometry</span> <span class="n">record</span> <span class="n">then</span> <span class="n">those</span> <span class="n">shapes</span> <span class="n">are</span> <span class="n">called</span> <span class="n">parts</span><span class="o">.</span> <span class="n">Parts</span>
+        <span class="n">are</span> <span class="n">designated</span> <span class="n">by</span> <span class="n">their</span> <span class="n">starting</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">geometry</span> <span class="n">record</span><span class="s">&#39;s</span>
+        <span class="nb">list</span> <span class="n">of</span> <span class="n">shapes</span><span class="o">.</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        self.shapeType = shapeType</span>
+<span class="s">        self.points = []</span>
+<span class="s">#DIVIDER</span>
+<span class="s">class _ShapeRecord:</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def __init__(self, shape=None, record=None):</span>
+<span class="s">        self.shape = shape</span>
+<span class="s">        self.record = record</span>
+<span class="s">#DIVIDER</span>
+<span class="s">class ShapefileException(Exception):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    pass</span>
+<span class="s">#DIVIDER</span>
+<span class="s">class Reader:</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def __init__(self, *args, **kwargs):</span>
+<span class="s">        self.shp = None</span>
+<span class="s">        self.shx = None</span>
+<span class="s">        self.dbf = None</span>
+<span class="s">        self.shapeName = &quot;Not specified&quot;</span>
+<span class="s">        self._offsets = []</span>
+<span class="s">        self.shpLength = None</span>
+<span class="s">        self.numRecords = None</span>
+<span class="s">        self.fields = []</span>
+<span class="s">        self.__dbfHdrLength = 0</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if len(args) &gt; 0:</span>
+<span class="s">            if type(args[0]) is type(&quot;stringTest&quot;):</span>
+<span class="s">                self.load(args[0])</span>
+<span class="s">                return</span>
+<span class="s">        if &quot;shp&quot; in kwargs.keys():</span>
+<span class="s">            if hasattr(kwargs[&quot;shp&quot;], &quot;read&quot;):</span>
+<span class="s">                self.shp = kwargs[&quot;shp&quot;]</span>
+<span class="s">                if hasattr(self.shp, &quot;seek&quot;):</span>
+<span class="s">                    self.shp.seek(0)</span>
+<span class="s">            if &quot;shx&quot; in kwargs.keys():</span>
+<span class="s">                if hasattr(kwargs[&quot;shx&quot;], &quot;read&quot;):</span>
+<span class="s">                    self.shx = kwargs[&quot;shx&quot;]</span>
+<span class="s">                    if hasattr(self.shx, &quot;seek&quot;):</span>
+<span class="s">                        self.shx.seek(0)</span>
+<span class="s">        if &quot;dbf&quot; in kwargs.keys():</span>
+<span class="s">            if hasattr(kwargs[&quot;dbf&quot;], &quot;read&quot;):</span>
+<span class="s">                self.dbf = kwargs[&quot;dbf&quot;]</span>
+<span class="s">                if hasattr(self.dbf, &quot;seek&quot;):</span>
+<span class="s">                    self.dbf.seek(0)</span>
+<span class="s">        if self.shp or self.dbf:        </span>
+<span class="s">            self.load()</span>
+<span class="s">        else:</span>
+<span class="s">            raise ShapefileException(&quot;Shapefile Reader requires a shapefile or file-like object.&quot;)</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def load(self, shapefile=None):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        available. If not a ShapefileException is raised.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Shapefile Reader requires a shapefile or file-like object.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shp</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shpLength</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dbf</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">f</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>A shape object of any type.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__restrictIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">shp</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Shapefile Reader requires a shapefile or file-like object. (no shp file found&quot;</span><span class="p">)</span>
+        <span class="n">shp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shp</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>An exception to handle shapefile specific problems.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">shp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shpLength</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&gt;i&quot;</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">shp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span><span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Reads the three files of a shapefile as a unit or</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;4d&quot;</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">32</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>separately.  If one of the three files (.shp, .shx,
+.dbf) is missing no exception is thrown until you try
+to call a method that depends on that particular file.
+The .shx index file is used if available for efficiency
+but is not required to read the geometry from the .shp
+file. The "shapefile" argument in the constructor is the
+name of the file you want to open.</p>
+<p>You can instantiate a Reader without specifying a shapefile
+and then specify one later with the load() method.</p>
+<p>Only the shapefile headers are read upon loading. Content
+within each file is only accessed when required and as
+efficiently as possible. Shapefiles are usually not large
+but they can be.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">elevation</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>See if a shapefile name was passed as an argument</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">measure</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">shp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Opens a shapefile from a filename or file-like</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>object. Normally this method would be called by the
+constructor with the file object or file name as an
+argument."""
+if shapefile:
+    (shapeName, ext) = os.path.splitext(shapefile)
+    self.shapeName = shapeName
+    try:
+        self.shp = open("%s.shp" % shapeName, "rb")
+    except IOError:
+        raise ShapefileException("Unable to open %s.shp" % shapeName)
+    try:
+        self.shx = open("%s.shx" % shapeName, "rb")
+    except IOError:
+        raise ShapefileException("Unable to open %s.shx" % shapeName)
+    try:
+        self.dbf = open("%s.dbf" % shapeName, "rb")
+    except IOError:
+        raise ShapefileException("Unable to open %s.dbf" % shapeName)
+if self.shp:
+    self.<strong>shpHeader()
+if self.dbf:
+    self.</strong>dbfHeader()</p>
+<p>__getFileObj(self, f):
+Checks to see if the requested shapefile file object is</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shp</span><span class="p">)</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">_Shape</span><span class="p">()</span>
+        <span class="n">nParts</span> <span class="o">=</span> <span class="n">nPoints</span> <span class="o">=</span> <span class="n">zmin</span> <span class="o">=</span> <span class="n">zmax</span> <span class="o">=</span> <span class="n">mmin</span> <span class="o">=</span> <span class="n">mmax</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="p">(</span><span class="n">recNum</span><span class="p">,</span> <span class="n">recLength</span><span class="p">)</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&gt;2i&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="n">shapeType</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">=</span> <span class="n">shapeType</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>Provides list-like handling of a record index with a clearer</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>error message if the index is out of bounds."""
+if self.numRecords:
+    rmax = self.numRecords - 1
+    if abs(i) &gt; rmax:
+        raise IndexError("Shape or Record index out of range.")
+    if i &lt; 0: i = range(self.numRecords)[i]
+return i</p>
+<p>__shpHeader(self):
+Reads the header information from a .shp or .shx file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">elif</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;4d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">32</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>File length (16-bit word * 2 = bytes)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+            <span class="n">nParts</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>Shape type</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+            <span class="n">nPoints</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>The shapefile's bounding box (lower left, upper right)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">nParts</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;</span><span class="si">%s</span><span class="s">i&quot;</span> <span class="o">%</span> <span class="n">nParts</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nParts</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>Elevation</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="o">==</span> <span class="mi">31</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">partTypes</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;i&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;</span><span class="si">%s</span><span class="s">i&quot;</span> <span class="o">%</span> <span class="n">nParts</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nParts</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>Measure</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">nPoints</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">)))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Returns the header info and geometry for a single shape.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span><span class="p">)</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;</span><span class="si">%s</span><span class="s">d&quot;</span> <span class="o">%</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nPoints</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">mmin</span><span class="p">,</span> <span class="n">mmax</span><span class="p">)</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>For Null shapes create an empty points list for consistency</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">record</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">d&quot;</span> <span class="o">%</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nPoints</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))):</span>
+                <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">10e38</span><span class="p">:</span>
+                    <span class="n">record</span><span class="o">.</span><span class="n">m</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">record</span><span class="o">.</span><span class="n">m</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <p>All shape types capable of having a bounding box</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">_Array</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">16</span><span class="p">)))]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      <p>Shape types with parts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <p>Shape types with points</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">record</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>Read parts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__shapeIndex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <p>Read part types for Multipatch - 31</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">record</span> <span class="nb">file</span><span class="o">.</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        shp = self.__getFileObj(self.shp)</span>
+<span class="s">        i = self.__restrictIndex(i)</span>
+<span class="s">        offset = self.__shapeIndex(i)</span>
+<span class="s">        if not offset:</span>
+<span class="s">#DIVIDER</span>
+<span class="s">            shapes = self.shapes()</span>
+<span class="s">            return shapes[i]</span>
+<span class="s">        shp.seek(offset)</span>
+<span class="s">        return self.__shape()</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def shapes(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        shp = self.__getFileObj(self.shp)</span>
+<span class="s">        shp.seek(100)</span>
+<span class="s">        shapes = []</span>
+<span class="s">        while shp.tell() &lt; self.shpLength:</span>
+<span class="s">            shapes.append(self.__shape())</span>
+<span class="s">        return shapes</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def __dbfHeaderLength(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if not self.__dbfHdrLength:</span>
+<span class="s">            if not self.dbf:</span>
+<span class="s">                raise ShapefileException(&quot;Shapefile Reader requires a shapefile or file-like object. (no dbf file found)&quot;)</span>
+<span class="s">            dbf = self.dbf</span>
+<span class="s">            (self.numRecords, self.__dbfHdrLength) = </span><span class="se">\</span>
+<span class="s">                    unpack(&quot;&lt;xxxxLH22x&quot;, dbf.read(32))</span>
+<span class="s">        return self.__dbfHdrLength</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def __dbfHeader(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if not self.dbf:</span>
+<span class="s">            raise ShapefileException(&quot;Shapefile Reader requires a shapefile or file-like object. (no dbf file found)&quot;)</span>
+<span class="s">        dbf = self.dbf</span>
+<span class="s">        headerLength = self.__dbfHeaderLength()</span>
+<span class="s">        numFields = (headerLength - 33) // 32</span>
+<span class="s">        for field in range(numFields):</span>
+<span class="s">            fieldDesc = list(unpack(&quot;&lt;11sc4xBB14x&quot;, dbf.read(32)))</span>
+<span class="s">            name = 0</span>
+<span class="s">            idx = 0</span>
+<span class="s">            if b(&quot;</span><span class="se">\x00</span><span class="s">&quot;) in fieldDesc[name]:</span>
+<span class="s">                idx = fieldDesc[name].index(b(&quot;</span><span class="se">\x00</span><span class="s">&quot;))</span>
+<span class="s">            else:</span>
+<span class="s">                idx = len(fieldDesc[name]) - 1</span>
+<span class="s">            fieldDesc[name] = fieldDesc[name][:idx]</span>
+<span class="s">            fieldDesc[name] = u(fieldDesc[name])</span>
+<span class="s">            fieldDesc[name] = fieldDesc[name].lstrip()</span>
+<span class="s">            fieldDesc[1] = u(fieldDesc[1])</span>
+<span class="s">            self.fields.append(fieldDesc)</span>
+<span class="s">        terminator = dbf.read(1)</span>
+<span class="s">        assert terminator == b(&quot;</span><span class="se">\r</span><span class="s">&quot;)</span>
+<span class="s">        self.fields.insert(0, (&#39;DeletionFlag&#39;, &#39;C&#39;, 1, 0))</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def __recordFmt(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if not self.numRecords:</span>
+<span class="s">            self.__dbfHeader()</span>
+<span class="s">        fmt = &#39;&#39;.join([&#39;</span><span class="si">%d</span><span class="s">s&#39; </span><span class="si">% f</span><span class="s">ieldinfo[2] for fieldinfo in self.fields])</span>
+<span class="s">        fmtSize = calcsize(fmt)</span>
+<span class="s">        return (fmt, fmtSize)</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def __record(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        f = self.__getFileObj(self.dbf)</span>
+<span class="s">        recFmt = self.__recordFmt()</span>
+<span class="s">        recordContents = unpack(recFmt[0], f.read(recFmt[1]))</span>
+<span class="s">        if recordContents[0] != b(&#39; &#39;):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">            return None</span>
+<span class="s">        record = []</span>
+<span class="s">        for (name, typ, size, deci), value in zip(self.fields,</span>
+<span class="s">                                                                                                recordContents):</span>
+<span class="s">            if name == &#39;DeletionFlag&#39;:</span>
+<span class="s">                continue</span>
+<span class="s">            elif not value.strip():</span>
+<span class="s">                record.append(value)</span>
+<span class="s">                continue</span>
+<span class="s">            elif typ == &quot;N&quot;:</span>
+<span class="s">                value = value.replace(b(&#39;</span><span class="se">\0</span><span class="s">&#39;), b(&#39;&#39;)).strip()</span>
+<span class="s">                if value == b(&#39;&#39;):</span>
+<span class="s">                    value = 0</span>
+<span class="s">                elif deci:</span>
+<span class="s">                    value = float(value)</span>
+<span class="s">                else:</span>
+<span class="s">                    value = int(value)</span>
+<span class="s">            elif typ == b(&#39;D&#39;):</span>
+<span class="s">                try:</span>
+<span class="s">                    y, m, d = int(value[:4]), int(value[4:6]), int(value[6:8])</span>
+<span class="s">                    value = [y, m, d]</span>
+<span class="s">                except:</span>
+<span class="s">                    value = value.strip()</span>
+<span class="s">            elif typ == b(&#39;L&#39;):</span>
+<span class="s">                value = (value in b(&#39;YyTt&#39;) and b(&#39;T&#39;)) or </span><span class="se">\</span>
+<span class="s">                                        (value in b(&#39;NnFf&#39;) and b(&#39;F&#39;)) or b(&#39;?&#39;)</span>
+<span class="s">            else:</span>
+<span class="s">                value = u(value)</span>
+<span class="s">                value = value.strip()</span>
+<span class="s">            record.append(value)</span>
+<span class="s">        return record</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def record(self, i=0):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        f = self.__getFileObj(self.dbf)</span>
+<span class="s">        if not self.numRecords:</span>
+<span class="s">            self.__dbfHeader()</span>
+<span class="s">        i = self.__restrictIndex(i)</span>
+<span class="s">        recSize = self.__recordFmt()[1]</span>
+<span class="s">        f.seek(0)</span>
+<span class="s">        f.seek(self.__dbfHeaderLength() + (i * recSize))</span>
+<span class="s">        return self.__record()</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def records(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if not self.numRecords:</span>
+<span class="s">            self.__dbfHeader()</span>
+<span class="s">        records = []</span>
+<span class="s">        f = self.__getFileObj(self.dbf)</span>
+<span class="s">        f.seek(self.__dbfHeaderLength())</span>
+<span class="s">        for i in range(self.numRecords):</span>
+<span class="s">            r = self.__record()</span>
+<span class="s">            if r:</span>
+<span class="s">                records.append(r)</span>
+<span class="s">        return records</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def shapeRecord(self, i=0):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        all records in a shapefile.&quot;&quot;&quot;</span>
+        <span class="n">shapeRecords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_ShapeRecord</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">rec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">record</span><span class="o">=</span><span class="n">rec</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> \
+                                <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">())]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Read points - produces a list of [x,y] values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Writer</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <p>Read z extremes and values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapeType</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">=</span> <span class="n">shapeType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shp</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shx</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbf</span> <span class="o">=</span> <span class="bp">None</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Read m extremes and values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lengths</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>Measure values less than -10e38 are nodata values according to the spec</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">deletionFlag</span> <span class="o">=</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>Read a single point</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__getFileObj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>Read a single Z value</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;No file-like object available.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;write&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">pth</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pth</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&quot;wb&quot;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      <p>Read a single M value</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__shpFileLength</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <p>Returns the offset in a .shp file for a shape based on information</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>in the .shx index file."""
+shx = self.shx
+if not shx:
+    return None
+if not self._offsets:
+    # File length (16-bit word * 2 = bytes) - header length
+    shx.seek(24)
+    shxRecordLength = (unpack("&gt;i", shx.read(4))[0] * 2) - 100
+    numRecords = shxRecordLength // 8
+    # Jump to the first record.
+    shx.seek(100)
+    for r in range(numRecords):
+        # Offsets are 16-bit words just like the file length
+        self._offsets.append(unpack("&gt;i", shx.read(4))[0] * 2)
+        shx.seek(shx.tell() + 4)
+if not i == None:
+    return self._offsets[i]</p>
+<p>shape(self, i=0):
+Returns a shape object for a shape in the the geometry</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      <p>Shx index not available so use the full list.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">size</span> <span class="o">+=</span> <span class="mi">12</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <p>Returns all shapes in a shapefile.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="s">&#39;parts&#39;</span><span class="p">):</span>
+                <span class="n">nParts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="s">&#39;points&#39;</span><span class="p">):</span>
+                <span class="n">nPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+                <span class="n">size</span> <span class="o">+=</span> <span class="mi">32</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <p>Retrieves the header length of a dbf file header.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">4</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <p>Reads a dbf header. Xbase-related code borrows heavily from ActiveState Python Cookbook Recipe 362715 by Raymond Hettinger</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="n">nParts</span> <span class="o">*</span> <span class="mi">4</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-55'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-55'>#</a>
+      </div>
+      <p>Calculates the size of a .shp geometry record.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">4</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">16</span> <span class="o">*</span> <span class="n">nPoints</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <p>Reads and returns a dbf record row as a list of values.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">==</span> <span class="mi">31</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">+=</span> <span class="n">nParts</span> <span class="o">*</span> <span class="mi">4</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-59'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-59'>#</a>
+      </div>
+      <p>deleted record</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">16</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-60'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-60'>#</a>
+      </div>
+      <p>Returns a specific dbf record based on the supplied index.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">nPoints</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-61'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-61'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-62'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-62'>#</a>
+      </div>
+      <p>Returns all records in a dbf file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">16</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-63'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-63'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">size</span> <span class="o">+=</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">nPoints</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-64'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-64'>#</a>
+      </div>
+      <p>Returns a combination geometry and attribute record for the</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+                <span class="n">size</span> <span class="o">+=</span> <span class="mi">16</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-65'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-65'>#</a>
+      </div>
+      <p>supplied record index."""
+i = self.__restrictIndex(i)
+return _ShapeRecord(shape=self.shape(i),
+                                                record=self.record(i))</p>
+<p>shapeRecords(self):
+Returns a list of combination geometry/attribute records for</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">+=</span> <span class="mi">8</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-66'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-66'>#</a>
+      </div>
+      <p>Provides write support for ESRI Shapefiles.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+                <span class="n">size</span> <span class="o">+=</span> <span class="mi">8</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-67'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-67'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">size</span> <span class="o">//=</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">size</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-68'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-68'>#</a>
+      </div>
+      <p>Geometry record offsets and lengths for writing shx file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">shapeTypes</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shapes</span><span class="p">:</span>
+            <span class="n">shapeType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span>
+            <span class="k">if</span> <span class="n">shapeTypes</span><span class="p">:</span>
+                <span class="n">shapeType</span> <span class="o">=</span> <span class="n">shapeTypes</span><span class="p">[</span><span class="n">shapes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>
+            <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">))[:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">px</span><span class="p">)</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">py</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-69'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-69'>#</a>
+      </div>
+      <p>Use deletion flags in dbf? Default is false (0).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__zbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">shapeTypes</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shapes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                    <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">z</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-70'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-70'>#</a>
+      </div>
+      <p>Safety handler to verify file-like objects</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__mbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">shapeTypes</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shapes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                    <span class="n">m</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-71'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-71'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">bbox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-72'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-72'>#</a>
+      </div>
+      <p>Calculates the file length of the shp file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__zbox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-73'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-73'>#</a>
+      </div>
+      <p>Start with header length</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">mbox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-74'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-74'>#</a>
+      </div>
+      <p>Calculate size of all shapes</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mbox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-75'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-75'>#</a>
+      </div>
+      <p>Add in record header and shape type fields</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__shapefileHeader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileObj</span><span class="p">,</span> <span class="n">headerType</span><span class="o">=</span><span class="s">&#39;shp&#39;</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-76'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-76'>#</a>
+      </div>
+      <p>nParts and nPoints do not apply to all shapes
+if self.shapeType not in (0,1):
+      nParts = len(s.parts)
+      nPoints = len(s.points)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbf</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">year</span> <span class="o">-=</span> <span class="mi">1900</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-77'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-77'>#</a>
+      </div>
+      <p>All shape types capable of having a bounding box</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;Deletion&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="n">numRecs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span>
+        <span class="n">numFields</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">headerLength</span> <span class="o">=</span> <span class="n">numFields</span> <span class="o">*</span> <span class="mi">32</span> <span class="o">+</span> <span class="mi">33</span>
+        <span class="n">recordLength</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">pack</span><span class="p">(</span><span class="s">&#39;&lt;BBBBLHH20x&#39;</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">numRecs</span><span class="p">,</span>
+                <span class="n">headerLength</span><span class="p">,</span> <span class="n">recordLength</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-78'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-78'>#</a>
+      </div>
+      <p>Shape types with parts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">fieldType</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">decimal</span> <span class="o">=</span> <span class="n">field</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">b</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">),</span> <span class="n">b</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">))</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">),</span> <span class="n">b</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\x00</span><span class="s">&#39;</span><span class="p">))</span>
+            <span class="n">fieldType</span> <span class="o">=</span> <span class="n">b</span><span class="p">(</span><span class="n">fieldType</span><span class="p">)</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">fld</span> <span class="o">=</span> <span class="n">pack</span><span class="p">(</span><span class="s">&#39;&lt;11sc4xBB14x&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldType</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">decimal</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fld</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-79'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-79'>#</a>
+      </div>
+      <p>Parts count</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\r</span><span class="s">&#39;</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-80'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-80'>#</a>
+      </div>
+      <p>Parts index array</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__shpRecords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-81'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-81'>#</a>
+      </div>
+      <p>Shape types with points</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shp</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">recNum</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">())</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-82'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-82'>#</a>
+      </div>
+      <p>Points count</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&gt;2i&quot;</span><span class="p">,</span> <span class="n">recNum</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">recNum</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-83'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-83'>#</a>
+      </div>
+      <p>Points array</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-84'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-84'>#</a>
+      </div>
+      <p>Calc size of part types for Multipatch (31)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;4d&quot;</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__bbox</span><span class="p">([</span><span class="n">s</span><span class="p">])))</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Falied to write bounding box for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-85'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-85'>#</a>
+      </div>
+      <p>Calc z extremes and values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-86'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-86'>#</a>
+      </div>
+      <p>z extremes</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">parts</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-87'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-87'>#</a>
+      </div>
+      <p>z array</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-88'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-88'>#</a>
+      </div>
+      <p>Calc m extremes and values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">)))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-89'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-89'>#</a>
+      </div>
+      <p>m extremes</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-90'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-90'>#</a>
+      </div>
+      <p>m array</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">==</span> <span class="mi">31</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">partTypes</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">pt</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-91'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-91'>#</a>
+      </div>
+      <p>Calc a single point</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">p</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">]</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write points for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-92'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-92'>#</a>
+      </div>
+      <p>Calc a single Z value</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">18</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__zbox</span><span class="p">([</span><span class="n">s</span><span class="p">])))</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write elevation extremes for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">]</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write elevation values for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-93'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-93'>#</a>
+      </div>
+      <p>Calc a single M value</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">31</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__mbox</span><span class="p">([</span><span class="n">s</span><span class="p">])))</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write measure extremes for record </span><span class="si">%s</span><span class="s">. Expected floats&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">]</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write measure values for record </span><span class="si">%s</span><span class="s">. Expected floats&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-94'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-94'>#</a>
+      </div>
+      <p>Calculate size as 16-bit words</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;2d&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write point for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-95'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-95'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;1d&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write elevation value for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-96'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-96'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">shapeType</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&lt;1d&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]))</span>
+                <span class="k">except</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ShapefileException</span><span class="p">(</span><span class="s">&quot;Failed to write measure value for record </span><span class="si">%s</span><span class="s">. Expected floats.&quot;</span> <span class="o">%</span> <span class="n">recNum</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-97'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-97'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">finish</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">finish</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">length</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-98'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-98'>#</a>
+      </div>
+      <p>Returns the current bounding box for the shapefile which is</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">start</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&gt;i&quot;</span><span class="p">,</span> <span class="n">length</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">finish</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-99'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-99'>#</a>
+      </div>
+      <p>the lower-left and upper-right corners. It does not contain the
+elevation or measure extremes."""
+return self.__bbox(self._shapes)</p>
+<p>zbox(self):
+Returns the current z extremes for the shapefile.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__shxRecords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-100'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-100'>#</a>
+      </div>
+      <p>Returns the current m extremes for the shapefile.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shx</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">)):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&gt;i&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offsets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pack</span><span class="p">(</span><span class="s">&quot;&gt;i&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lengths</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-101'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-101'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__dbfRecords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-102'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-102'>#</a>
+      </div>
+      <p>Writes the specified header type to the specified file-like object.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dbf</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;Deletion&quot;</span><span class="p">):</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">b</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">))</span> <span class="c"># deletion flag</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">fieldName</span><span class="p">,</span> <span class="n">fieldType</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">dec</span><span class="p">),</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+                <span class="n">fieldType</span> <span class="o">=</span> <span class="n">fieldType</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fieldType</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;N&quot;</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">fieldType</span> <span class="o">==</span> <span class="s">&#39;L&#39;</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)[:</span><span class="n">size</span><span class="p">]</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">size</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">b</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-103'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-103'>#</a>
+      </div>
+      <p>Several of the shapefile formats are so similar that a single generic
+method to read or write them is warranted."""
+f = self.__getFileObj(fileObj)
+f.seek(0)</p>
+<h1>File code, Unused bytes</h1>
+<p>f.write(pack("&gt;6i", 9994,0,0,0,0,0))</p>
+<h1>File length (Bytes / 2 = 16-bit words)</h1>
+<p>if headerType == 'shp':
+    f.write(pack("&gt;i", self.__shpFileLength()))
+elif headerType == 'shx':
+    f.write(pack('&gt;i', ((100 + (len(self._shapes) * 8)) // 2)))</p>
+<h1>Version, Shape type</h1>
+<p>f.write(pack("&lt;2i", 1000, self.shapeType))</p>
+<h1>The shapefile's bounding box (lower left, upper right)</h1>
+<p>if self.shapeType != 0:
+    try:
+        f.write(pack("&lt;4d", *self.bbox()))
+    except error:
+        raise ShapefileException("Failed to write shapefile bounding box. Floats required.")
+else:
+    f.write(pack("&lt;4d", 0,0,0,0))</p>
+<h1>Elevation</h1>
+<p>z = self.zbox()</p>
+<h1>Measure</h1>
+<p>m = self.mbox()
+try:
+    f.write(pack("&lt;4d", z[0], z[1], m[0], m[1]))
+except error:
+    raise ShapefileException("Failed to write shapefile elevation and measure values. Floats required.")</p>
+<p>__dbfHeader(self):
+Writes the dbf header and field descriptors.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">null</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-104'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-104'>#</a>
+      </div>
+      <p>Remove deletion flag placeholder from fields</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_Shape</span><span class="p">(</span><span class="n">NULL</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-105'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-105'>#</a>
+      </div>
+      <p>Field descriptors</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-106'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-106'>#</a>
+      </div>
+      <p>Terminator</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">pointShape</span> <span class="o">=</span> <span class="n">_Shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span><span class="p">)</span>
+        <span class="n">pointShape</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">m</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pointShape</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-107'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-107'>#</a>
+      </div>
+      <p>Write the shp records</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="o">=</span><span class="p">[],</span> <span class="n">shapeType</span><span class="o">=</span><span class="n">POLYLINE</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-108'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-108'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">shapeType</span><span class="p">,</span> <span class="p">[])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-109'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-109'>#</a>
+      </div>
+      <p>Record number, Content length place holder</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">poly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="o">=</span><span class="p">[],</span> <span class="n">shapeType</span><span class="o">=</span><span class="n">POLYGON</span><span class="p">,</span> <span class="n">partTypes</span><span class="o">=</span><span class="p">[]):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-110'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-110'>#</a>
+      </div>
+      <p>Shape Type</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">polyShape</span> <span class="o">=</span> <span class="n">_Shape</span><span class="p">(</span><span class="n">shapeType</span><span class="p">)</span>
+        <span class="n">polyShape</span><span class="o">.</span><span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">polyShape</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+            <span class="n">polyShape</span><span class="o">.</span><span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">polyShape</span><span class="o">.</span><span class="n">points</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-111'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-111'>#</a>
+      </div>
+      <p>All shape types capable of having a bounding box</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">point</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">point</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-112'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-112'>#</a>
+      </div>
+      <p>Shape types with parts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">point</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">polyShape</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">polyShape</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">==</span> <span class="mi">31</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">partTypes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+                    <span class="n">partTypes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polyShape</span><span class="o">.</span><span class="n">shapeType</span><span class="p">)</span>
+            <span class="n">polyShape</span><span class="o">.</span><span class="n">partTypes</span> <span class="o">=</span> <span class="n">partTypes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polyShape</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-113'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-113'>#</a>
+      </div>
+      <p>Number of parts</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fieldType</span><span class="o">=</span><span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s">&quot;50&quot;</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-114'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-114'>#</a>
+      </div>
+      <p>Shape types with multiple points per record</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">fieldType</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">decimal</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-115'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-115'>#</a>
+      </div>
+      <p>Number of points</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">recordList</span><span class="p">,</span> <span class="o">**</span><span class="n">recordDict</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-116'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-116'>#</a>
+      </div>
+      <p>Write part indexes</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-117'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-117'>#</a>
+      </div>
+      <p>Part types for Multipatch (31)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveShp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-118'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-118'>#</a>
+      </div>
+      <p>Write points for multiple-point records</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;write&quot;</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.shp&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shapeType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shapefileHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shp</span><span class="p">,</span> <span class="n">headerType</span><span class="o">=</span><span class="s">&#39;shp&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shpRecords</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-119'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-119'>#</a>
+      </div>
+      <p>Write z extremes and values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveShx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-120'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-120'>#</a>
+      </div>
+      <p>Write m extremes and values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;write&quot;</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.shx&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shapeType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shapeType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shapefileHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shx</span><span class="p">,</span> <span class="n">headerType</span><span class="o">=</span><span class="s">&#39;shx&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shxRecords</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-121'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-121'>#</a>
+      </div>
+      <p>Write a single point</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">saveDbf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-122'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-122'>#</a>
+      </div>
+      <p>Write a single Z value</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&quot;write&quot;</span><span class="p">):</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">target</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;.dbf&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getFileObj</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dbfHeader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dbfRecords</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-123'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-123'>#</a>
+      </div>
+      <p>Write a single M value</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shx</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dbf</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-124'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-124'>#</a>
+      </div>
+      <p>Finalize record length as 16-bit words</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">pass</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-125'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-125'>#</a>
+      </div>
+      <p>start - 4 bytes is the content length field</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">part</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-126'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-126'>#</a>
+      </div>
+      <p>Writes the shx records.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">you</span> <span class="n">to</span> <span class="n">update</span> <span class="n">a</span> <span class="n">specific</span> <span class="n">point</span> <span class="n">by</span> <span class="n">shape</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">point</span> <span class="n">of</span> <span class="nb">any</span>
+        <span class="n">shape</span> <span class="nb">type</span><span class="o">.</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if shape and part and point:</span>
+<span class="s">            try: self._shapes[shape]</span>
+<span class="s">            except IndexError: self._shapes.append([])</span>
+<span class="s">            try: self._shapes[shape][part]</span>
+<span class="s">            except IndexError: self._shapes[shape].append([])</span>
+<span class="s">            try: self._shapes[shape][part][point]</span>
+<span class="s">            except IndexError: self._shapes[shape][part].append([])</span>
+<span class="s">            p = self._shapes[shape][part][point]</span>
+<span class="s">            if x: p[0] = x</span>
+<span class="s">            if y: p[1] = y</span>
+<span class="s">            if z: p[2] = z</span>
+<span class="s">            if m: p[3] = m</span>
+<span class="s">            self._shapes[shape][part][point] = p</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        elif shape and part and not point:</span>
+<span class="s">            try: self._shapes[shape]</span>
+<span class="s">            except IndexError: self._shapes.append([])</span>
+<span class="s">            try: self._shapes[shape][part]</span>
+<span class="s">            except IndexError: self._shapes[shape].append([])</span>
+<span class="s">            points = self._shapes[shape][part]</span>
+<span class="s">            for i in range(len(points)):</span>
+<span class="s">                p = points[i]</span>
+<span class="s">                if x: p[0] = x</span>
+<span class="s">                if y: p[1] = y</span>
+<span class="s">                if z: p[2] = z</span>
+<span class="s">                if m: p[3] = m</span>
+<span class="s">                self._shapes[shape][part][i] = p</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        elif shape and not part and not point:</span>
+<span class="s">            try: self._shapes[shape]</span>
+<span class="s">            except IndexError: self._shapes.append([])</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        if addr:</span>
+<span class="s">            shape, part, point = addr</span>
+<span class="s">            self._shapes[shape][part][point] = [x, y, z, m]</span>
+<span class="s">        else:</span>
+<span class="s">            Writer.point(self, x, y, z, m)</span>
+<span class="s">        if self.autoBalance:</span>
+<span class="s">            self.balance()</span>
+<span class="s">#DIVIDER</span>
+<span class="s">    def validate(self):</span>
+<span class="s">#DIVIDER</span>
+<span class="s">        on which type of record was created to make sure all three files</span>
+<span class="s">        are in synch.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">null</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_shapes</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-127'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-127'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__fieldNorm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-128'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-128'>#</a>
+      </div>
+      <p>Writes the dbf records.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">Doctests</span> <span class="n">are</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">module</span> <span class="s">&#39;pyshp_usage.py&#39;</span><span class="o">.</span> <span class="n">This</span> <span class="n">library</span> <span class="n">was</span> <span class="n">developed</span>
+    <span class="n">using</span> <span class="n">Python</span> <span class="mf">2.3</span><span class="o">.</span> <span class="n">Python</span> <span class="mf">2.4</span> <span class="ow">and</span> <span class="n">above</span> <span class="n">have</span> <span class="n">some</span> <span class="n">excellent</span> <span class="n">improvements</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">built</span><span class="o">-</span><span class="ow">in</span>
+    <span class="n">testing</span> <span class="n">libraries</span> <span class="n">but</span> <span class="k">for</span> <span class="n">now</span> <span class="n">unit</span> <span class="n">testing</span> <span class="ow">is</span> <span class="n">done</span> <span class="n">using</span> <span class="n">what</span><span class="s">&#39;s available in</span>
+    <span class="mf">2.3</span><span class="o">.</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-129'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-129'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-130'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-130'>#</a>
+      </div>
+      <p>Creates a null shape.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-131'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-131'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-132'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-132'>#</a>
+      </div>
+      <p>Creates a point shape.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-133'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-133'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-134'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-134'>#</a>
+      </div>
+      <p>Creates a line shape. This method is just a convienience method</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-135'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-135'>#</a>
+      </div>
+      <p>which wraps 'poly()'.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-136'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-136'>#</a>
+      </div>
+      <p>Creates a shape that has multiple collections of points (parts)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-137'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-137'>#</a>
+      </div>
+      <p>including lines, polygons, and even multipoint shapes. If no shape type
+is specified it defaults to 'polygon'. If no part types are specified
+(which they normally won't be) then all parts default to the shape type.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-138'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-138'>#</a>
+      </div>
+      <p>Ensure point is list</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-139'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-139'>#</a>
+      </div>
+      <p>Make sure point has z and m values</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-140'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-140'>#</a>
+      </div>
+      <p>Adds a dbf field descriptor to the shapefile.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-141'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-141'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-142'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-142'>#</a>
+      </div>
+      <p>Creates a dbf attribute record. You can submit either a sequence of</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-143'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-143'>#</a>
+      </div>
+      <p>field values or keyword arguments of field names and values. Before
+adding records you must add fields for the record values using the
+fields() method. If the record values exceed the number of fields the
+extra ones won't be added. In the case of using keyword arguments to specify
+field/value pairs only fields matching the already registered fields
+will be added."""
+record = []
+fieldCount = len(self.fields)</p>
+<h1>Compensate for deletion flag</h1>
+<p>if self.fields[0][0].startswith("Deletion"): fieldCount -= 1
+if recordList:
+    [record.append(recordList[i]) for i in range(fieldCount)]
+elif recordDict:
+    for field in self.fields:
+        if field[0] in recordDict:
+            val = recordDict[field[0]]
+            if val:
+                record.append(val)
+            else:
+                record.append("")
+if record:
+    self.records.append(record)</p>
+<p>shape(self, i):
+return self._shapes[i]</p>
+<p>shapes(self):
+Return the current list of shapes.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-144'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-144'>#</a>
+      </div>
+      <p>Save an shp file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-145'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-145'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-146'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-146'>#</a>
+      </div>
+      <p>Save an shx file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-147'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-147'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-148'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-148'>#</a>
+      </div>
+      <p>Save a dbf file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-149'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-149'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-150'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-150'>#</a>
+      </div>
+      <p>Save the shapefile data to three files or</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-151'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-151'>#</a>
+      </div>
+      <p>three file-like objects. SHP and DBF files can also
+be written exclusively using saveShp, saveShx, and saveDbf respectively."""</p>
+<h1>TODO: Create a unique filename for target if None.</h1>
+<p>if shp:
+    self.saveShp(shp)
+if shx:
+    self.saveShx(shx)
+if dbf:
+    self.saveDbf(dbf)
+elif target:
+    self.saveShp(target)
+    self.shp.close()
+    self.saveShx(target)
+    self.shx.close()
+    self.saveDbf(target)
+    self.dbf.close()</p>
+<p>itor(Writer):
+<strong>init</strong>(self, shapefile=None, shapeType=POINT, autoBalance=1):
+self.autoBalance = autoBalance
+if not shapefile:
+    Writer.<strong>init</strong>(self, shapeType)
+elif is_string(shapefile):
+    base = os.path.splitext(shapefile)[0]
+    if os.path.isfile("%s.shp" % base):
+        r = Reader(base)
+        Writer.<strong>init</strong>(self, r.shapeType)
+        self._shapes = r.shapes()
+        self.fields = r.fields
+        self.records = r.records()</p>
+<p>select(self, expr):
+Select one or more shapes (to be implemented)
+TODO: Implement expressions to select shapes.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-152'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-152'>#</a>
+      </div>
+      <p>Deletes the specified part of any shape by specifying a shape</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-153'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-153'>#</a>
+      </div>
+      <p>number, part number, or point number."""</p>
+<h1>shape, part, point</h1>
+<p>if shape and part and point:
+    del self._shapes[shape][part][point]</p>
+<h1>shape, part</h1>
+<p>elif shape and part and not point:
+    del self._shapes[shape][part]</p>
+<h1>shape</h1>
+<p>elif shape and not part and not point:
+    del self._shapes[shape]</p>
+<h1>point</h1>
+<p>elif not shape and not part and point:
+    for s in self._shapes:
+        if s.shapeType == 1:
+            del self._shapes[point]
+        else:
+            for part in s.parts:
+                del s[part][point]</p>
+<h1>part, point</h1>
+<p>elif not shape and part and point:
+    for s in self._shapes:
+        del s[part][point]</p>
+<h1>part</h1>
+<p>elif not shape and part and not point:
+    for s in self._shapes:
+        del s[part]</p>
+<p>point(self, x=None, y=None, z=None, m=None, shape=None, part=None, point=None, addr=None):
+Creates/updates a point shape. The arguments allows</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-154'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-154'>#</a>
+      </div>
+      <p>shape, part, point</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-155'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-155'>#</a>
+      </div>
+      <p>shape, part</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-156'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-156'>#</a>
+      </div>
+      <p>shape</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-157'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-157'>#</a>
+      </div>
+      <p>point
+part</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-158'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-158'>#</a>
+      </div>
+      <p>An optional method to try and validate the shapefile</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-159'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-159'>#</a>
+      </div>
+      <p>as much as possible before writing it (not implemented)."""</p>
+<h1>TODO: Implement validation method</h1>
+<p>pass</p>
+<p>balance(self):
+Adds a corresponding empty attribute or null geometry record depending</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-160'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-160'>#</a>
+      </div>
+      <p>Normalizes a dbf field name to fit within the spec and the</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-161'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-161'>#</a>
+      </div>
+      <p>expectations of certain ESRI software."""
+if len(fieldName) &gt; 11: fieldName = fieldName[:11]
+fieldName = fieldName.upper()
+fieldName.replace(' ', '_')</p>
+<p>Testing
+():
+rt doctest
+est.NORMALIZE_WHITESPACE = 1
+est.testfile("README.txt", verbose=1)</p>
+<p>e<strong> == "</strong>main__":</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-162'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-162'>#</a>
+      </div>
+      <p>test()</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>filter.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>filter.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>layer filter</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">re</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">filter_record</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;and&#39;</span> <span class="ow">in</span> <span class="n">filt</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">for</span> <span class="n">sfilt</span> <span class="ow">in</span> <span class="n">filt</span><span class="p">[</span><span class="s">&#39;and&#39;</span><span class="p">]:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="ow">and</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">sfilt</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s">&#39;or&#39;</span> <span class="ow">in</span> <span class="n">filt</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">for</span> <span class="n">sfilt</span> <span class="ow">in</span> <span class="n">filt</span><span class="p">[</span><span class="s">&#39;or&#39;</span><span class="p">]:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="ow">or</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">sfilt</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">filter_single</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">filter_single</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">filt</span>
+    <span class="n">prop</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s">&#39;in&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">val</span>
+    <span class="k">elif</span> <span class="s">&#39;like&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s">&#39;^&#39;</span> <span class="o">+</span> <span class="n">_escape_regex</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;%&#39;</span><span class="p">,</span> <span class="s">&#39;.*&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;$&#39;</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+    <span class="k">elif</span> <span class="s">&#39;matches&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+    <span class="k">elif</span> <span class="s">&#39;is&#39;</span> <span class="ow">in</span> <span class="n">comp</span> <span class="ow">or</span> <span class="s">&#39;=&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">prop</span> <span class="o">==</span> <span class="n">val</span>
+    <span class="k">elif</span> <span class="s">&#39;greater&#39;</span> <span class="ow">in</span> <span class="n">comp</span> <span class="ow">or</span> <span class="p">(</span><span class="s">&#39;&gt;&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">prop</span> <span class="o">&gt;</span> <span class="n">val</span>
+    <span class="k">elif</span> <span class="s">&#39;less&#39;</span> <span class="ow">in</span> <span class="n">comp</span> <span class="ow">or</span> <span class="s">&#39;&lt;&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">prop</span> <span class="o">&lt;</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s">&#39;not&#39;</span> <span class="ow">in</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">res</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">_escape_regex</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;*&#39;</span><span class="p">,</span> <span class="s">&#39;?&#39;</span><span class="p">,</span> <span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="s">&#39;(&#39;</span><span class="p">,</span> <span class="s">&#39;)&#39;</span><span class="p">,</span> <span class="s">&#39;[&#39;</span><span class="p">,</span> <span class="s">&#39;]&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">chars</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">&#39;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

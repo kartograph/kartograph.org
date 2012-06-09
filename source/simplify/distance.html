@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>distance.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>distance.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>simplifies a line segment using a very simple algorithm that checks the distance
+to the last non-deleted point. the algorithm operates on line segments.</p>
+<p>in order to preserve topology of the original polygons the algorithm
+- never removes the first or the last point of a line segment
+- flags all points as simplified after processing (so it won't be processed twice)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">simplify_distance</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">dist_sq</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">*</span> <span class="n">dist</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+    <span class="n">kept</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">deleted</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">points</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>never remove first or last point of line</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>            <span class="n">pt</span><span class="o">.</span><span class="n">simplified</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">lpt</span> <span class="o">=</span> <span class="n">pt</span>
+            <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">lpt</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">lpt</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">lpt</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">lpt</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>  <span class="c"># compute distance to last point</span>
+            <span class="k">if</span> <span class="n">pt</span><span class="o">.</span><span class="n">simplified</span> <span class="ow">or</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist_sq</span><span class="p">:</span>  <span class="c"># if point already handled or distance exceeds threshold..</span>
+                <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>  <span class="c"># ..keep the point</span>
+                <span class="n">lpt</span> <span class="o">=</span> <span class="n">pt</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c"># otherwise remove it</span>
+                <span class="n">deleted</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">pt</span><span class="o">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">pt</span><span class="o">.</span><span class="n">simplified</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kept</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+            <span class="n">pt</span><span class="o">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="n">points</span>
+
+    <span class="k">return</span> <span class="n">kept</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>print 'kept %d   deleted %d' % (kept, deleted)</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__init__.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>__init__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <pre><code>kartograph - a svg mapping library
+Copyright (C) 2011  Gregor Aisch
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</code></pre>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">projections</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">base</span> <span class="kn">import</span> <span class="n">Proj</span>
+<span class="kn">from</span> <span class="nn">cylindrical</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;lonlat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Equirectangular</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;cea&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CEA</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;gallpeters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GallPeters</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;hobodyer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">HoboDyer</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;behrmann&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Behrmann</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;balthasart&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Balthasart</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;mercator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mercator</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;ll&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LonLat</span>
+
+<span class="kn">from</span> <span class="nn">pseudocylindrical</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;naturalearth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NaturalEarth</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;robinson&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Robinson</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;eckert4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EckertIV</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;sinusoidal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sinusoidal</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;mollweide&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mollweide</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;wagner4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">WagnerIV</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;wagner5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">WagnerV</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;loximuthal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Loximuthal</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;canters1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CantersModifiedSinusoidalI</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;goodehomolosine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GoodeHomolosine</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;hatano&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hatano</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;aitoff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Aitoff</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;winkel3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Winkel3</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;nicolosi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Nicolosi</span>
+
+<span class="kn">from</span> <span class="nn">azimuthal</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;ortho&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Orthographic</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;laea&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LAEA</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;stereo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Stereographic</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;satellite&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Satellite</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;eda&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EquidistantAzimuthal</span>
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;aitoff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Aitoff</span>
+
+<span class="kn">from</span> <span class="nn">conic</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">projections</span><span class="p">[</span><span class="s">&#39;lcc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LCC</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Proj4</span><span class="p">(</span><span class="n">Proj</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projstr</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">pyproj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="n">projstr</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+        <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ll</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">LCC__</span><span class="p">(</span><span class="n">Proj4</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lat1</span><span class="o">=</span><span class="mi">28</span><span class="p">,</span> <span class="n">lat2</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="n">Proj4</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;+proj=lcc +lat_0=</span><span class="si">%f</span><span class="s"> +lon_0=</span><span class="si">%f</span><span class="s"> +lat_1=</span><span class="si">%f</span><span class="s"> +lat_2=</span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lat0</span><span class="p">,</span> <span class="n">lon0</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lat2</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">pjname</span> <span class="ow">in</span> <span class="n">projections</span><span class="p">:</span>
+    <span class="n">projections</span><span class="p">[</span><span class="n">pjname</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">pjname</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>some class testing
+p = LAEA(52.0,10.0)
+x,y = p.project(50,5)
+assert (round(x,2),round(y,2)) == (3962799.45, -2999718.85), 'LAEA proj error'</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="kn">from</span> <span class="nn">kartograph.geometry</span> <span class="kn">import</span> <span class="n">BBox</span>
+
+    <span class="k">print</span> <span class="n">Proj</span><span class="o">.</span><span class="n">fromXML</span><span class="p">(</span><span class="n">Robinson</span><span class="p">(</span><span class="n">lat0</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">toXML</span><span class="p">(),</span> <span class="n">projections</span><span class="p">)</span>
+
+    <span class="n">Robinson</span><span class="p">(</span><span class="n">lat0</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lon0</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">pj</span> <span class="ow">in</span> <span class="n">projections</span><span class="p">:</span>
+        <span class="n">Proj</span> <span class="o">=</span> <span class="n">projections</span><span class="p">[</span><span class="n">pj</span><span class="p">]</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="n">BBox</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">proj</span> <span class="o">=</span> <span class="n">Proj</span><span class="p">(</span><span class="n">lon0</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">proj</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">proj</span><span class="o">.</span><span class="n">world_bounds</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">proj</span><span class="o">.</span><span class="n">toXML</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;Error&#39;</span><span class="p">,</span> <span class="n">pj</span>
+            <span class="k">print</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">raise</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
