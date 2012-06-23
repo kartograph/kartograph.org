@@ -27,9 +27,7 @@
 <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
 <span class="kn">from</span> <span class="nn">proj</span> <span class="kn">import</span> <span class="n">projections</span>
 <span class="kn">from</span> <span class="nn">filter</span> <span class="kn">import</span> <span class="n">filter_record</span>
-<span class="kn">from</span> <span class="nn">errors</span> <span class="kn">import</span> <span class="n">KartographError</span>
-
-<span class="n">_verbose</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+<span class="kn">from</span> <span class="nn">errors</span> <span class="kn">import</span> <span class="n">KartographError</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -38,10 +36,10 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-1'>#</a>
       </div>
-      
+      <h2>Map</h2>
     </div>
     <div class='code'>
-      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Map</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -53,28 +51,7 @@
       
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">layerCache</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;svg&#39;</span><span class="p">,</span> <span class="n">src_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">_verbose</span> <span class="o">=</span> <span class="n">verbose</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">format</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">layersById</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">_bounds_polygons_cache</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">_unprojected_bounds</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">src_encoding</span><span class="p">:</span>
-            <span class="n">src_encoding</span> <span class="o">=</span> <span class="s">&#39;utf-8&#39;</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">_source_encoding</span> <span class="o">=</span> <span class="n">src_encoding</span>
-
-        <span class="k">for</span> <span class="n">layer_cfg</span> <span class="ow">in</span> <span class="n">options</span><span class="p">[</span><span class="s">&#39;layers&#39;</span><span class="p">]:</span>
-            <span class="n">layer_id</span> <span class="o">=</span> <span class="n">layer_cfg</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
-            <span class="n">layer</span> <span class="o">=</span> <span class="n">MapLayer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_cfg</span><span class="p">,</span> <span class="n">me</span><span class="p">,</span> <span class="n">layerCache</span><span class="p">)</span>
-            <span class="n">me</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-            <span class="n">me</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span>
-
-        <span class="n">me</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_init_projection</span><span class="p">()</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">bounds_poly</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_init_bounds</span><span class="p">()</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_get_view</span><span class="p">()</span>
-        <span class="n">me</span><span class="o">.</span><span class="n">view_poly</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_init_view_poly</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">Map</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -83,11 +60,12 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-3'>#</a>
       </div>
-      <p>get features</p>
+      
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">me</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-            <span class="n">layer</span><span class="o">.</span><span class="n">get_features</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">layerCache</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;svg&#39;</span><span class="p">,</span> <span class="n">src_encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">format</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -96,10 +74,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-4'>#</a>
       </div>
-      <p>_debug_show_features(layerFeatures[id], 'original')</p>
+      <p>List and dictionary references to the map layers.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_join_layers</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">layersById</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -108,11 +87,11 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-5'>#</a>
       </div>
-      <p>_debug_show_features(layerFeatures[id], 'joined')</p>
+      <p>We will cache the bounding geometry since we need it twice, eventually.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s">&#39;export&#39;</span><span class="p">][</span><span class="s">&#39;crop-to-view&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">format</span> <span class="o">!=</span> <span class="s">&#39;kml&#39;</span><span class="p">:</span>
-            <span class="n">me</span><span class="o">.</span><span class="n">_crop_layers_to_view</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_bounding_geometry_cache</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">_unprojected_bounds</span> <span class="o">=</span> <span class="bp">None</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -121,10 +100,13 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-6'>#</a>
       </div>
-      <p>_debug_show_features(layerFeatures[id], 'cropped to view')</p>
+      <p>The <strong>source encoding</strong> will be used as first guess when Kartograph tries to decode
+the meta data of shapefiles etc. We use Unicode as default source encoding.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_simplify_layers</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="ow">not</span> <span class="n">src_encoding</span><span class="p">:</span>
+            <span class="n">src_encoding</span> <span class="o">=</span> <span class="s">&#39;utf-8&#39;</span>
+        <span class="n">me</span><span class="o">.</span><span class="n">_source_encoding</span> <span class="o">=</span> <span class="n">src_encoding</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -133,11 +115,15 @@
       <div class='octowrap'>
         <a class='octothorpe' href='#section-7'>#</a>
       </div>
-      <p>_debug_show_features(layerFeatures[id], 'simplified')
-self.crop_layers(layers, layerOpts, layerFeatures)</p>
+      <p>Construct <a href="maplayer.py">MapLayer</a> instances for every layer and store references
+to the layers in a list and a dictionary.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_subtract_layers</span><span class="p">()</span></pre></div>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">layer_cfg</span> <span class="ow">in</span> <span class="n">options</span><span class="p">[</span><span class="s">&#39;layers&#39;</span><span class="p">]:</span>
+            <span class="n">layer_id</span> <span class="o">=</span> <span class="n">layer_cfg</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="n">MapLayer</span><span class="p">(</span><span class="n">layer_id</span><span class="p">,</span> <span class="n">layer_cfg</span><span class="p">,</span> <span class="n">me</span><span class="p">,</span> <span class="n">layerCache</span><span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="n">layer_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -146,10 +132,11 @@ self.crop_layers(layers, layerOpts, layerFeatures)</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-8'>#</a>
       </div>
-      <p>instantiates the map projection</p>
+      <p>Initialize the projection that will be used in this map. This sounds easier than
+it is since we need to compute lot's of stuff here.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_init_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_init_projection</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -158,24 +145,10 @@ self.crop_layers(layers, layerOpts, layerFeatures)</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-9'>#</a>
       </div>
-      
+      <p>Compute the bounding geometry for the map.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;kml&#39;</span><span class="p">,</span> <span class="s">&#39;json&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">projections</span><span class="p">[</span><span class="s">&#39;ll&#39;</span><span class="p">]()</span>  <span class="c"># use no projection for KML</span>
-
-        <span class="n">map_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_map_center</span><span class="p">()</span>
-        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
-        <span class="n">projC</span> <span class="o">=</span> <span class="n">projections</span><span class="p">[</span><span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">]]</span>
-        <span class="n">p_opts</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">prop</span> <span class="o">!=</span> <span class="s">&quot;id&quot;</span><span class="p">:</span>
-                <span class="n">p_opts</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="n">prop</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">prop</span> <span class="o">==</span> <span class="s">&quot;lon0&quot;</span> <span class="ow">and</span> <span class="n">p_opts</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;auto&quot;</span><span class="p">:</span>
-                <span class="n">p_opts</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">prop</span> <span class="o">==</span> <span class="s">&quot;lat0&quot;</span> <span class="ow">and</span> <span class="n">p_opts</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;auto&quot;</span><span class="p">:</span>
-                <span class="n">p_opts</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">projC</span><span class="p">(</span><span class="o">**</span><span class="n">p_opts</span><span class="p">)</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">bounds_poly</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_init_bounds</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -184,11 +157,11 @@ self.crop_layers(layers, layerOpts, layerFeatures)</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-10'>#</a>
       </div>
-      <p>used by _init_projection() to determine the center of the
-map projection, depending on the bounds config</p>
+      <p>Set up the <a href="geometry/view.py">view</a> which will transform from projected coordinates
+(e.g. in meters) to screen coordinates in our map output.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__get_map_center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_get_view</span><span class="p">()</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
@@ -197,29 +170,248 @@ map projection, depending on the bounds config</p>
       <div class='octowrap'>
         <a class='octothorpe' href='#section-11'>#</a>
       </div>
-      
+      <p>Get the polygon (in fact it's a rectangle in most cases) that will be used
+to clip away unneeded geometry unless <em>cfg['export']['crop-to-view']</em> is set to false.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">view_poly</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">_init_view_poly</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>Load all features that could be visible in each layer. The feature geometries will
+be projected and transformed to screen coordinates.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">me</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">get_features</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>In each layer we will join polygons.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_join_features</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <p>Eventually we crop geometries to the map bounding rectangle.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s">&#39;export&#39;</span><span class="p">][</span><span class="s">&#39;crop-to-view&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">format</span> <span class="o">!=</span> <span class="s">&#39;kml&#39;</span><span class="p">:</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">_crop_layers_to_view</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Here's where we apply the simplification to geometries.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_simplify_layers</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <p>Also we can crop layers to another layer, useful if we need to limit geological
+geometries such as tree coverage to a political boundary of a country.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_crop_layers</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Or subtract one layer from another (or more), for instance to cut out lakes
+from political boundaries.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">me</span><span class="o">.</span><span class="n">_subtract_layers</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <h3>Initializing the map projection</h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_init_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Some output formats don't need map projection at all, so
+we just return the identity projection.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;kml&#39;</span><span class="p">,</span> <span class="s">&#39;json&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">projections</span><span class="p">[</span><span class="s">&#39;ll&#39;</span><span class="p">]()</span>  <span class="c"># use no projection for KML</span>
+
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <p>If either <em>lat0</em> or <em>lon0</em> were set to "auto", we need to
+compute a nice center of the projection and update the
+projection configuration.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">autoLon</span> <span class="o">=</span> <span class="s">&#39;lon0&#39;</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;lon0&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;auto&#39;</span>
+        <span class="n">autoLat</span> <span class="o">=</span> <span class="s">&#39;lat0&#39;</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;lat0&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;auto&#39;</span>
+        <span class="k">if</span> <span class="n">autoLon</span> <span class="ow">or</span> <span class="n">autoLat</span><span class="p">:</span>
+            <span class="n">map_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_map_center</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">autoLon</span><span class="p">:</span>
+                <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;lon0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">autoLat</span><span class="p">:</span>
+                <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;lat0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Load the projection class, if the id is known.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">projections</span><span class="p">:</span>
+            <span class="n">projC</span> <span class="o">=</span> <span class="n">projections</span><span class="p">[</span><span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;projection unknown </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="s">&#39;id&#39;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Populate a dictionary of projection properties that
+will be passed to the projection constructor as keyword
+arguments.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">p_opts</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">prop</span> <span class="o">!=</span> <span class="s">&quot;id&quot;</span><span class="p">:</span>
+                <span class="n">p_opts</span><span class="p">[</span><span class="n">prop</span><span class="p">]</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">][</span><span class="n">prop</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">projC</span><span class="p">(</span><span class="o">**</span><span class="n">p_opts</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <h3>Determining the projection center</h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__get_map_center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>To find out where the map will be centered to we need to
+know the geographical boundaries.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
         <span class="n">mode</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;mode&#39;</span><span class="p">]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">]</span>
-
-        <span class="n">lon0</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&#39;bbox&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>If the bound mode is set to <em>bbox</em> we simply
+take the mean latitude and longitude as center.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&#39;bbox&#39;</span><span class="p">:</span>
             <span class="n">lon0</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">lat0</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-        <span class="k">elif</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;point&#39;</span><span class="p">:</span>
+            <span class="n">lat0</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>If the bound mode is set to <em>point</em> we average
+over all latitude and longitude coordinates.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">elif</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;point&#39;</span><span class="p">:</span>
             <span class="n">lon0</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">lat0</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">m</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
                 <span class="n">lon0</span> <span class="o">+=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">lon</span>
-                <span class="n">lat0</span> <span class="o">+=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">lat</span>
-
-        <span class="k">elif</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;poly&#39;</span><span class="p">:</span>
-            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bounds_polygons</span><span class="p">()</span>
+                <span class="n">lat0</span> <span class="o">+=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">lat</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>The computationally worst case is the bound mode
+<em>polygon</em> since we need to load the shapefile geometry
+to compute its center of mass. However, we need
+to load it anyway and cache the bounding geometry,
+so this comes at low extra cost.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">elif</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;poly&#39;</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bounding_geometry</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">geom</span><span class="p">,</span> <span class="n">BaseGeometry</span><span class="p">):</span>
                     <span class="p">(</span><span class="n">lon0</span><span class="p">,</span> <span class="n">lat0</span><span class="p">)</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">geom</span><span class="o">.</span><span class="n">representative_point</span><span class="p">()</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -232,23 +424,22 @@ map projection, depending on the bounds config</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-12'>
+  <div class='section' id='section-28'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-12'>#</a>
+        <a class='octothorpe' href='#section-28'>#</a>
       </div>
-      <p>computes the (x,y) bounding box for the map,
-given a specific projection</p>
+      <h3>Compute the projected bounding box</h3>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_init_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-13'>
+  <div class='section' id='section-29'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-13'>#</a>
+        <a class='octothorpe' href='#section-29'>#</a>
       </div>
       
     </div>
@@ -260,112 +451,250 @@ given a specific projection</p>
 
         <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
         <span class="n">proj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span>
-        <span class="n">bnds</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">]</span>
-        <span class="n">mode</span> <span class="o">=</span> <span class="n">bnds</span><span class="p">[</span><span class="s">&#39;mode&#39;</span><span class="p">][:]</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">bnds</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">_verbose</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&#39;using bounds mode&#39;</span><span class="p">,</span> <span class="n">mode</span>
-
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;bbox&quot;</span><span class="p">:</span>  <span class="c"># catch special case bbox</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;mode&#39;</span><span class="p">][:]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <p>If the bound mode is set to <em>bbox</em> we simply project
+a rectangle in lat/lon coordinates.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;bbox&quot;</span><span class="p">:</span>  <span class="c"># catch special case bbox</span>
             <span class="n">sea</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">bounding_geometry</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">projected</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
             <span class="n">sbbox</span> <span class="o">=</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">sea</span><span class="p">)</span>
-            <span class="n">sbbox</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="n">sbbox</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">bnds</span><span class="p">[</span><span class="s">&#39;padding&#39;</span><span class="p">])</span>
+            <span class="n">sbbox</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="n">sbbox</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;padding&#39;</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">bbox_to_polygon</span><span class="p">(</span><span class="n">sbbox</span><span class="p">)</span>
 
-        <span class="n">bbox</span> <span class="o">=</span> <span class="n">BBox</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;point&quot;</span><span class="p">:</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="n">BBox</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>If the bound mode is set to <em>points</em> we project all
+points and compute the bounding box.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;point&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
                 <span class="n">pt</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span>
-                <span class="n">bbox</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;poly&quot;</span><span class="p">:</span>
-            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bounds_polygons</span><span class="p">()</span>
+                <span class="n">bbox</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <p>In bound mode <em>polygons</em>, which should correctly be
+named gemetry, we compute the bounding boxes of every
+geometry. We will also.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">mode</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;poly&quot;</span><span class="p">:</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bounding_geometry</span><span class="p">()</span>
             <span class="n">ubbox</span> <span class="o">=</span> <span class="n">BBox</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
                     <span class="n">ubbox</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">))</span>
                     <span class="n">feature</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
                     <span class="n">fbbox</span> <span class="o">=</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s">&quot;min-area&quot;</span><span class="p">])</span>
-                    <span class="n">bbox</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fbbox</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_unprojected_bounds</span> <span class="o">=</span> <span class="n">ubbox</span>
+                    <span class="n">bbox</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fbbox</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>Save the unprojected bounding box for later to
+determine what features can be skipped.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="bp">self</span><span class="o">.</span><span class="n">_unprojected_bounds</span> <span class="o">=</span> <span class="n">ubbox</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;no features found for calculating the map bounds&#39;</span><span class="p">)</span>
-        <span class="n">bbox</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">bnds</span><span class="p">[</span><span class="s">&#39;padding&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">bbox_to_polygon</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span></pre></div>
+                <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;no features found for calculating the map bounds&#39;</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-14'>
+  <div class='section' id='section-34'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-14'>#</a>
+        <a class='octothorpe' href='#section-34'>#</a>
       </div>
-      <p>for bounds mode "polygons" this helper function
-returns a list of all polygons that the map should
-be cropped to</p>
+      <p>If we need some extra geometry around the map bounds, we inflate
+the bbox according to the set <em>padding</em>.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_get_bounds_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>        <span class="n">bbox</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">]</span>    <span class="p">[</span><span class="s">&#39;padding&#39;</span><span class="p">])</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-15'>
+  <div class='section' id='section-35'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-15'>#</a>
+        <a class='octothorpe' href='#section-35'>#</a>
       </div>
-      
+      <p>At the end we convert the bounding box to a Polygon because
+we need it for clipping tasks.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounds_polygons_cache</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounds_polygons_cache</span>
+      <div class="highlight"><pre>        <span class="k">return</span> <span class="n">bbox_to_polygon</span><span class="p">(</span><span class="n">bbox</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <h3>Get bounding geometry</h3>
+<p>For bounds mode "<em>polygons</em>" this helper function
+returns a list of all geometry that the map should
+be cropped to.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_get_bounding_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>Use the cached geometry, if available.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_geometry_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_geometry_cache</span>
 
         <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
         <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">]</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;layer&#39;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="nb">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;layer not found &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="nb">id</span><span class="p">)</span>
-        <span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
-            <span class="n">layerFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="bp">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">layerFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]:</span>
-            <span class="n">boundsFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">boundsFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="bp">True</span>
-
-        <span class="nb">filter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">layerFilter</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="ow">and</span> <span class="n">boundsFilter</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
-        <span class="n">features</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span> <span class="n">min_area</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;min-area&quot;</span><span class="p">],</span> <span class="n">charset</span><span class="o">=</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;charset&#39;</span><span class="p">])</span></pre></div>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;layer&#39;</span><span class="p">]</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-16'>
+  <div class='section' id='section-38'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-16'>#</a>
+        <a class='octothorpe' href='#section-38'>#</a>
       </div>
-      <p>remove features that are too small</p>
+      <p>Check that the layer exists.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="nb">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;layer not found &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Construct the filter function of the layer, which specifies
+what features should be excluded from the map completely.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="n">layerFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">layerFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <p>Construct the filter function of the boundary, which specifies
+what features should be excluded from the boundary calculation.
+For instance, you often want to exclude Alaska and Hawaii from
+the boundary computation of the map, although a part of Alaska
+might be visible in the resulting map.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]:</span>
+            <span class="n">boundsFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">filter_record</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">],</span> <span class="n">rec</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">boundsFilter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="bp">True</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Combine both filters to a single function.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="nb">filter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="n">layerFilter</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="ow">and</span> <span class="n">boundsFilter</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <p>Load the features from the layer source (e.g. a shapefile).</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">features</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">,</span>
+            <span class="n">min_area</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;min-area&quot;</span><span class="p">],</span>
+            <span class="n">charset</span><span class="o">=</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;charset&#39;</span><span class="p">]</span>
+        <span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>Omit tiny islands, if needed.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter-islands&#39;</span><span class="p">]:</span>
-            <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span> <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">area</span> <span class="o">&gt;</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter-islands&#39;</span><span class="p">]]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_bounds_polygons_cache</span> <span class="o">=</span> <span class="n">features</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features</span>
+                <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">area</span> <span class="o">&gt;</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;filter-islands&#39;</span><span class="p">]]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <p>Store computed boundary in cache.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">_bounding_geometry_cache</span> <span class="o">=</span> <span class="n">features</span>
         <span class="k">return</span> <span class="n">features</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-17'>
+  <div class='section' id='section-45'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-17'>#</a>
+        <a class='octothorpe' href='#section-45'>#</a>
       </div>
       <p>returns the output view</p>
     </div>
@@ -374,10 +703,10 @@ be cropped to</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-18'>
+  <div class='section' id='section-46'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-18'>#</a>
+        <a class='octothorpe' href='#section-46'>#</a>
       </div>
       
     </div>
@@ -403,10 +732,10 @@ be cropped to</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-19'>
+  <div class='section' id='section-47'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-19'>#</a>
+        <a class='octothorpe' href='#section-47'>#</a>
       </div>
       <p>creates a polygon that represents the rectangular view bounds
 used for cropping the geometries to not overlap the view</p>
@@ -416,10 +745,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-20'>
+  <div class='section' id='section-48'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-20'>#</a>
+        <a class='octothorpe' href='#section-48'>#</a>
       </div>
       
     </div>
@@ -432,10 +761,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-21'>
+  <div class='section' id='section-49'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-21'>#</a>
+        <a class='octothorpe' href='#section-49'>#</a>
       </div>
       <p>performs polygon simplification</p>
     </div>
@@ -444,10 +773,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-22'>
+  <div class='section' id='section-50'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-22'>#</a>
+        <a class='octothorpe' href='#section-50'>#</a>
       </div>
       
     </div>
@@ -458,10 +787,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-23'>
+  <div class='section' id='section-51'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-23'>#</a>
+        <a class='octothorpe' href='#section-51'>#</a>
       </div>
       <p>compute topology for all layers</p>
     </div>
@@ -473,10 +802,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-24'>
+  <div class='section' id='section-52'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-24'>#</a>
+        <a class='octothorpe' href='#section-52'>#</a>
       </div>
       <p>break features into lines</p>
     </div>
@@ -488,10 +817,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-25'>
+  <div class='section' id='section-53'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-25'>#</a>
+        <a class='octothorpe' href='#section-53'>#</a>
       </div>
       <p>simplify lines</p>
     </div>
@@ -513,10 +842,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-26'>
+  <div class='section' id='section-54'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-26'>#</a>
+        <a class='octothorpe' href='#section-54'>#</a>
       </div>
       <p>cuts the layer features to the map view</p>
     </div>
@@ -525,10 +854,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-27'>
+  <div class='section' id='section-55'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-27'>#</a>
+        <a class='octothorpe' href='#section-55'>#</a>
       </div>
       
     </div>
@@ -537,10 +866,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-28'>
+  <div class='section' id='section-56'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-28'>#</a>
+        <a class='octothorpe' href='#section-56'>#</a>
       </div>
       <p>out = []</p>
     </div>
@@ -551,10 +880,10 @@ used for cropping the geometries to not overlap the view</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-29'>
+  <div class='section' id='section-57'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-29'>#</a>
+        <a class='octothorpe' href='#section-57'>#</a>
       </div>
       <p>print feat.geometry
 _plot_geometry(feat.geometry)</p>
@@ -564,10 +893,10 @@ _plot_geometry(feat.geometry)</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-30'>
+  <div class='section' id='section-58'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-30'>#</a>
+        <a class='octothorpe' href='#section-58'>#</a>
       </div>
       <p>if not feat.is_empty():
    out.append(feat)
@@ -578,10 +907,10 @@ layer.features = out</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-31'>
+  <div class='section' id='section-59'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-31'>#</a>
+        <a class='octothorpe' href='#section-59'>#</a>
       </div>
       <p>handles crop-to</p>
     </div>
@@ -590,10 +919,10 @@ layer.features = out</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-32'>
+  <div class='section' id='section-60'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-32'>#</a>
+        <a class='octothorpe' href='#section-60'>#</a>
       </div>
       
     </div>
@@ -605,7 +934,9 @@ layer.features = out</p>
                     <span class="n">cbbox</span> <span class="o">=</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">tocrop</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
                     <span class="n">crop_at_layer</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;crop-to&#39;</span><span class="p">]</span>
                     <span class="k">if</span> <span class="n">crop_at_layer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;you want to substract from layer &quot;</span><span class="si">%s</span><span class="s">&quot; which cannot be found&#39;</span> <span class="o">%</span> <span class="n">crop_at_layer</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;you want to substract &#39;</span>
+                            <span class="o">+</span> <span class="s">&#39;from layer &quot;</span><span class="si">%s</span><span class="s">&quot; which cannot be found&#39;</span>
+                            <span class="o">%</span> <span class="n">crop_at_layer</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">crop_at</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="n">crop_at_layer</span><span class="p">]</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">crop_at</span><span class="o">.</span><span class="n">geom</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">cbbox</span><span class="p">):</span>
                             <span class="n">tocrop</span><span class="o">.</span><span class="n">crop_to</span><span class="p">(</span><span class="n">crop_at</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
@@ -614,58 +945,85 @@ layer.features = out</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-33'>
+  <div class='section' id='section-61'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-33'>#</a>
+        <a class='octothorpe' href='#section-61'>#</a>
       </div>
-      <p>handles subtract-from</p>
+      <h3>Subtract geometry</h3>
     </div>
     <div class='code'>
       <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_subtract_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-34'>
+  <div class='section' id='section-62'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-34'>#</a>
+        <a class='octothorpe' href='#section-62'>#</a>
       </div>
-      
+      <p>Substract geometry of a layer from the geometry
+of one or more different layers. Added mainly
+for excluding great lakes from country polygons.</p>
     </div>
     <div class='code'>
       <div class="highlight"><pre>        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]:</span>
                 <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">feat</span><span class="o">.</span><span class="n">geom</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                         <span class="k">continue</span>
-                    <span class="n">cbbox</span> <span class="o">=</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">subid</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]:</span>
-                        <span class="k">if</span> <span class="n">subid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;you want to subtract from layer &quot;</span><span class="si">%s</span><span class="s">&quot; which cannot be found&#39;</span> <span class="o">%</span> <span class="n">subid</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">sfeat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="n">subid</span><span class="p">]</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="n">sfeat</span><span class="o">.</span><span class="n">geom</span> <span class="ow">and</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">sfeat</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">cbbox</span><span class="p">):</span>
-                                <span class="n">sfeat</span><span class="o">.</span><span class="n">subtract_geom</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span>
-                <span class="n">layer</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+                    <span class="n">cbbox</span> <span class="o">=</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-35'>
+  <div class='section' id='section-63'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-35'>#</a>
+        <a class='octothorpe' href='#section-63'>#</a>
       </div>
-      <p>joins features in layers</p>
+      <p>We remove it from multiple layers, if wanted.</p>
     </div>
     <div class='code'>
-      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_join_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+      <div class="highlight"><pre>                    <span class="k">for</span> <span class="n">subid</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">subid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;you want to subtract&#39;</span>
+                                <span class="o">+</span> <span class="s">&#39; from layer &quot;</span><span class="si">%s</span><span class="s">&quot; which cannot be found&#39;</span>
+                                <span class="o">%</span> <span class="n">subid</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layersById</span><span class="p">[</span><span class="n">subid</span><span class="p">]</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">geom</span> <span class="ow">and</span> <span class="n">geom_to_bbox</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">cbbox</span><span class="p">):</span>
+                                <span class="n">s</span><span class="o">.</span><span class="n">subtract_geom</span><span class="p">(</span><span class="n">feat</span><span class="o">.</span><span class="n">geom</span><span class="p">)</span></pre></div>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-36'>
+  <div class='section' id='section-64'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-36'>#</a>
+        <a class='octothorpe' href='#section-64'>#</a>
+      </div>
+      <p>Finally, we don't want the subtracted features
+to be included in our map.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">layer</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-65'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-65'>#</a>
+      </div>
+      <h3>Joins features within a layer.</h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_join_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-66'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-66'>#</a>
       </div>
       
     </div>
@@ -682,10 +1040,10 @@ layer.features = out</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-37'>
+  <div class='section' id='section-67'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-37'>#</a>
+        <a class='octothorpe' href='#section-67'>#</a>
       </div>
       <p>auto populate groups</p>
     </div>
@@ -713,10 +1071,10 @@ layer.features = out</p>
     </div>
   </div>
   <div class='clearall'></div>
-  <div class='section' id='section-38'>
+  <div class='section' id='section-68'>
     <div class='docs'>
       <div class='octowrap'>
-        <a class='octothorpe' href='#section-38'>#</a>
+        <a class='octothorpe' href='#section-68'>#</a>
       </div>
       <p>print unjoined,'features were not joined'</p>
     </div>

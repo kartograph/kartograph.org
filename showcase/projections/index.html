@@ -34,8 +34,16 @@ $script.ready('kartograph', function() {
         this.up = 0;
         this.tilt = 0;
         this.proj = 'ortho';
-        this.projstr = '+proj=lcc +lat_1=44.1 +lat_0=44.1 +lon_0=0 +k_0=0.999877499 +x_0=600000 +y_0=200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m'
+        this.projstr = '+proj=lcc +lat_1=44.1 +lat_0=44.1 +lon_0=0 +k_0=0.999877499 +x_0=600000 +y_0=200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m',
         //this.flip = 0;
+        this.offsetx = 0;
+        this.offsety = 0;
+        this.startx = 0;
+        this.starty = 0;
+        this.deltalon = 0;
+        this.deltalat = 0;
+        this.isdragged = false;
+        this.firstclick = true;
     };
     var globeopt = new GlobeOpt();
     var url = location.href.split('#');
@@ -207,6 +215,53 @@ $script.ready('kartograph', function() {
         };
 
         updateGUI();
+
+        $('#map-parent').click(function (e) {
+            globeopt.startx = e.pageX - this.offsetLeft;
+            globeopt.starty = e.pageY - this.offsetTop;
+        });
+        $('#map-parent').mousedown(function (e) {
+            globeopt.isdragged = true;
+        });
+        $('#map-parent').mouseup(function (e) {
+            globeopt.isdragged = false;
+            globeopt.firstclick = true;
+            $('#status2').html((e.pageX - globeopt.offsetx - globeopt.startx) + ', ' + (e.pageY - globeopt.offsety - globeopt.starty));
+        });
+        var latstart = 0,
+            lonstart = 0,
+            lastlat = 0,
+            lastlon = 0;
+        $('#map-parent').mousemove(function (e) {
+            globeopt.offsetx = this.offsetLeft;
+            globeopt.offsety = this.offsetTop;
+            $('#status').html(e.pageX + ', ' + e.pageY);
+            if (globeopt.isdragged === true) {
+                lastlat = globeopt.lat0;
+                lastlon = globeopt.lon0;
+                if (globeopt.firstclick === true) {
+                    globeopt.startx = e.pageX - globeopt.offsetx;
+                    globeopt.starty = e.pageY - globeopt.offsety;
+                    latstart = globeopt.lat0;
+                    lonstart = globeopt.lon0;
+                    globeopt.firstclick = false;
+                }
+                var relx = e.pageX - globeopt.offsetx - globeopt.startx;
+                var rely = e.pageY - globeopt.offsety - globeopt.starty;
+                //$('#status').html(relx +', '+ rely);
+                globeopt.deltalon = (-relx / 4);
+                globeopt.deltalat = (rely / 4);
+                globeopt.lon0 = (lonstart + globeopt.deltalon + 540) % 360 - 180;
+                globeopt.lat0 = latstart + globeopt.deltalat;
+                if (globeopt.lat0 > 90) {globeopt.lat0 = 90; }
+                if (globeopt.lat0 < -90) {globeopt.lat0 = -90; }
+                //$('#relxystatus').html(globeopt.deltalat +'Â°'+ globeopt.deltalon + 'Â°');
+                $('#latlonstatus').html((Math.floor(globeopt.lat0)) + 'Â°, ' + (Math.floor(globeopt.lon0)) + 'Â°');
+                if (globeopt.lat0 !== lastlat || globeopt.lon0 !== lastlon) {
+                    renderFrame();
+                }
+            }
+        });
 
     });
 });
