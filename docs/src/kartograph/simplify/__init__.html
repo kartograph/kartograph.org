@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__init__.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>__init__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;create_point_store&#39;</span><span class="p">,</span> <span class="s">&#39;unify_polygon&#39;</span><span class="p">,</span> <span class="s">&#39;unify_polygons&#39;</span><span class="p">,</span> <span class="s">&#39;simplify_lines&#39;</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">unify</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">distance</span> <span class="kn">import</span> <span class="n">simplify_distance</span>
+<span class="kn">from</span> <span class="nn">douglas_peucker</span> <span class="kn">import</span> <span class="n">simplify_douglas_peucker</span>
+<span class="kn">from</span> <span class="nn">visvalingam</span> <span class="kn">import</span> <span class="n">simplify_visvalingam_whyatt</span>
+
+
+<span class="n">simplification_methods</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">simplification_methods</span><span class="p">[</span><span class="s">&#39;distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">simplify_distance</span>
+<span class="n">simplification_methods</span><span class="p">[</span><span class="s">&#39;douglas-peucker&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">simplify_douglas_peucker</span>
+<span class="n">simplification_methods</span><span class="p">[</span><span class="s">&#39;visvalingam-whyatt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">simplify_visvalingam_whyatt</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>simplifies a set of lines</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">simplify_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">simplify</span> <span class="o">=</span> <span class="n">simplification_methods</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      <p>remove duplicate points from line</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">unique</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">line</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">unique</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">simplify</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

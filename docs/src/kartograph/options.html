@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>options.py</title>
+  <link rel="stylesheet" href="../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>options.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>API 2.0
+helper methods for validating options dictionary</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">proj</span>
+<span class="kn">import</span> <span class="nn">errors</span>
+
+
+<span class="n">Error</span> <span class="o">=</span> <span class="n">errors</span><span class="o">.</span><span class="n">KartographOptionParseError</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">is_str</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">read_map_descriptor</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s">&#39;.json&#39;</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cfg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;parsing of json map configuration failed.</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cfg</span>
+    <span class="k">elif</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;.yaml&#39;</span><span class="p">,</span> <span class="s">&#39;.yml&#39;</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">yaml</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cfg</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;parsing of yaml map configuration failed.</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cfg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;supported config formats are .json and .yaml&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>check out that the option dict is filled correctly</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_options</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>projection</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">parse_proj</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+    <span class="n">parse_layers</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+    <span class="n">parse_bounds</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+    <span class="n">parse_export</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <p>checks projections</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_proj</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="s">&#39;proj&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+        <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">prj</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;proj&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prj</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s">&#39;bounds&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+            <span class="n">prj</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;robinson&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">prj</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;laea&#39;</span>
+    <span class="k">if</span> <span class="n">prj</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">proj</span><span class="o">.</span><span class="n">projections</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;unknown projection&#39;</span><span class="p">)</span>
+    <span class="n">prjClass</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">projections</span><span class="p">[</span><span class="n">prj</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]]</span>
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">prjClass</span><span class="o">.</span><span class="n">attributes</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prj</span><span class="p">:</span>
+            <span class="n">prj</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prj</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&quot;auto&quot;</span><span class="p">:</span>
+                <span class="n">prj</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">prj</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layers</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;layers&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+        <span class="n">opts</span><span class="p">[</span><span class="s">&#39;layers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">l_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">g_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">s_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;layers&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s">&#39;styles&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s">&#39;styles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s">&#39;src&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span> <span class="ow">and</span> <span class="s">&#39;special&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;you need to define the source for your layers&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&#39;src&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;layer source not found: &#39;</span> <span class="o">+</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;layer_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">l_id</span><span class="p">)</span>
+                <span class="n">l_id</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="s">&#39;charset&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                <span class="n">layer</span><span class="p">[</span><span class="s">&#39;charset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;utf-8&#39;</span>
+        <span class="k">elif</span> <span class="s">&#39;special&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;special&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;graticule&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                    <span class="n">layer</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;graticule&#39;</span>
+                    <span class="k">if</span> <span class="n">g_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">g_id</span><span class="p">)</span>
+                    <span class="n">g_id</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="s">&#39;fill&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;styles&#39;</span><span class="p">]:</span>
+                    <span class="n">layer</span><span class="p">[</span><span class="s">&#39;styles&#39;</span><span class="p">][</span><span class="s">&#39;fill&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;None&#39;</span>
+                <span class="n">parse_layer_graticule</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;special&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;sea&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+                    <span class="n">layer</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;sea&#39;</span>
+                    <span class="k">if</span> <span class="n">s_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s_id</span><span class="p">)</span>
+                    <span class="n">s_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">parse_layer_attributes</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">parse_layer_filter</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">parse_layer_join</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">parse_layer_simplify</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">parse_layer_subtract</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">parse_layer_cropping</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_attributes</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;attributes&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">is_str</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>  <span class="c"># [&quot;ISO_A3&quot;, &quot;FIPS&quot;]</span>
+                <span class="n">attrs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s">&#39;src&#39;</span><span class="p">:</span> <span class="n">attr</span><span class="p">,</span> <span class="s">&#39;tgt&#39;</span><span class="p">:</span> <span class="n">attr</span><span class="p">})</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>  <span class="c"># { &quot;ISO_A3&quot;: &quot;iso&quot; }</span>
+                <span class="n">attrs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s">&#39;src&#39;</span><span class="p">:</span> <span class="n">attr</span><span class="p">,</span> <span class="s">&#39;tgt&#39;</span><span class="p">:</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">][</span><span class="n">attr</span><span class="p">]})</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s">&#39;src&#39;</span> <span class="ow">in</span> <span class="n">attr</span> <span class="ow">and</span> <span class="s">&#39;tgt&#39;</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+    <span class="n">layer</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attrs</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_filter</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;filter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span>
+    <span class="k">return</span>  <span class="c"># todo: check valid filter syntax (recursivly, place code in filter.py)</span>
+    <span class="nb">filter</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;filter&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s">&#39;type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">:</span>
+        <span class="nb">filter</span><span class="p">[</span><span class="s">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;include&#39;</span>
+    <span class="k">if</span> <span class="s">&#39;attribute&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;layer filter must define an attribute to filter on&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s">&#39;equals&#39;</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">filter</span><span class="p">[</span><span class="s">&#39;equals&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="nb">filter</span><span class="p">[</span><span class="s">&#39;equals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">filter</span><span class="p">[</span><span class="s">&#39;equals&#39;</span><span class="p">]]</span>
+    <span class="k">elif</span> <span class="s">&#39;greater-than&#39;</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">filter</span><span class="p">[</span><span class="s">&#39;greater-than&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">filter</span><span class="p">[</span><span class="s">&#39;greater-than&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;could not convert filter value &quot;greater-than&quot; to float&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s">&#39;less-than&#39;</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">filter</span><span class="p">[</span><span class="s">&#39;less-than&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">filter</span><span class="p">[</span><span class="s">&#39;less-than&#39;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;could not convert filter value &quot;less-than&quot; to float&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;you must define either &quot;equals&quot;, &quot;greater-than&quot; or &quot;less-than&quot; in the filter&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_join</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;join&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;join&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;join&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">join</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;join&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s">&#39;group-by&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">join</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;missing attribute &quot;group-by&quot;: you need to specify an attribute by which the features should be joined.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s">&#39;groups&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">join</span><span class="p">:</span>
+        <span class="n">join</span><span class="p">[</span><span class="s">&#39;groups&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="s">&#39;group-as&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">join</span><span class="p">:</span>
+        <span class="n">join</span><span class="p">[</span><span class="s">&#39;group-as&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_simplify</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;filter-islands&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;filter-islands&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="s">&#39;unify-precision&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;unify-precision&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="s">&#39;simplify&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>default to visvalingam-whyatt</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;method&quot;</span><span class="p">:</span> <span class="s">&quot;visvalingam-whyatt&quot;</span><span class="p">,</span> <span class="s">&quot;tolerance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">])}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">][</span><span class="s">&#39;tolerance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;simplify&#39;</span><span class="p">][</span><span class="s">&#39;tolerance&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;could not convert simplification amount to float&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_subtract</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;subtract-from&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)):</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;subtract-from&#39;</span><span class="p">]]</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_cropping</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;crop-to&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;crop-to&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_layer_graticule</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;latitudes&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;latitudes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;latitudes&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;latitudes&#39;</span><span class="p">]</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;latitudes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">lat</span> <span class="ow">in</span> <span class="n">_xfrange</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s">&#39;latitudes&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="o">-</span><span class="n">lat</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s">&#39;longitudes&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;longitudes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;longitudes&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;longitudes&#39;</span><span class="p">]</span>
+        <span class="n">layer</span><span class="p">[</span><span class="s">&#39;longitudes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">lon</span> <span class="ow">in</span> <span class="n">_xfrange</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="mi">181</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lon</span> <span class="o">==</span> <span class="mi">180</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">lon</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">lon</span><span class="p">,</span> <span class="o">-</span><span class="n">lon</span><span class="p">]</span>
+            <span class="n">layer</span><span class="p">[</span><span class="s">&#39;longitudes&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">p</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">_xfrange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">step</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">step</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="n">step</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">start</span>
+        <span class="n">start</span> <span class="o">+=</span> <span class="n">step</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_bounds</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&#39;bounds&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+        <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>return</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">bounds</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s">&#39;mode&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;bbox&#39;</span>
+
+    <span class="k">if</span> <span class="s">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">90</span><span class="p">]</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;bbox&#39;</span>
+
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;mode&#39;</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s">&#39;crop&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;crop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;auto&#39;</span>
+
+    <span class="k">if</span> <span class="s">&quot;padding&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bounds</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="s">&quot;padding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;bbox&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+                    <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;bounds mode bbox requires array with exactly 4 values [lon0,lat0,lon1,lat]&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Error</span><span class="p">:</span>
+            <span class="k">raise</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;bounds mode bbox requires array with exactly 4 values [lon0,lat0,lon1,lat]&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">&quot;points&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">pt</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">pt</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;bounds mode points requires array with (lon,lat) tuples&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Error</span><span class="p">:</span>
+            <span class="k">raise</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;bounds mode points requires array with (lon,lat) tuples&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&quot;polygons&quot;</span><span class="p">,</span> <span class="s">&quot;polygon&quot;</span><span class="p">):</span>
+        <span class="n">bounds</span><span class="p">[</span><span class="s">&#39;mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mode</span> <span class="o">=</span> <span class="s">&quot;polygons&quot;</span>
+        <span class="k">if</span> <span class="s">&quot;layer&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;layer&quot;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;you must specify a layer for bounds mode &#39;</span> <span class="o">+</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&quot;filter&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&quot;filter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="s">&quot;attribute&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;attribute&quot;</span><span class="p">]):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&quot;attribute&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="s">&quot;values&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">&quot;attribute&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;you must specify a list of values to match in bounds mode &#39;</span> <span class="o">+</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">]):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="s">&quot;min-area&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s">&quot;min-area&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&quot;min-area&quot;</span><span class="p">])</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s">&#39;min_area must be an integer or float&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&#39;min-area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_export</span><span class="p">(</span><span class="n">opts</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">&quot;export&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+        <span class="n">opts</span><span class="p">[</span><span class="s">&quot;export&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">opts</span><span class="p">[</span><span class="s">&quot;export&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s">&quot;width&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span> <span class="ow">and</span> <span class="s">&quot;height&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span>
+    <span class="k">elif</span> <span class="s">&quot;height&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;height&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span>
+    <span class="k">elif</span> <span class="s">&quot;width&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span>
+
+    <span class="k">if</span> <span class="s">&quot;ratio&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span>
+    <span class="k">if</span> <span class="s">&quot;round&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&quot;round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exp</span><span class="p">[</span><span class="s">&quot;round&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s">&quot;crop-to-view&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exp</span><span class="p">:</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s">&#39;crop-to-view&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

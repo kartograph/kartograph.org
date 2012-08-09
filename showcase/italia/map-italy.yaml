@@ -9,14 +9,14 @@ layers:
     latitudes: [30,32,34,36,38,40,42,44,46,48,50]
     longitudes: [5,7.5,10,12.5,15,17.5,20]
 -   id: land
-    src: ../shp/naturalearth/land/10m_land.shp
+    src: ../shp/naturalearth/10m_land.shp
 -   id: context
-    src: ../shp/naturalearth/10m-admin0-countries/ne_10m_admin_0_countries.shp
+    src: ../shp/naturalearth/ne_10m_admin_0_countries.shp
     attributes:
         ISO_A3: iso
     filter: [ISO_A3,is not,ITA]
 -   id: ITA
-    src: ../shp/naturalearth/admin1-states-provinces/1.4.0/ne_10m_admin_1_states_provinces_shp.shp
+    src: ../shp/naturalearth/ne_10m_admin_1_states_provinces_shp.shp
     filter: [ISO,is,ITA]
 bounds:
     mode: polygons

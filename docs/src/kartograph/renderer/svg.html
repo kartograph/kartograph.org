@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>svg.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>svg.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">kartograph.renderer</span> <span class="kn">import</span> <span class="n">MapRenderer</span>
+<span class="kn">from</span> <span class="nn">kartograph.errors</span> <span class="kn">import</span> <span class="n">KartographError</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>This script contains everything that is needed by Kartograph to finally
+render the processed maps into SVG files.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      <p>The SVG renderer is based on xml.dom.minidom.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="kn">from</span> <span class="nn">xml.dom</span> <span class="kn">import</span> <span class="n">minidom</span>
+<span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">import</span> <span class="nn">re</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">SvgRenderer</span><span class="p">(</span><span class="n">MapRenderer</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <p>The render() method prepares a new empty SVG document and
+stores all the layer features into SVG groups.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="bp">self</span><span class="o">.</span><span class="n">_init_svg_doc</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_store_layers_to_svg</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_init_svg_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Load width and height of the map view
+We add two pixels to the height to ensure that
+the map fits.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">height</span> <span class="o">+</span> <span class="mi">2</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <p>SvgDocument is a handy wrapper around xml.dom.minidom. It is defined below.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">svg</span> <span class="o">=</span> <span class="n">SvgDocument</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">px&#39;</span> <span class="o">%</span> <span class="n">w</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%d</span><span class="s">px&#39;</span> <span class="o">%</span> <span class="n">h</span><span class="p">,</span>
+            <span class="n">viewBox</span><span class="o">=</span><span class="s">&#39;0 0 </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span>
+            <span class="n">enable_background</span><span class="o">=</span><span class="s">&#39;new 0 0 </span><span class="si">%d</span><span class="s"> </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span>
+            <span class="n">style</span><span class="o">=</span><span class="s">&#39;stroke-linejoin: round; stroke:#000; fill:#f6f3f0;&#39;</span><span class="p">)</span>
+
+        <span class="n">defs</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;defs&#39;</span><span class="p">,</span> <span class="n">svg</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;style&#39;</span><span class="p">,</span> <span class="n">defs</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s">&#39;text/css&#39;</span><span class="p">)</span>
+        <span class="n">css</span> <span class="o">=</span> <span class="s">&#39;path { fill-rule: evenodd; }</span><span class="se">\n</span><span class="s">#context path { fill: #eee; stroke: #bbb; } &#39;</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">cdata</span><span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">svg</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">views</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;views&#39;</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;view&#39;</span><span class="p">,</span> <span class="n">views</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;padding&#39;</span><span class="p">]),</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
+
+        <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;proj&#39;</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">proj</span><span class="o">.</span><span class="n">attrs</span><span class="p">())</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;bbox&#39;</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">src_bbox</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">y</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">src_bbox</span><span class="o">.</span><span class="n">top</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">w</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">src_bbox</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">h</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">src_bbox</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">ll</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">90</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;mode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;bbox&quot;</span><span class="p">:</span>
+            <span class="n">ll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;bounds&#39;</span><span class="p">][</span><span class="s">&#39;data&#39;</span><span class="p">]</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;llbbox&#39;</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span>
+            <span class="n">lon0</span><span class="o">=</span><span class="n">ll</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lon1</span><span class="o">=</span><span class="n">ll</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">lat0</span><span class="o">=</span><span class="n">ll</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lat1</span><span class="o">=</span><span class="n">ll</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">svg</span> <span class="o">=</span> <span class="n">svg</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>store features in svg</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_store_layers_to_svg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">svg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">features</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;ignoring empty layer&quot;</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">id</span>
+                <span class="k">continue</span>  <span class="c"># ignore empty layers</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="n">svg</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">layer</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_feature</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;attributes&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">g</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="s">&quot;feature.to_svg is None&quot;</span><span class="p">,</span> <span class="n">feat</span>
+            <span class="k">if</span> <span class="s">&#39;styles&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;styles&#39;</span><span class="p">]:</span>
+                    <span class="n">g</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;styles&#39;</span><span class="p">][</span><span class="n">prop</span><span class="p">]))</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_render_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_geometry</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">for</span> <span class="n">cfg</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s">&#39;src&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+                <span class="n">tgt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s">&#39;(\W|_)+&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="p">[</span><span class="s">&#39;tgt&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">props</span><span class="p">:</span>
+                    <span class="k">continue</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <p>raise KartographError(('attribute not found "%s"'%cfg['src']))</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">val</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="n">cfg</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;data-&#39;</span> <span class="o">+</span> <span class="n">tgt</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">tgt</span> <span class="o">==</span> <span class="s">&quot;id&quot;</span><span class="p">:</span>
+                    <span class="n">node</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s">&#39;where&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>can be used to replace attributes...</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>                <span class="n">src</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">]</span>
+                <span class="n">tgt</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s">&#39;set&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s">&#39;equals&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s">&#39;to&#39;</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">KartographError</span><span class="p">(</span><span class="s">&#39;attributes: &quot;equals&quot; and &quot;to&quot; arrays must be of same length&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s">&#39;equals&#39;</span><span class="p">])):</span>
+                    <span class="k">if</span> <span class="n">feature</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="n">src</span><span class="p">]</span> <span class="o">==</span> <span class="n">cfg</span><span class="p">[</span><span class="s">&#39;equals&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                        <span class="n">node</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;data-&#39;</span> <span class="o">+</span> <span class="n">tgt</span><span class="p">,</span> <span class="n">cfg</span><span class="p">[</span><span class="s">&#39;to&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s">&#39;__color__&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="o">.</span><span class="n">props</span><span class="p">:</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;fill&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="s">&#39;__color__&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">node</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_render_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="p">(</span><span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_polygon</span><span class="p">(</span><span class="n">geometry</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>constructs a svg representation of a polygon</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">_render_polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>        <span class="n">_round</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;export&#39;</span><span class="p">][</span><span class="s">&#39;round&#39;</span><span class="p">]</span>
+        <span class="n">path_str</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">_round</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%f</span><span class="s">,</span><span class="si">%f</span><span class="s">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s">&#39;%.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">_round</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;f&#39;</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="n">fmt</span> <span class="o">+</span> <span class="s">&#39;,&#39;</span> <span class="o">+</span> <span class="n">fmt</span>
+
+        <span class="n">geoms</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="s">&#39;geoms&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">geometry</span><span class="o">.</span><span class="n">geoms</span> <span class="ow">or</span> <span class="p">[</span><span class="n">geometry</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">polygon</span> <span class="ow">in</span> <span class="n">geoms</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">polygon</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">ring</span> <span class="ow">in</span> <span class="p">[</span><span class="n">polygon</span><span class="o">.</span><span class="n">exterior</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">polygon</span><span class="o">.</span><span class="n">interiors</span><span class="p">):</span>
+                <span class="n">cont_str</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+                <span class="n">kept</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ring</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+                    <span class="n">kept</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kept</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">kept</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">cont_str</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+                        <span class="n">cont_str</span> <span class="o">=</span> <span class="s">&quot;M&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">cont_str</span> <span class="o">+=</span> <span class="s">&quot;L&quot;</span>
+                    <span class="n">cont_str</span> <span class="o">+=</span> <span class="n">fmt</span> <span class="o">%</span> <span class="n">pt</span>
+                <span class="n">cont_str</span> <span class="o">+=</span> <span class="s">&quot;Z &quot;</span>
+                <span class="n">path_str</span> <span class="o">+=</span> <span class="n">cont_str</span>
+        <span class="k">if</span> <span class="n">path_str</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">path_str</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">svg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">preview</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">svg</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">svg</span><span class="o">.</span><span class="n">tostring</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <h2>SvgDocument</h2>
+<p>SVGDocument is a handy wrapper around xml.dom.minidom which allows us
+to quickly build XML structures. It is largely inspired by the SVG class
+of the <a href="http://code.google.com/p/svgfig/">svgfig</a> project, which was
+used by one of the earlier versions of Kartograph.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">SvgDocument</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <p>Of course, we need to create and XML document with all this
+boring SVG header stuff added to it.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">imp</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">getDOMImplementation</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">createDocumentType</span><span class="p">(</span><span class="s">&#39;svg&#39;</span><span class="p">,</span>
+            <span class="s">&#39;-//W3C//DTD SVG 1.1//EN&#39;</span><span class="p">,</span>
+            <span class="s">&#39;http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">createDocument</span><span class="p">(</span><span class="s">&#39;http://www.w3.org/2000/svg&#39;</span><span class="p">,</span> <span class="s">&#39;svg&#39;</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">svg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s">&#39;svg&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;xmlns&#39;</span><span class="p">,</span> <span class="s">&#39;http://www.w3.org/2000/svg&#39;</span><span class="p">)</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;version&#39;</span><span class="p">,</span> <span class="s">&#39;1.1&#39;</span><span class="p">)</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">&#39;xmlns:xlink&#39;</span><span class="p">,</span> <span class="s">&#39;http://www.w3.org/1999/xlink&#39;</span><span class="p">)</span>
+        <span class="n">_add_attrs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>This is the magic of SvgDocument. Instead of having to do appendChild()
+and addAttribute() for every node we create, we just call svgdoc.node()
+which is smart enough to append itself to the parent if we specify one,
+and also sets all attributes we pass as keyword arguments.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">el</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">_add_attrs</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">parent</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">el</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <p>Sometimes we also need a &lt;[CDATA]&gt; block, for instance if we embed
+CSS code in the SVG document.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">cdata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">cd</span> <span class="o">=</span> <span class="n">minidom</span><span class="o">.</span><span class="n">CDATASection</span><span class="p">()</span>
+        <span class="n">cd</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">parent</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">cd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cd</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Here we finally write the SVG file, and we're brave enough
+to try to write it in Unicode.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s">&#39;warning: could not encode to unicode&#39;</span>
+
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <p>Don't blame me if you don't have a command-line shortcut to
+simply the best free browser of the world.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">preview</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&#39;tmp.svg&#39;</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">call</span>
+        <span class="n">call</span><span class="p">([</span><span class="s">&quot;firefox&quot;</span><span class="p">,</span> <span class="s">&quot;tmp.svg&quot;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">def</span> <span class="nf">tostring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <p>This is an artifact of an older version of Kartograph, but
+maybe we'll need it later. It will load an SVG document from
+a file.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="n">svg</span> <span class="o">=</span> <span class="n">SvgDocument</span><span class="p">()</span>
+        <span class="n">dom</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">dom</span>
+        <span class="n">svg</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s">&#39;svg&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">svg</span>
+
+
+<span class="k">def</span> <span class="nf">_add_attrs</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>

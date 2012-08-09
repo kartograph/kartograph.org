@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__init__.py</title>
+  <link rel="stylesheet" href="../../pycco.css">
+</head>
+<body>
+<div id="background"></div>
+<div id='container'>
+  <div class='section'>
+    <div class='docs'><h1>__init__.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      <p>as of version 2.0 kartograph supports multiple import formats</p>
+<ul>
+<li>Shapefile</li>
+<li>KML ? (only polygons and polylines)</li>
+<li>GeoJSON ?</li>
+</ul>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;LayerSource&#39;</span><span class="p">,</span> <span class="s">&#39;ShapefileLayer&#39;</span><span class="p">,</span> <span class="s">&#39;GraticuleLayer&#39;</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">shplayer</span> <span class="kn">import</span> <span class="n">ShapefileLayer</span>
+<span class="kn">from</span> <span class="nn">layersource</span> <span class="kn">import</span> <span class="n">LayerSource</span>
+<span class="kn">from</span> <span class="nn">special</span> <span class="kn">import</span> <span class="n">GraticuleLayer</span><span class="p">,</span> <span class="n">SeaLayer</span>
+<span class="kn">from</span> <span class="nn">kartograph.errors</span> <span class="kn">import</span> <span class="o">*</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">handle_layer_source</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">if</span> <span class="s">&#39;src&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">src</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;.shp&quot;</span><span class="p">:</span>  <span class="c"># shapefile layer</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">ShapefileLayer</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">LayerSource</span><span class="p">):</span>
+            <span class="n">cache</span><span class="p">[</span><span class="n">layer</span><span class="p">[</span><span class="s">&#39;src&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">src</span>
+            <span class="k">return</span> <span class="n">src</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KartographLayerSourceError</span><span class="p">(</span><span class="s">&#39;don</span><span class="se">\&#39;</span><span class="s">t know how to handle &quot;&#39;</span> <span class="o">+</span> <span class="n">src</span> <span class="o">+</span> <span class="s">&#39;&quot;&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s">&#39;special&#39;</span> <span class="ow">in</span> <span class="n">layer</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;special&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;graticule&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">GraticuleLayer</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">layer</span><span class="p">[</span><span class="s">&#39;special&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;sea&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SeaLayer</span><span class="p">()</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
