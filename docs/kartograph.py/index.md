@@ -36,7 +36,7 @@ The following chapters will cover the details of the map configuration syntax.
 
 The most important configuration (and the only one which you cannot leave out) is ``layers``. 
     
-**New:** The upcoming version of Kartograph will also support an dictionary of dictionaries, with layer ids as keys.
+The layer configuration accepts either two formats. The first is a dictionary of dictionaries, with layer ids as keys. This was added lately.
 
     {
         "layers": {
@@ -49,7 +49,7 @@ The most important configuration (and the only one which you cannot leave out) i
         }
     }
 
-The old syntax is still supported (but deprecated). It required ``layers`` to be a list of dictionaries, one for each layer. You can name (and should) name the layer using ``layer.id``.
+The old syntax is still supported (but possibly deprecated in the future). It accepts the layers as a list of dictionaries. You can name (and should) name the layer using ``layer.id``.
 
     {
         "layers": [{
@@ -117,6 +117,17 @@ This would change the path in the resulting SVG to:
         }
     }
 
+### Specifying the input charset
+
+While Kartograph.py tries to guess the right charset on a per shape level, you can speed up things by explicitly naming the source charset.
+
+    "mylayer": {
+        "src": "countries.shp",
+        "charset": "latin-1"
+    }
+    
+On the output-side, Kartograph.py will encode all SVGs in Unicode.
+
 ## Adding PostGIS layers
 
 You can add a PostGIS layer by passing information about the database to ``layer.src``. To avoid conflicts with shapefiles you need to prepend "**postgis:**" to the database configuration string. Also Kartograph.py needs to know which table you want to read from.
@@ -146,19 +157,75 @@ Kartograph.py will add the provided string to the WHERE part of the query.
 
 Keeping the attributes (read: non-geometry columns) of your PostGIS table works exactly the same way as for [shapefile layers](#keeping-data-attributes).
 
-## Advanced Layer Processing
 
-Kartograph supports a range of
+## Joining features within a layer
 
-### Joining features within a layer
+In some situations you might want to join some polygons of a layer. For instance, you might want to create world map of continents instead of showing individual countries. To do so, you simply set the ``layer.join`` parameter.
 
+### Joining all features to one
 
+In the most simplest form you can join all features (of the same type) into one by just setting ``layer.join`` to **true**.
 
-### ...
+    "mylayer": {
+        "src": "countries.shp",
+        "join": true
+    }
+    
+Note that the joining results in different operations depending on the geometry type. Polygonal features are joined using [union](http://toblerity.github.com/shapely/manual.html#object.union), while linear features are joined using [linemerge](http://toblerity.github.com/shapely/manual.html#shapely.ops.linemerge).
 
+### Joining features to distinct, named groups
 
+The next level is to join the features to several features by grouping them according to a data attribute, defined by ``layer.join.group-by``.
 
-## Special Layers
+    "mylayer": {
+        "join": {
+            "group-by": "CONT"
+        }
+    }
+
+Finally, you may also freely define which features should be joined into which group, by adding a dictionary ``layer.join.groups`` in which a set of values (of the attribute specified in ``group-by``) is assigned to group names (the keys). If you set ``group-as``, too, the group names will be added to the SVG, just as if they were regular attributes.
+
+    "join": {
+        "group-by": "FIPS_1",
+        "groups": {
+            "east": ["GM12","GM11","GM13","GM16","GM15","GM14"],
+            "west": ["GM01","GM02","GM03","GM04","GM05","GM06","GM07","GM08","GM09","GM10"]
+        },
+        "group-as": "id"
+    }
+
+In the above example, the regions of Germany would be joined into the groups "east" and "west". The ``group-as`` property is optional. If set, the joined polygons will store the group ids as data attributes (e.g. data-id="west").
+
+![joined polygon features](join.png)
+
+## Layer Subtraction and Cropping
+
+Sometimes you need to subtract polygons from one layer from the polygons of another layer. One example use case is when you have state boundaries and lakes in different shapefiles. You can make Kartograph do this by setting the ``layer.subtract-from`` attribute to the id of the layer you want to subtract from. You can also subtract a layer from more than one other layers by providing an array of layer ids.
+
+    "countries": {
+       "src": "ne_adm_level0.shp"
+    },
+    "lakes": { 
+       "src": "ne_10m_lakes.shp",
+       "subtract-from": "countries"
+    }
+    
+### Cropping layers to another layer
+
+Another use case is that you need to crop a layer to a existing layer. You can do so by setting the crop-to option. Assuming a shapefile that has forestation polygons for Europe, the following would crop the forests to the shape of Germany:
+
+    "germany": {
+        "src": "ne_adm_level0.shp",
+        "filter": {
+            "ISO_A3": "DEU"
+        }
+    },
+    "forests": {
+        "src": "forests_of_europe.shp",
+        "crop-to": "germany"
+    }
+
+## Special Layers: Graticule and Sea
 
 ### Graticule
 
@@ -180,6 +247,107 @@ The sea layer is especially useful in non-rectangular world maps, where the 'bac
 
 ## Projection 
 
+
+Of course, you may want to define the map projection that will be used to project the geo data:
+
+    "proj": {
+        "id": "laea",
+        "lon0": 11.0,
+        "lat0": 52
+    }
+
+
+Other projections might support different parameters:
+
+
+    "proj": {
+        "id": "satellite",
+        "lon0": 11.0,
+        "lat0": 52.0,
+        "dist": 1.3,
+        "up": 45.0
+    }
+
+
+In some situations you can leave out some projection parameters or set them to "auto". Then, Kartograph will try to figure out useful values itself (e.g. the geographic center of the displayed polygons). You can even mix automatic and user-defined projection parameters:
+
+
+    "proj": {
+        "id": "robinson",
+        "lon0": "auto",
+        "lat0": 52.0
+    }
+
+
+For a list of all available map projections and their parameters, check out this page (todo).
+
+
+## Framing the Map
+
+Often you don't want to render the entire globe, but a smaller section of it. Kartograph supports different convenient ways to define how to clip the map.
+
+### Clipping to a longitude/latitude range (bbox)
+
+![clipping to China](crop-bbox-01.png)
+
+The mode **bbox** allows you to define a minimum/maximum value for latitude and longitudes. Kartograph will ensure that the entire lon,lat is visible in the map. Note that the layer polygons are _not_ cropped to the viewport rectangle, but to the lon/lat range, whose actual shape depends on the used map projection.
+
+    "bounds": {
+        "mode": "bbox", 
+        "data": [70,17,135,54]
+    }
+
+
+If no bounds are set up at all, Kartograph will fallback to the full lon/lat range [-180,-90,180,90].
+
+### Clipping to map features (polygons)
+
+![clipping to China](crop-polygon.png)
+
+In some situations you don't want to mess around with lon/lat bounding boxes, but you simply want one or many polygons to be fully visible in the map. That's what the **polygons** mode is for:
+
+    "bounds": {
+        "mode": "polygons",
+        "data": {
+            "layer": "countries",
+            "attribute": "NE_ISO_3",
+            "values": ["DEU","FRA","ITA","GBR"]
+        }
+    }
+
+
+The **layer** option refers to the id of a layer defined in the [layers section](#layers).
+
+### Omitting tiny islands in boundary calculation
+
+But wait, now comes the tricky part of using automatically calculated bounding boxes for geographic polygons. Since many geographic regions consist of multiple polygons, you often don't want to crop your map to the full extends. If you, for instance, want to crop the map to Spain you probably don't want have all these tiny islands included (see image above). Therefore, Kartograph allows you to set the parameter **min_area**. The bounding box calculation will ignore every polygon whose area is less than **min_area** multiplied with the area of the largest polygon.
+
+    "bounds": {
+        "mode": "polygons",
+        "data": {
+            "layer": "countries",
+            "attribute": "NE_ISO_3",
+            "ids": ["ESP"],
+            "min-area": 0.20,
+            "padding": 10
+        }
+    }
+
+
+![clipping to spain](crop-polygon-minarea.png)
+
+
+### Clipping to a rectangle that includes a set of points
+
+The **points** mode allows you to define a set of points (that is pairs of lon/lat values), that will be visible in the map. Kartograph will crop the map to the smallest rectangle that includes all defined points. Note that the calculation is done _after_ the projection of the coordinates.
+
+    "bounds": {
+        "mode": "points",
+        "data": [[11.2,34.2],[23,33.3]]
+    }
+
+
+
 ## CSS-Styling
 
 Kartograph.py allows you to style your SVG maps using CSS.
@@ -188,9 +356,16 @@ On the command line you can use the ``-s`` or ``--style`` parameter.
 
     kartograph -s style.css config.json -o map.svg
     
+In Python you need to read the stylesheet yourself and pass its content using the ``stylesheet`` attribute:
+
+    from kartograph import Kartograph
+    css = open('style.css').read()
+    K = Kartograph()
+    K.generate(config, outfile='map.svg', stylesheet=css)
+    
 ### Per-layer styling
 
-To style a specific layer you simply set some rules for the layer id.
+To style a specific layer you simply define a rule for the layer id.
 
     #mylayer {
         fill: red;
