@@ -77,12 +77,12 @@ Sometimes you don't want your entire shapefile to be added to the map. You can u
 
     "mylayer":  {
         "src": "countries.shp",
-        "filter": ["ISO", "=", "FRA"]
+        "filter": { "ISO3": "FRA" }
     }
     
-Read more about the [filter syntax](/docs/kartograph.py/filter.html).
+Of course, you can build more complex filters, too. Read more about it in the [extended filter documentation](/docs/kartograph.py/filter.html).
 
-### Keeping the attributes
+### Keeping data attributes
 
 Most of the time you want Kartograph.py to include some of the data attributes defined in your shapefile. That's what you can use ``layer.attributes`` for.
 
@@ -117,6 +117,35 @@ This would change the path in the resulting SVG to:
         }
     }
 
+## Adding PostGIS layers
+
+You can add a PostGIS layer by passing information about the database to ``layer.src``. To avoid conflicts with shapefiles you need to prepend "**postgis:**" to the database configuration string. Also Kartograph.py needs to know which table you want to read from.
+
+    "mylayer": {
+        "src": "postgis:dbname=osm",
+        "table": "planet_osm_polygon"
+    }
+    
+Please refer to [Psycopg documentation](http://initd.org/psycopg/docs/module.html#psycopg2.connect) for more details about the database configuration.
+
+### Querying the database
+
+Although you can use the built in [filtering](#filtering) of Kartograph.py on PostGIS layers, too, sometimes it is a lot faster to let PostGIS do the filtering. Therefor you can provide the ``layer.query`` attribute.
+
+    "mylayer": {
+        "src": "postgis:dbname=osm",
+        "table": "planet_osm_polygon"
+        "query": "boundary = 'administrative'"
+    }
+    
+Kartograph.py will add the provided string to the WHERE part of the query.
+
+**Note:** you don't need to query for a given lat/lon box yourself, since Kartograph.py will do this automatically. In those cases the provided query will be AND-concatenated with the bounding box query.
+
+### Keeping meta attributes of PostGIS geometries
+
+Keeping the attributes (read: non-geometry columns) of your PostGIS table works exactly the same way as for [shapefile layers](#keeping-data-attributes).
+
 ## Advanced Layer Processing
 
 Kartograph supports a range of
@@ -127,16 +156,7 @@ Kartograph supports a range of
 
 ### ...
 
-## Adding PostGIS layers
 
-You can add a PostGIS layer too.
-
-    "mylayer": {
-        "id": "mylayer",
-        "src": "postgis:dbname=osm",
-        "table": "planet_osm_polygon",
-        "query": "boundary = 'administrative'"
-    }
 
 ## Special Layers
 
