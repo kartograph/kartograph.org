@@ -61,7 +61,7 @@ In case that your callback function lives outside the scope of your map the map 
 
 ``loadMap()`` supports some additional parameters which you can access by passing a dictionary as third parameter:
 
-	map.loadMap(map_url, callback, options)
+	map.loadMap(map_url, callback, options);
 
 
 The following options are available:
@@ -91,7 +91,7 @@ You can also give the layer a new name. This is especially useful if you add the
 
 In Kartograph SVG maps, each path can hold a range of data attributes. In some situations one of these attributes can be used as a key for identifying the paths, which is used by some features of Kartograph.js. To specify the key attribute you can set the ``key`` option to the name of the attribute.
 
-	map.addLayer('mylayer', { key: 'ISO' })
+	map.addLayer('mylayer', { key: 'ISO' });
 
 
 ## Map Styling
