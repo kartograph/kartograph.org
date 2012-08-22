@@ -136,7 +136,7 @@ Although you can use the built in [filtering](#filtering) of Kartograph.py on Po
         "src": "postgis:dbname=osm",
         "table": "planet_osm_polygon"
         "query": "boundary = 'administrative'"
-    }
+    }        
     
 Kartograph.py will add the provided string to the WHERE part of the query.
 

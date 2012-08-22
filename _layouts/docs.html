@@ -42,7 +42,18 @@ $script.ready('jquery', function() {
 
 	});
 	$script.ready('highlightjs', function() {
-		$('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+		$('pre code').each(function(i, e) {
+			var code = $(e).html();
+			if (code.substr(0,1) == '"' && code.substr(code.length-2, 1) == '}') {
+				e.className = 'json';
+				$(e).html('{'+code+'}');
+				hljs.highlightBlock(e);
+				var i = $(e).html()
+				$(e).html(i.substr(1, i.length-2));
+			}
+
+			hljs.highlightBlock(e)
+		});
 	});
 });
 
