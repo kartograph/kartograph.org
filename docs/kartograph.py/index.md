@@ -198,7 +198,7 @@ To style a specific layer you simply set some rules for the layer id.
     
 ### Re-use styles for several layers
 
-Of course you can re-use 
+Of course you can re-use a given style for several layers by applying it to multiple (layer) ids.
 
     #mylayer, #anotherlayer {
         stroke: none;
@@ -206,12 +206,11 @@ Of course you can re-use
     
 However, if you have lots of layers this might be a bit too much. Another way is to assign classes to your layers
 
-    {
-        "id": "mylayer",
+    "mylayer": {
         "class": "roads"
     }
     
-Then you can add per-class styles
+Then you can add per-class styles just as you would do in HTML.
 
     .roads {
         stroke-width: 2px;
@@ -219,7 +218,28 @@ Then you can add per-class styles
     
 ### Conditional styling
 
+Sometimes you want to apply some styles depending on data attributes. Therefor Kartograph.py supports a CSS3 attribute selector-like\* syntax. The following style is applied to all all paths with an attribute 'highway' equals "*motorway*"
 
+    .roads[highway=motorway] {
+        stroke-width: 4px;
+    }
+
+\* Actually Kartograph.py supports a bit more than CSS3. You can
+
+* check if an attribute **begins with** a given string using ``|=``
+* check if an attribute **ends with** a given string using ``=|``
+* check if a numerical attribute is **greater** or **smaller** than a given value using ``>``, ``<``, ``>=``, and ``<=``.
+
+Using the numerical comparators you could easily apply a choropleth-like styling to your map.
+
+    #states[crimerate<0.1] {
+        fill: lightgreen;
+    }
+        
+    #states[crimerate>0.4] {
+        fill: darkred;
+    }
+   
 
 ## Setting Export Parameters
 
