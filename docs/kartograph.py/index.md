@@ -40,12 +40,8 @@ The layer configuration accepts either two formats. The first is a dictionary of
 
     {
         "layers": {
-            "mylayer": {
-            
-            },
-            "anotherlayer": {
-            
-            }
+            "mylayer": { },
+            "anotherlayer": { }
         }
     }
 

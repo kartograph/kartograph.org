@@ -43,8 +43,11 @@ $script.ready('jquery', function() {
 	});
 	$script.ready('highlightjs', function() {
 		$('pre code').each(function(i, e) {
-			var code = $(e).html();
-			if (code.substr(0,1) == '"' && code.substr(code.length-2, 1) == '}') {
+			var code = $(e).html().trim(), 
+				code2 = code.replace(/\s/g, ''),
+				last = code2.substr(code2.length-1, 1);
+			console.log('last', last);
+			if (code.substr(0,1) == '"' && (last == '}' || last == ']')) {
 				e.className = 'json';
 				$(e).html('{'+code+'}');
 				hljs.highlightBlock(e);
