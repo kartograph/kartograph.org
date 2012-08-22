@@ -113,6 +113,7 @@ p > code {
 .content.docs h3 {
 	margin: 30px 0 20px;
 	font-size: 28px;
+	font-weight: normal;
 }
 
 .toc ul {
