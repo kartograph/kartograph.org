@@ -142,7 +142,7 @@ By passing functions instead of values you can apply conditional styling. This w
 
 ## Events
 
-### Listen to mouse events
+### Listening to mouse events
 
 It's easy to respond to mouse events. Kartograph supports the following events: ``click``, ``dblclick``, ``mouseenter``, ``mouseleave``. Please refer the jQuery mouse event documentation to learn more about the different event types.
 

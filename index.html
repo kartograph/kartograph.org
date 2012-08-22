@@ -8,8 +8,8 @@ showcase: ['eastcoast', 'italia', 'choropleth', 'charts', 'dotgrid', '3d', 'proj
 toctitle: Quick Links
 toc:
     'http://blog.kartograph.org/': 'Latest News / Blog'
-    'docs/kartograph.py.html': 'Kartograph.py Docs'
-    'docs/kartograph.js.html': 'Kartograph.js Docs'
+    'docs/kartograph.py/': 'Kartograph.py Docs'
+    'docs/kartograph.js/': 'Kartograph.js Docs'
     'https://github.com/kartograph/': 'Kartograph @ Github'
     'http://twitter.com/kartographjs': 'Kartograph @ Twitter'
 ---
@@ -17,7 +17,7 @@ toc:
 <h1>Why Kartograph?</h1>
 <p>Kartograph is a simple and lightweight framework for building interactive map applications without Google Maps or any other mapping service. It was created with the needs of designers and data journalists in mind.</p>
 
-<p>Actually, <b>Kartograph</b> is two libraries. One generates beautiful SVG maps; the other helps you to create interactive map applications that runs across all major browsers..</p>
+<p>Actually, <b>Kartograph</b> is two libraries. One generates beautiful SVG maps; the other helps you to create interactive map applications that runs across all major browsers.</p>
 
 
 <div class="row" style="margin-top: 30px;margin-bottom:30px;">
@@ -28,9 +28,9 @@ toc:
         <p>A powerful Python library for generating beautiful, Illustrator-friendly SVG maps.</p>
 
         <ul>
-            <li>Renders beautiful <i>&amp;</i> compact SVG maps from ESRI shapefiles and PostGIS databases</li>
-            <li>Topology-preserving <a href="http://bost.ocks.org/mike/simplify/">Visvalingam</a> simplification</li>
-            <li>Keeps metadata found in geodata as data attributes</li>
+            <li>Renders SVG maps from shapefiles and PostGIS</li>
+            <li>Compact using <a href="http://bost.ocks.org/mike/simplify/">Visvalingam</a> simplification</li>
+            <li>Stores metadata in data attributes</li>
             <li>Built on top of <a href="http://www.gdal.org/ogr/index.html">GDAL/OGR</a> and <a href="http://toblerity.github.com/shapely/manual.html">shapely</a></li>
             <li>Licensed under <a href="http://www.gnu.org/licenses/agpl-3.0">AGPL</a></li>
         </ul>
@@ -47,9 +47,8 @@ toc:
         <p>A JavaScript library for creating interactive map applications on top of SVG maps.</p>
 
         <ul>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li>Data vis friendly</li>
+            <li>Runs 100% stand-alone. No tile-server needed.</li>
             <li>Gracefully degrades to Internet Explorer 7+</li>
             <li>Built on top of <a href="http://raphaeljs.com/">Raphaël</a> and <a href="http://jquery.com/">jQuery</a>
             <li>Licensed under <a href="http://www.gnu.org/licenses/lgpl-3.0">LGPL</a></li>
