@@ -15,10 +15,10 @@ body {
 
 .sidebar .tagline {
 	font-style: italic;
-	font-size: 15px;
+	font-size: 17px;
 	text-align: center;
 	color: #888;
-	padding: 0 15%;
+	padding: 0 12%;
 }
 
 .sidebar h3 {
@@ -60,8 +60,8 @@ body {
 
 .content p, .content li {
 	font-family: Georgia, serif;
-	font-size: 15px;
-	line-height: 22px;
+	font-size: 17px;
+	line-height: 28px;
 }
 
 pre {
@@ -90,14 +90,17 @@ p > code {
 
 .content li {
 	margin-bottom: 1ex;
+	line-height: 25px;
 }
 
 .sidebar p {
 	color: #555;
 	padding: 0 30px;
 	font-family: Georgia, serif;
-	font-size: 12px;
+	font-size: 14px;
 }
+
+.btn-custom { background-color: hsl(26, 27%, 24%) !important; background-repeat: repeat-x; filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#9b7559", endColorstr="#4d3a2c"); background-image: -khtml-gradient(linear, left top, left bottom, from(#9b7559), to(#4d3a2c)); background-image: -moz-linear-gradient(top, #9b7559, #4d3a2c); background-image: -ms-linear-gradient(top, #9b7559, #4d3a2c); background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #9b7559), color-stop(100%, #4d3a2c)); background-image: -webkit-linear-gradient(top, #9b7559, #4d3a2c); background-image: -o-linear-gradient(top, #9b7559, #4d3a2c); background-image: linear-gradient(#9b7559, #4d3a2c); border-color: #4d3a2c #4d3a2c hsl(26, 27%, 18%); color: #fff !important; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.39); -webkit-font-smoothing: antialiased; }
 
 .content h1, .content h2, .content h3,
 .sidebar h3, .sidebar .tagline
