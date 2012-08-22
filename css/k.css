@@ -1,9 +1,31 @@
-.k-about .tagline {
-	font-style: italic;
+
+body {
+	font-family: Georgia, serif;
 	font-size: 14px;
-	margin-left: 55px;
+	line-height: 1.6;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	background-color: white;
+	padding: 30px; 
+}
+
+.sidebar {
+	text-align: center;
+}
+
+.sidebar .tagline {
+	font-style: italic;
+	font-size: 15px;
+	text-align: center;
 	color: #888;
-	font-weight: 300;
+	padding: 0 15%;
+}
+
+.sidebar h3 {
+	font-weight: normal;
+	font-size: 24px;
+	line-height: 32px;
+	margin-top: 20px;
 }
 
 .nav-tabs.nav-stacked > li > a:hover {
@@ -11,14 +33,15 @@
 }
 
 .k-menu ul.nav {
-	margin-left: 0;
+	margin: 30px 0;
 }
 
 .k-menu ul.nav li {
+	text-align: center;
 	list-style: none;
 	font-size: 18px;
 	line-height: 20px;
-	margin-bottom: 1em;
+	margin-bottom: 1ex;
 }
 
 .hero-unit h1 {
@@ -29,22 +52,129 @@
 	margin-left: 0.4em;
 }
 
-.k-intro p, .k-intro li {
+.content i {
+	font-family: Baskerville, Garamond;
+	font-style: italic;
+	font-size: 1.1;
+}
+
+.content p, .content li {
+	font-family: Georgia, serif;
 	font-size: 15px;
-	font-weight: 300;
-	line-height: 21px;
-	margin-bottom: 1em;
+	line-height: 22px;
+}
+
+pre {
+	background: none;
+	border: none;
+	margin: 20px 0;
+	padding: 0;
+}
+
+pre code {
+	padding: 10px!important;
+	background: #F6f6f6!important;
+}
+
+p > code {
+	color: #000;
+	padding:2px;
+	margin: 0 3px;
+	border: 1px solid #eee;
+}
+
+.content ul, .content ol {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.content li {
+	margin-bottom: 1ex;
+}
+
+.sidebar p {
+	color: #555;
+	padding: 0 30px;
+	font-family: Georgia, serif;
+	font-size: 12px;
+}
+
+.content h1, .content h2, .content h3,
+.sidebar h3, .sidebar .tagline
+{
+	font-family: Garamond, 'Garamond classico', Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+}
+
+.content.docs h2 {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 5px;
+}
+
+.content.docs h3 {
+	margin: 30px 0 20px;
+	font-size: 28px;
+}
+
+.toc ul {
+	text-align: center;
+	margin: 0;
+}
+
+.toc a {
+	color: #68a;
+	border-bottom: 1px dotted #68a;
+}
+
+.toc > ul > li > a {
+	border-bottom: 1px solid #68a;
+}
+
+.toc > ul > li {
+	list-style: none;
+	padding: 3px;
+}
+
+.toc li > ul {
+	margin-top: 3px;
+}
+.toc li > ul > li {
+	list-style: none;
+	padding: 2px;
+}
+
+.headerlink {
+	color: #ccc;
+	font-family: Georgia;
+	padding: 0 5px;
+	visibility: hidden;
+}
+
+.headerlink:hover {
+	text-decoration: none;
+	background: #f9f9f9;
+	color: #bbb;
+}
+
+h2:hover .headerlink,
+h3:hover .headerlink {
+	visibility: visible;
 }
 
 .nav-tabs.nav-stacked > li > a {
-	border: 0;	
+	border: 0;
 }
 
-h1, h2 { font-weight: 300; }
-h3 { font-weight: normal; }
 
-h1 {
-	margin: 0 0 0.3em;
+.content h1 {
+	margin: 0 0 0.5em;
+	font-size: 42px;
+	font-weight: normal;
+}
+
+.content h2 {
+	font-size: 30px;
+	margin: 1em 0 0.4em;
+	font-weight: normal;
 }
 
 .page-header h1 {
@@ -156,4 +286,21 @@ h1 {
 .k-gui .dg .cr.number input[type="text"]:hover,
 .k-gui .dg .cr.number input[type="text"]:focus {
 	color: #eee;
+}
+
+.footer {
+	text-align: right;
+	color: #888;
+	font-size: 13px;
+}
+
+.footer a {
+	color: #888;
+	border-bottom: 1px dotted #888;
+}
+
+.footer a:hover {
+	text-decoration: none;
+	border-bottom: 1px solid #555;
+	color: #555;
 }

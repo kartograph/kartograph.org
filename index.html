@@ -1,23 +1,85 @@
 ---
 layout: default
 title: Kartograph – rethink mapping
-headline: Goodbye, Mercator!
-tagline: Nope, that's not the true size of Greenland..
-headbg: /img/robinson.jpg
+#headline: Goodbye, Mercator!
+#tagline: Nope, that's not the true size of Greenland..
+#headbg: /img/robinson.jpg
+showcase: ['eastcoast', 'italia', 'choropleth', 'charts', 'dotgrid', '3d', 'projections']
+toctitle: Documentation
+toc:
+    'docs/kartograph.py.html': 'Kartograph.py'
+    'docs/kartograph.js.html': 'Kartograph.js'
 ---
 
-<div class="row">
-    <div class="span5 k-intro">
-        <h1>Why Kartograph?</h1>
-        <p>Kartograph is a new framework for building interactive map applications without Google Maps or any other mapping service. It was created with the needs of <a href="/showcase/italia/">designers</a> and <a href="/showcase/charts/">data journalists</a> in mind.</p>
+<h1>Why Kartograph?</h1>
+<p>Kartograph is a simple and lightweight framework for building interactive map applications without Google Maps or any other mapping service. It was created with the needs of designers and data journalists in mind.</p>
 
-        <p>Please check out the <a href="/showcase/">showcase section</a> to see what Kartograph can do for you or dive into the <a href="/about/">details on how it works</a>.</p>
+<p>Actually, <b>Kartograph</b> is two libraries. One generates beautiful SVG maps; the other helps you to create interactive map applications that runs across all major browsers..</p>
+
+
+<div class="row" style="margin-top: 30px;margin-bottom:30px;">
+
+    <div class="span4">
+
+        <h2>Kartograph.py</h2>
+        <p>A powerful Python library for generating beautiful, Illustrator-friendly SVG maps.</p>
+
+        <ul>
+            <li>Renders beautiful <i>&amp;</i> compact SVG maps from ESRI shapefiles and PostGIS databases</li>
+            <li>Topology-preserving <a href="http://bost.ocks.org/mike/simplify/">Visvalingam</a> simplification</li>
+            <li>Keeps metadata found in geodata as data attributes</li>
+            <li>Built on top of <a href="http://www.gdal.org/ogr/index.html">GDAL/OGR</a> and <a href="http://toblerity.github.com/shapely/manual.html">shapely</a></li>
+            <li>Licensed under <a href="http://www.gnu.org/licenses/agpl-3.0">AGPL</a></li>
+        </ul>
+
+        <p>
+            <a class="btn" href="/docs/kartograph.py.html">Read the docs</a> &nbsp;
+            <a class="btn" href="https://github.com/kartograph/kartograph.py">Fork on Github</a>
+        </p>
+
+    </div>
+    <div class="span4" style="border-left:3px solid #eee; padding-left: 20px;">
+
+        <h2>Kartograph.js</h2>
+        <p>A JavaScript library for creating interactive map applications on top of SVG maps.</p>
+
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li>Gracefully degrades to Internet Explorer 7+</li>
+            <li>Built on top of <a href="http://raphaeljs.com/">Raphaël</a> and <a href="http://jquery.com/">jQuery</a>
+            <li>Licensed under <a href="http://www.gnu.org/licenses/lgpl-3.0">LGPL</a></li>
+        </ul>
+
+        <p>
+            <a class="btn" href="/docs/kartograph.js.html">Read the docs</a> &nbsp;
+            <a class="btn" href="https://github.com/kartograph/kartograph.js">Fork on Github</a>
+        </p>
+
+    </div>
+</div>
+
+
+    <h1 id="showcase">See it in action</h1>
+
+    <ul class="thumbnails">
+    {% for item in page.showcase %}
+        <li class="span3">
+            <a href="/showcase/{{ item }}/" class="thumbnail">
+                <img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+
 
         <h2>Current Progress</h2>
         <p>At the moment Kartograph is still in an early pre-release stadium, which means that it basically works and is already used a lot by its author but there are some more things left to do to make it as easy-to-use for everybody else. This includes tutorials and step-by-step examples and API documentation.</p>
         <p>If you like Kartograph and can’t wait to support its development, please find the donation buttons on the left. Any contribution is much appreciated. Thanks!</p>
-        
-    </div>
+
+<div class="row">
     <div class="span4">
         <a href="/showcase/italia/"><img style="border-radius:7px" src="/showcase/italia/screenshot.png" alt="Kartograph" /></a>
         <h1 style="margin-top:10px">Features</h1>

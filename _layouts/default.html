@@ -21,52 +21,73 @@ layout: core
 			</div>
 		</div>
 		<div class="row">
-			<div class="span3 k-about">
-				<a href="/"><img src="/img/logotype.png" alt="Kartograph" /></a>
-				<p class="tagline">A simple and lightweight framework for creating beautiful, interactive vector maps.</p>
-			</div>
-			<div class="span9">
-				<div class="hero-unit"{% if page.headbg %} style="background:url({{page.headbg}})" {% endif %}>
-   				<h1>{{ page.headline }}</h1>
-   				<p>{{ page.tagline }}</p>
+			<div class="span3 sidebar">
+				<div class="head">
+					<a href="/"><img src="/img/logo.png" alt="Kartograph" /></a>
+					<p class="tagline">A simple and lightweight framework for creating beautiful, interactive vector maps.</p>
 				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="span3 k-menu">
-				<ul class="nav nav-tabs nav-stacked">
-					<li{% if page.url == "/index.html" %} class="active" {% endif %}><a href="/">Hello Kartograph</a></li>
-					<li{% if page.url contains "/showcase/" %} class="active" {% endif %}><a href="/showcase/">Showcase</a></li>
-					<li{% if page.url contains "/about/" %} class="active" {% endif %}><a href="/about/">How does it work?</a></li>
-					<li{% if page.url contains "blog.kartograph.org" %} class="active" {% endif %}><a href="http://blog.kartograph.org">Blog</a></li>
-					<li><a target="_blank" href="http://github.com/kartograph/">Fork on Github</a></li>
-					<li><a target="_blank" href="http://twitter.com/#!/kartographjs/">Say Hi on Twitter</a></li>
-				</ul>
+
+				{% if page.toc %}
+				<div class="toc">
+					<h3>{% if page.toctitle %}{{ page.toctitle }}{% else %}Table of Contents{% endif %}</h3>
+
+					<ul>
+						{% for l in page.toc %}
+							{% if l[1]['_'] %}
+							<li><a href="{{ l[0] }}">{{ l[1]['_'] }}</a>
+								<ul>
+								{% for s in l[1] %}
+								{% if s[0] != '_' %}
+								<li><a href="{{ s[0] }}">{{ s[1] }}</a></li>
+								{% endif %}
+								{% endfor %}
+								</ul>
+							</li>
+							{% else %}
+							<li><a href="{{ l[0] }}">{{ l[1] }}</a></li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+				{% endif %}
+
+
 				<div class="k-donate">
 
-					<p>Kartograph is the work of a single <a href="http://gka.me">developer</a>, so contributions will help me get things running.</p>
-
-					<div class="k-paypal">
-
-						<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-						<input type="hidden" name="cmd" value="_s-xclick">
-						<input type="hidden" name="hosted_button_id" value="FN9RZTVRXRD54">
-						<input type="image" src="http://kartograph.org/img/donate.png" border="0" name="submit" alt="Donate using PayPal">
-						<img alt="" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" width="1" height="1">
-						</form>
-
-					</div>
+					<h3>Donate</h3>
+					<p>If you love Kartograph, consider donating an amount of your choice through <a href="https://www.gittip.com/gka/">Gittip</a> or <a href="https://flattr.com/profile/gka">Flattr</a>.</p>
 
 					<div class="k-donate-buttons">
-						<a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://kartograph.org"></a>
+						<iframe style="border: 0; margin: 0; padding: 0;"
+						        src="https://www.gittip.com/gka/widget.html"
+						        width="48pt" height="20pt"></iframe> <a class="FlattrButton" style="display:none;" rev="flattr;button:compact;" href="http://kartograph.org"></a>
 						<noscript><a href="http://flattr.com/thing/554581/Kartograph-rethinking-mapping" target="_blank">
 						<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a></noscript>
 					</div>
+
 				</div>
 
+				<div class="feedback">
+					<h3>Feedback</h3>
+					<p>I really appreciate your feedback, so feel free to send me comments, questsions etc. <a href="mailto:feedback@kartograph.org">via email</a>.</p>
+				</div>
+
+
 			</div>
+
 			<div class="span9">
-				{{ content }}
+				{% if page.headline %}
+				<div class="hero-unit"{% if page.headbg %} style="background:url({{page.headbg}})" {% endif %}>
+   					<h1>{{ page.headline }}</h1>
+   					<p>{{ page.tagline }}</p>
+				</div>
+				{% endif %}
+				<div class="content{% if page.class %} {{ page.class }}{% endif %}">
+					{{ content }}
+				</div>
+				<div class="footer">
+					&copy; Copyright 2012. Created by <a href="http://driven-by-data.net">Gregor Aisch</a>.
+				</div>
 			</div>
 		</div>
 	</div>

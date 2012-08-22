@@ -1,0 +1,51 @@
+---
+class: docs
+layout: default
+toc: true
+scripts: [[jquery, '/js/jquery.min.js'], [highlightjs, '/js/highlight/highlight.pack.js']]
+styles: ['/js/highlight/styles/github.css']
+---
+
+
+
+{{ content }}
+
+<script type="text/javascript">
+$script.ready('jquery', function() {
+
+	$(function() {
+		var toc = $('.toc');
+		var ul = $('<ul></ul>'),
+			parent = ul;
+
+		toc.append(ul);
+
+		$('.docs h2, .docs h3').each(function(i, el) {
+			var h = $(el),
+				t = h.html(),
+				id = t.toLowerCase().replace(/[\s\.]+/g, '-'),
+				li = $('<li><a href="#'+id+'">'+t+'</a></li>');
+
+			h.append('<a class="headerlink" id="'+id+'" href="#'+id+'">¶</a>');
+			if (el.nodeName.toLowerCase() == 'h2') {
+				// parent = $('<ul></ul>');
+				// li.append(parent);
+				ul.append(li);
+			} else {
+				// parent.append(li);
+			}
+		});
+
+		if (location.hash[0] == '#' && $(location.hash)) {
+			$(location.hash).parent()[0].scrollIntoView();
+		}
+
+	});
+	$script.ready('highlightjs', function() {
+		$('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+	});
+});
+
+
+
+</script>
