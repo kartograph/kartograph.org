@@ -164,12 +164,12 @@ p > code {
 .toc {
 	position: relative;
 
--webkit-transition: top 2000ms cubic-bezier(0.090, 1, 0.135, 1.000); /* older webkit */
--webkit-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
-   -moz-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
-    -ms-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
-     -o-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
-        transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000); /* custom */
+-webkit-transition: top 1000ms cubic-bezier(0.090, 1, 0.135, 1.000); /* older webkit */
+-webkit-transition: top 1000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+   -moz-transition: top 1000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+    -ms-transition: top 1000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+     -o-transition: top 1000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+        transition: top 1000ms cubic-bezier(0.090, 1.015, 0.135, 1.000); /* custom */
 
 -webkit-transition-timing-function: cubic-bezier(0.090, 1, 0.135, 1.000); /* older webkit */
 -webkit-transition-timing-function: cubic-bezier(0.090, 1.015, 0.135, 1.000);
