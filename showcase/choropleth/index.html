@@ -1,6 +1,7 @@
 ---
 layout: showcase
 title: Choropleth Maps
+about: This choropleth map shows population data for each of the departements of metropolean France.  In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived. Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.
 prev: italia
 next: charts
 ---
@@ -26,7 +27,8 @@ $script.ready(['kartograph'], function() {
 					map.loadStyles('styles.css', function() {
 						map.addLayer({
 							id: 'departments',
-							key: 'id'
+							key: 'id',
+							titles: function(d) { console.log(d) }
 						});
 						updateMap();
 					})
@@ -38,11 +40,12 @@ $script.ready(['kartograph'], function() {
 		 * update map colors
 		 */
 		function updateMap() {
-			var prop = $('.measure.btn-primary').data('value'),
-				scale = $('.scale.btn-primary').data('value');
+			var prop = $('.measure.btn-custom').data('value'),
+				scale = $('.scale.btn-custom').data('value'),
+				colors = $('.colors.btn-custom').data('value');
 
 			colorscale = new chroma.ColorScale({
-				colors: chroma.brewer.YlGnBu,
+				colors: chroma.brewer[colors],
 				limits: chroma.limits(dep_data, scale, 7, prop)
 			});
 
@@ -61,8 +64,8 @@ $script.ready(['kartograph'], function() {
 		// init user interface
 		$('.btn').click(function(event) {
 			var tgt = $(event.target), par = tgt.parent();
-			$('.btn', par).removeClass('btn-primary');
-			tgt.addClass('btn-primary');
+			$('.btn', par).removeClass('btn-custom');
+			tgt.addClass('btn-custom');
 			updateMap();
 		});
 
@@ -72,32 +75,48 @@ $script.ready(['kartograph'], function() {
 </script>
 
 <div class="row">
-	<div class="span7">
-		<div id="map">&nbsp;</div>
-	</div>
-	<div class="span5">
-		<div class="page-header">
-			<h1>Choropleth Maps</h1>
-		</div>
+	<div class="span4 content">
+
+		<h2>Variable</h2>
+		<p>Again, it's a bad idea to display absolute quantities (such as population) on a choropleth map.</p>
 		<p>
-		This choropleth map shows population data for each of the departements of metropolean France. The colors are taken from ColorBrewer.
-		</p>
-		<p>
-		In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived.
-		</p>
-		<p>
-		Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.
-		</p>
-		<h3>Measure</h3>
-		<p>
-			<a class="measure btn btn-primary" data-value="density">Population Density</a>
+			<a class="measure btn btn-custom" data-value="density">Population Density</a>
 			<a class="measure btn" data-value="pop">Population</a>
 		</p>
-		<h3>Classes</h3>
+		<h2>Classes</h2>
+		<p>The class limits are computed using <a href="https://github.com/gka/chroma.js">chroma.js</a>.
 		<p>
-			<a class="scale btn btn-primary" data-value="q">Quantiles</a>
+			<a class="scale btn btn-custom" data-value="q">Quantiles</a>
 			<a class="scale btn" data-value="e">Equidistant</a>
 			<a class="scale btn" data-value="k">k-Means</a>
 		</p>
+		<h2>Colors</h2>
+		<p>The colors are taken from <a href="http://colorbrewer2.org">ColorBrewer</a>. They are already included in <a href="https://github.com/gka/chroma.js">chroma.js</a>.</p>
+		<p style="line-height:33px">
+			Single hue:<br />
+			<a class="colors btn" data-value="Grays">Grays</a>
+			<a class="colors btn" data-value="Blues">Blues</a>
+			<a class="colors btn" data-value="Reds">Reds</a>
+			<a class="colors btn" data-value="Oranges">Oranges</a>
+			<a class="colors btn" data-value="Greens">Greens</a>
+			<a class="colors btn" data-value="Purples">Purples</a><br />
+			Multiple hues: <br />
+			<a class="colors btn" data-value="OrRd">Orange &rarr; Red</a>
+			<a class="colors btn" data-value="PuBu">Purple &rarr; Blue</a>
+			<a class="colors btn" data-value="PuRd">Purple &rarr; Red</a>
+			<a class="colors btn" data-value="RdPu">Red &rarr; Purple</a>
+			<a class="colors btn" data-value="BuPu">Blue &rarr; Purple</a>
+			<a class="colors btn" data-value="BuGn">Blue &rarr; Green</a>
+			<a class="colors btn" data-value="YlGn">Yellow &rarr; Green</a>
+			<a class="colors btn" data-value="GnBu">Green &rarr; Blue</a>
+			<a class="colors btn btn-custom" data-value="YlGnBu">Yellow &rarr; Green &rarr; Blue</a>
+			<a class="colors btn" data-value="YlOrBr">Yellow &rarr; Orange &rarr; Brown</a>
+			<a class="colors btn" data-value="YlOrRd">Yellow &rarr; Orange &rarr; Red</a>
+			<a class="colors btn" data-value="PuBuGn">Purple &rarr; Blue &rarr; Green</a>
+			
+		</p>
+	</div>
+	<div class="span8">
+		<div id="map">&nbsp;</div>
 	</div>
 </div>

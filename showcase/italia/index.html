@@ -1,6 +1,7 @@
 ---
 layout: showcase
-title: Bella Italia
+title: La Bella Italia
+about: This example map of Italy showcases some ways you can style Kartograph maps. The base colors are defined in CSS, glow filters and image textures are applied in SVG. Also you can see heavy use of symbols (labels and icons) as well as geo paths. The labels are set in the <a href="http://www.fontsquirrel.com/fonts/Aquiline" target="_blank">Aquiline</a> font, created by Manfred Klein.
 prev: eastcoast
 next: choropleth
 ---
@@ -123,7 +124,7 @@ $script.ready('kartograph', function() {
                 return {
                     transform: "t" + [point.x-7, point.y-7] + "r" + (point.alpha+180)
                 };
-            }; 
+            };
             function run() {
                 e.animate({along: 1}, 20000, '<>', function () {
                     setTimeout(function() {
@@ -150,12 +151,7 @@ $script.ready('kartograph', function() {
 </script>
 
 <div class="row">
-    <div class="span4">
-        <div class="page-header">
-            <h1>La Bella Italia</h1>
-        </div>
-        <p>This example map of Italy showcases some ways you can style Kartograph maps. The base colors are defined in CSS, glow filters and image textures are applied in SVG.</p>
-        <p>Also you can see heavy use of symbols (labels and icons) as well as geo paths. The labels are set in the <a href="http://www.fontsquirrel.com/fonts/Aquiline" target="_blank">Aquiline</a> font, created by Manfred Klein.</p>
+    <div class="span3 content">
 
         <div class="k-layer-toggle">
             <h2>Toggle Layer Visibility</h2>
@@ -172,7 +168,7 @@ $script.ready('kartograph', function() {
             <label class="checkbox"><input type="checkbox" checked value="ferry"> Ferry Routes</label>
         </div>
     </div>
-    <div class="span8">
+    <div class="span9">
         <div id="map"></div>
     </div>
 </div>

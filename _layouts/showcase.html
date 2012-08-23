@@ -4,11 +4,16 @@ scripts: [[jquery, '/js/jquery.min.js'], [kartograph, '/js/raphael.min.js', '/js
 ---
 
 <div class="container">
-	<div class="row">
-		<div class="span4" style="margin-top:20px">
-			<a href="/#showcase"><img src="/img/logotype.png" alt="Kartograph" /></a>
+	<div class="row" style="margin-top:20px">
+		<div class="span3">
+			<a href="/#showcase"><img src="/img/logo.png" alt="Kartograph" /></a>
 		</div>
-		<div class="span3 offset5" style="margin-top:30px">
+		<div class="span7 content">
+
+			<h1>{{ page.title }}</h1>
+			<p>{{ page.about }}</p>
+		</div>
+		<div class="span2">
 			<ul class="pager">
 				{% if page.next %}
 				<li class="next">
@@ -16,7 +21,7 @@ scripts: [[jquery, '/js/jquery.min.js'], [kartograph, '/js/raphael.min.js', '/js
 				</li>
 				{% endif %}{% if page.prev %}
 				<li class="next">
-					<a style="margin-right:13px" href="/showcase/{{ page.prev }}">&larr; Previous</a>
+					<a style="margin-right:13px" href="/showcase/{{ page.prev }}">&larr;</a>
 				</li>
 				{% endif %}
 			</ul>

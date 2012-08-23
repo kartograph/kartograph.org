@@ -58,10 +58,15 @@ body {
 	font-size: 1.1;
 }
 
-.content p, .content li {
+.content p, .content li, .content label {
 	font-family: Georgia, serif;
 	font-size: 15px;
 	line-height: 25px;
+}
+
+.content label.checkbox input {
+	position: relative;
+	top: 5px;
 }
 
 pre {
