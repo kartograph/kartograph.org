@@ -38,6 +38,13 @@ $script.ready('jquery', function() {
 			}
 		});
 
+		$('.docs p').each(function(i, el) {
+			el = $(el);
+			if (el.html().substr(0,7) == 'Source:') {
+				el.addClass('source');
+			}
+		});
+
 		if (location.hash[0] == '#' && $(location.hash)) {
 			$(location.hash).parent()[0].scrollIntoView();
 		}

@@ -154,6 +154,11 @@ Kartograph.py will add the provided string to the WHERE part of the query.
 Keeping the attributes (read: non-geometry columns) of your PostGIS table works exactly the same way as for [shapefile layers](#keeping-data-attributes).
 
 
+### Creating Maps from OpenStreetMap data
+
+[How to use Kartograph.py to render nice SVG maps from OpenStreetMap data](/docs/kartograph.py/osm.html)
+
+
 ## Joining features within a layer
 
 In some situations you might want to join some polygons of a layer. For instance, you might want to create world map of continents instead of showing individual countries. To do so, you simply set the ``layer.join`` parameter.
@@ -205,6 +210,11 @@ Sometimes you need to subtract polygons from one layer from the polygons of anot
        "src": "ne_10m_lakes.shp",
        "subtract-from": "countries"
     }
+    
+![usa w/o great lakes](cut-lakes.png)
+    
+Source: [left](/maps/#3434004), [right](/maps/#3434486)
+
     
 ### Cropping layers to another layer
 

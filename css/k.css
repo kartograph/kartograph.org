@@ -121,6 +121,18 @@ p > code {
 	font-weight: normal;
 }
 
+.content.docs .source {
+	font-size: 13px;
+	text-align: right;
+	color: #999;
+}
+
+.content.docs .source a {
+	color: #888;
+	border-bottom: 1px dotted #888;
+
+}
+
 .toc ul {
 	text-align: center;
 	margin: 0;
