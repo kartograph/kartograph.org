@@ -317,8 +317,7 @@ In some situations you don't want to mess around with lon/lat bounding boxes, bu
         "mode": "polygons",
         "data": {
             "layer": "countries",
-            "attribute": "NE_ISO_3",
-            "values": ["DEU","FRA","ITA","GBR"]
+            "filter": ["NE_ISO_3", "in", ["DEU","FRA","ITA","GBR"]]
         }
     }
 
@@ -333,8 +332,9 @@ But wait, now comes the tricky part of using automatically calculated bounding b
         "mode": "polygons",
         "data": {
             "layer": "countries",
-            "attribute": "NE_ISO_3",
-            "ids": ["ESP"],
+            "filter": {
+                "NE_ISO_3": "ESP"
+            }
             "min-area": 0.20,
             "padding": 10
         }
