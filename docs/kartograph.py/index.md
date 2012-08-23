@@ -7,9 +7,15 @@ title: Kartograph.py Docs
 
 This documentation refers to the latest version of Kartograph. *Work in progress.*
 
-## Installing Kartograph
+## Installing Kartograph.py
 
-The easiest way to install Kartograph.py to 
+To install Kartograph.py you need to run Python (something like 2.7) and a couple of other frameworks. 
+    
+* Installing on [Ubuntu](install-ubuntu.html)
+* Installing on [Mac OS X](install-macosx.html)
+* Installing on [Windows](install-windows.html)
+
+After you installed all the pre-requisites, installing Kartograph.py should be as easy as
 
     python setup.py install
 
@@ -318,6 +324,8 @@ In some situations you don't want to mess around with lon/lat bounding boxes, bu
             "layer": "countries",
         }
     }
+
+![clipping to China](crop-polygon.png)
     
 Sometimes you just want to focus the map on one feature while keeping other features visible around it. Therefor you can add ``filter`` to the bounds data attribute. It uses the same filter syntax as seen in the [layer section](#filtering).
 
@@ -329,7 +337,6 @@ Sometimes you just want to focus the map on one feature while keeping other feat
         }
     }
 
-![clipping to China](crop-polygon.png)
 
 
 The **layer** option refers to the id of a layer defined in the [layers section](#layers).
@@ -344,7 +351,7 @@ But wait, now comes the tricky part of using automatically calculated bounding b
             "layer": "countries",
             "filter": {
                 "NE_ISO_3": "ESP"
-            }
+            },
             "min-area": 0.20,
             "padding": 10
         }
