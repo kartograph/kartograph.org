@@ -146,6 +146,39 @@ p > code {
 	padding: 2px;
 }
 
+.toc li a {
+	background: #fff;
+	-webkit-transition: background-color 0.3s ease-in-out;
+	-moz-transition: background-color 0.3s ease-in-out;
+	-o-transition: background-color 0.3s ease-in-out;
+	transition: background-color 0.3s ease-in-out;
+}
+
+.toc li.active a {
+	background: #eee;
+	padding: 0 1ex;
+	color: #000;
+	border-bottom: 0;
+}
+
+.toc {
+	position: relative;
+
+-webkit-transition: top 2000ms cubic-bezier(0.090, 1, 0.135, 1.000); /* older webkit */
+-webkit-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+   -moz-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+    -ms-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+     -o-transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000);
+        transition: top 2000ms cubic-bezier(0.090, 1.015, 0.135, 1.000); /* custom */
+
+-webkit-transition-timing-function: cubic-bezier(0.090, 1, 0.135, 1.000); /* older webkit */
+-webkit-transition-timing-function: cubic-bezier(0.090, 1.015, 0.135, 1.000);
+   -moz-transition-timing-function: cubic-bezier(0.090, 1.015, 0.135, 1.000);
+    -ms-transition-timing-function: cubic-bezier(0.090, 1.015, 0.135, 1.000);
+     -o-transition-timing-function: cubic-bezier(0.090, 1.015, 0.135, 1.000);
+        transition-timing-function: cubic-bezier(0.090, 1.015, 0.135, 1.000); /* custom */
+}
+
 .headerlink {
 	color: #ccc;
 	font-family: Georgia;
