@@ -2,15 +2,22 @@
 layout: docs
 title: Installing Kartograph.py on Ubuntu
 ---
+
 # Installing Kartograph.py on Ubuntu
 
-This is how install Kartograph on a fresh Ubuntu 12.04 system. At first you need to make sure that you have the following libraries installed. They are needed to compile the dependencies for Kartograph. Note that this instructions work with version 0.4.6 and will probably not work with older versions.
+This is how install Kartograph on a fresh Ubuntu 12.04 system.
+
+## Installing the pre-requisites
+
+At first you need to make sure that you have the following libraries installed. They are needed to compile the dependencies for Kartograph. Note that this instructions work with version 0.4.6 and will probably not work with older versions.
 
 
     sudo apt-get install libxslt1-dev
     sudo apt-get install python-dev
     sudo apt-get install python-shapely
 
+
+## Setup a virtual environment
 
 Then you probably want to install virtualenv which allows you to run Kartograph in a safe environment:
 
@@ -24,6 +31,8 @@ Now create and activate a new virtual environment for Kartograph. We name it jus
     cd K
     source bin/activate
 
+
+## Install Kartograph.py
 
 Download and install Kartograph.py
 
