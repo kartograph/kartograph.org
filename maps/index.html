@@ -38,7 +38,7 @@ $script.ready('jquery', function() {
                         });
                         $('#title').html(res.data.description);
                         $('#gist-link').html('#'+res.data.id);
-                        $('#gist-link').attr('href', 'https://github.com/gist/'+res.data.id);
+                        $('#gist-link').attr('href', 'https://gist.github.com/'+res.data.id);
                         $('#cnt').show();
                         $('#loading').hide();
                     }
