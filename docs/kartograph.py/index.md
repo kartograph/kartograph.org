@@ -5,6 +5,7 @@ title: Kartograph.py Docs
 
 # Kartograph.py Documentation
 
+<div class="alert"><p>This documentation refers to the latest version of Kartograph.</p></div>
 
 ## Installing Kartograph
 

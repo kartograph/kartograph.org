@@ -40,7 +40,7 @@ $script.ready(['kartograph'], function() {
 		 * update map colors
 		 */
 		function updateMap() {
-			var prop = $('.measure.btn-custom').data('value'),
+			var prop = 'density', // $('.measure.btn-custom').data('value'),
 				scale = $('.scale.btn-custom').data('value'),
 				colors = $('.colors.btn-custom').data('value');
 
@@ -77,12 +77,12 @@ $script.ready(['kartograph'], function() {
 <div class="row">
 	<div class="span4 content">
 
-		<h2>Variable</h2>
+		<!--<h2>Variable</h2>
 		<p>Again, it's a bad idea to display absolute quantities (such as population) on a choropleth map.</p>
 		<p>
 			<a class="measure btn btn-custom" data-value="density">Population Density</a>
 			<a class="measure btn" data-value="pop">Population</a>
-		</p>
+		</p>-->
 		<h2>Classes</h2>
 		<p>The class limits are computed using <a href="https://github.com/gka/chroma.js">chroma.js</a>.
 		<p>

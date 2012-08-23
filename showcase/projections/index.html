@@ -1,6 +1,7 @@
 ---
 layout: showcase
 title: Map Projections
+about: This examples shows the map projections built in Kartograph.js. Feel free to play around with the projections and their parameters. Drag the map to change the projection center.
 jsplugins: ['dat.gui.js']
 prev: 3d
 ---
@@ -33,7 +34,7 @@ $script.ready('kartograph', function() {
         this.dist = 2;
         this.up = 0;
         this.tilt = 0;
-        this.proj = 'ortho';
+        this.proj = 'hatano';
         this.projstr = '+proj=lcc +lat_1=44.1 +lat_0=44.1 +lon_0=0 +k_0=0.999877499 +x_0=600000 +y_0=200000 +a=6378249.2 +b=6356515 +towgs84=-168,-60,320,0,0,0,0 +pm=paris +units=m',
         //this.flip = 0;
         this.offsetx = 0;
@@ -275,7 +276,7 @@ $script.ready('kartograph', function() {
 <div class="row">
     <div class="span7">
         <div class="page-header" style="margin-top:0"><h1 id="k-proj-title">Map Projection Showcase</h1></div>
-        <p>This showcase is not really showing Kartograph but gives you a simple interface to play around with all available map projections and their parameters.</p>
+        <p></p>
     </div>
     <div class="span5">
         <div class="k-gui"></div>

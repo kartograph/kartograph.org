@@ -1,6 +1,7 @@
 ---
 layout: showcase
-title: 3-dimensional mapping
+title: Three-dimensional Mapping
+about: This map shows crime data for some cities in the United States. You can choose between showing actual quantities of incidents or the rates. Note that the purpose of this demo is not to promote 3D bar charts (which are fairly ineffective), but to showcase the satellite projection along with the possibility to project three dimensional geo-coordinates. In fact, the height of the bars in this example is given in km above ground.
 prev: dotgrid
 next: projections
 ---
@@ -65,10 +66,13 @@ $script.ready(['jquery', 'kartograph'], function() {
                                     fill: 'none',
                                     'stroke-linecap': 'square'
                                 });
-                                if (Raphael.svg)
+
+                                if (Raphael.svg) {
                                     bar.animate({ path: map.getGeoPathStr(pts) }, 500);
-                                else
+                                    bar.node.setAttribute('title', c.City);
+                                } else {
                                     bar.attr('path', map.getGeoPathStr(pts));
+                                }
                                 symbols.push(bar);
                             }
                         });
@@ -98,12 +102,7 @@ $script.ready(['jquery', 'kartograph'], function() {
 </div>
 
 <div class="row">
-    <div class="span5">
-        <h1>Three-dimensional mapping</h1>
-        <p>This map shows crime data for some US cities. You can choose between showing actual quantities of incidents or the rates.</p>
-        <p>Note that the purpose of this demo is not to promote 3D bar charts (which are fairly ineffective), but to showcase the satellite projection along with the possibility to project three dimensional geo-coordinates. In fact, the height of the bars in this example is given in km above ground. </p>
-    </div>
-    <div class="span7" style="text-align:right">
+    <div class="span12" style="text-align:right">
 
         <span style="margin-right:1em">
             <a class="dataset btn btn-primary" data-val="ViolentCrime">Violent Crime</a>
