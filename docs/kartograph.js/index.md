@@ -112,7 +112,6 @@ You can load a stylesheet for your map using ``loadCSS``. Of course, you could a
 
 You can also style your map directly using the Kartograph.js API.
 
-
 	map.addLayer('mylayer', {
 		styles: {
 			fill: '#cdd',

@@ -17,7 +17,7 @@ toc:
 <h1>What is Kartograph?</h1>
 <p>Kartograph is a simple and lightweight framework for building interactive map applications without Google Maps or any other mapping service. It was created with the needs of designers and data journalists in mind.</p>
 
-<p>Actually, <b>Kartograph</b> is two libraries. One generates beautiful SVG maps; the other helps you to create interactive map applications that runs across all major browsers.</p>
+<p>Actually, <b>Kartograph</b> is two libraries. One generates beautiful <i>&amp;</i> compact SVG maps; the other helps you to create interactive maps that run across all major browsers.</p>
 
 
 <div class="row" style="margin-top: 30px;margin-bottom:30px;">
@@ -44,7 +44,7 @@ toc:
     <div class="span4" style="border-left:3px solid #eee; padding-left: 20px;">
 
         <h2 style="margin-top:0">Kartograph.js</h2>
-        <p>A JavaScript library for creating interactive map applications on top of SVG maps.</p>
+        <p>A JavaScript library for creating interactive maps based on Kartograph.py SVG maps.</p>
 
         <ul>
             <li>Data vis friendly</li>
@@ -63,38 +63,17 @@ toc:
 </div>
 
 
-    <h1 id="showcase">See it in action</h1>
+<h1 id="showcase">See it in action</h1>
 
-    <ul class="thumbnails">
-    {% for item in page.showcase %}
-        <li class="span3">
-            <a href="/showcase/{{ item }}/" class="thumbnail">
-                <img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
+<ul class="thumbnails">
+{% for item in page.showcase %}
+    <li class="span3">
+        <a href="/showcase/{{ item }}/" class="thumbnail">
+            <img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />
+        </a>
+    </li>
+{% endfor %}
+</ul>
 
-
-
-        <h2>Current Progress</h2>
-        <p>At the moment Kartograph is still in an early pre-release stadium, which means that it basically works and is already used a lot by its author but there are some more things left to do to make it as easy-to-use for everybody else. This includes tutorials and step-by-step examples and API documentation.</p>
-        <p>If you like Kartograph and can’t wait to support its development, please find the donation buttons on the left. Any contribution is much appreciated. Thanks!</p>
-
-<div class="row">
-    <div class="span4">
-        <a href="/showcase/italia/"><img style="border-radius:7px" src="/showcase/italia/screenshot.png" alt="Kartograph" /></a>
-        <h1 style="margin-top:10px">Features</h1>
-        <ul>
-            <li>Supporting <a href="/showcase/italia/">beautiful maps</a>&trade;</li>
-            <li><a href="/showcase/choropleth/">Data</a> <a href="/showcase/dotgrid/">vis</a> <a href="/showcase/charts/">friendly</a>
-            <li>Tons of <a href="/showcase/projections/">map projections</a>, some even in <a href="/showcase/3d/">3D</a>.</li>
-            <li>Runs 100% stand-alone</li>
-            <li>Gracefully degrades to IE7</li>
-        </ul>
-        <!--<h2>Out of scope</h2>
-        <p>Sorry, but the one thing Kartograph can’t do for you is tile maps. So, if you really, really need street-level details in your map, try one of the <a href="http://leaflet.cloudmade.com">other</a> <a href="http://polymaps.org">great</a> <a href="http://openlayers.org">mapping</a> <a href="http://developers.cartodb.com/">frameworks</a>.</p>-->
-    </div>
-</div>
 
 
