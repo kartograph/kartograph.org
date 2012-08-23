@@ -295,23 +295,31 @@ Often you don't want to render the entire globe, but a smaller section of it. Ka
 
 ### Clipping to a longitude/latitude range (bbox)
 
-![clipping to China](crop-bbox-01.png)
+The mode **bbox** allows you to define minimum and maximum values for latitude and longitudes. Kartograph will ensure that the entire lon,lat is visible in the map. Note that the layer polygons are _not_ cropped to the viewport rectangle, but to the lon/lat range, whose actual shape depends on the used map projection.
 
-The mode **bbox** allows you to define a minimum/maximum value for latitude and longitudes. Kartograph will ensure that the entire lon,lat is visible in the map. Note that the layer polygons are _not_ cropped to the viewport rectangle, but to the lon/lat range, whose actual shape depends on the used map projection.
+The data format is ``[minLon, minLat, maxLon, maxLat]``.
 
     "bounds": {
         "mode": "bbox", 
-        "data": [70,17,135,54]
+        "data": [70, 17, 135, 54]
     }
 
+![clipping to China](crop-bbox-01.png)
 
-If no bounds are set up at all, Kartograph will fallback to the full lon/lat range [-180,-90,180,90].
+If no bounds are set up at all, Kartograph will fallback to the full lon/lat range [-180, -90, 180, 90].
 
 ### Clipping to map features (polygons)
 
-![clipping to China](crop-polygon.png)
+In some situations you don't want to mess around with lon/lat bounding boxes, but you simply want one or many polygons to be fully visible in the map. That's what the **polygons** mode is for. In this mode ``bounds.data`` requires at least the ``layer`` to which the map should be clipped to.
 
-In some situations you don't want to mess around with lon/lat bounding boxes, but you simply want one or many polygons to be fully visible in the map. That's what the **polygons** mode is for:
+    "bounds": {
+        "mode": "polygons",
+        "data": {
+            "layer": "countries",
+        }
+    }
+    
+Sometimes you just want to focus the map on one feature while keeping other features visible around it. Therefor you can add ``filter`` to the bounds data attribute. It uses the same filter syntax as seen in the [layer section](#filtering).
 
     "bounds": {
         "mode": "polygons",
@@ -320,6 +328,8 @@ In some situations you don't want to mess around with lon/lat bounding boxes, bu
             "filter": ["NE_ISO_3", "in", ["DEU","FRA","ITA","GBR"]]
         }
     }
+
+![clipping to China](crop-polygon.png)
 
 
 The **layer** option refers to the id of a layer defined in the [layers section](#layers).
