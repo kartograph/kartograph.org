@@ -51,8 +51,11 @@ $script.ready('jquery', function() {
 				position: 'relative',
 				top: top
 			});
+		}
+
+		function highlightSection() {
 			$('.toc li').removeClass('active');
-			var m = null;
+			var m = null, sy = $(document).scrollTop();
 			$('.content h2').each(function(i, el) {
 				if (Math.round($(el).offset().top) <= sy) m = $(el);
 			});
@@ -66,10 +69,16 @@ $script.ready('jquery', function() {
 
 		$(window).scroll(function() {
 			if (tocTimeout) clearTimeout(tocTimeout);
-			tocTimeout = setTimeout(moveTOC, 3000);
+			if ($(document).scrollTop() < 1000) {
+				$('.toc').css('top', 0);
+			} else {
+				tocTimeout = setTimeout(moveTOC, 3000);
+			}
+			highlightSection();
 		});
 
 		moveTOC();
+		highlightSection();
 
 	});
 	$script.ready('highlightjs', function() {
