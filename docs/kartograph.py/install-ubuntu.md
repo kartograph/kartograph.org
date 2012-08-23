@@ -3,9 +3,11 @@ layout: docs
 title: Installing Kartograph.py on Ubuntu
 ---
 
+← [Return to Kartograph.py Docs](/docs/kartograph.py/)
+
 # Installing Kartograph.py on Ubuntu
 
-This is how install Kartograph on a fresh Ubuntu 12.04 system.
+This is how install Kartograph.py on a fresh Ubuntu 12.04 system.
 
 ## Installing the pre-requisites
 
