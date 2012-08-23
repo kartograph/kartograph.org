@@ -1,0 +1,71 @@
+---
+layout: default
+title: Kartograph.py
+scripts: [[jquery, '/js/jquery.min.js', '/js/highlight/highlight.pack.js']]
+styles: ['/js/highlight/styles/github.css']
+---
+
+<script type="text/javascript">
+
+$script.ready('jquery', function() {
+
+    $(function() {
+        if (location.hash) {
+            var gistid = location.hash.substr(1);
+            $.ajax({
+                url:'https://api.github.com/gists/'+gistid,
+                dataType: 'jsonp',
+                success: function(res) {
+                    if (res.data.user.login == "gka") {  // only accept my own gists
+                        $.each(res.data.files, function(name, file) {
+                            if (name.match(/\.svg$/)) {
+                                $('#map').html(file.content);
+                                return false;
+                            }
+                        });
+                        $.each(res.data.files, function(name, file) {
+                            if (name.match(/\.yaml$/) || name.match(/\.json$/)) {
+                                var ext = name.substr(name.indexOf('.')+1);
+                                $('#map-cfg').html(hljs.highlight(ext == 'yaml' ? 'python' : ext, file.content).value);
+                                return false;
+                            }
+                        });
+                        $.each(res.data.files, function(name, file) {
+                            if (name.match(/\.css$/)) {
+                                $('#map-styles').html(hljs.highlight('css', file.content).value);
+                                return false;
+                            }
+                        });
+                        $('#title').html(res.data.description);
+                        $('#gist-link').html('#'+res.data.id);
+                        $('#gist-link').attr('href', 'https://github.com/gist/'+res.data.id);
+                        $('#cnt').show();
+                        $('#loading').hide();
+                    }
+                }
+            });
+        }
+    });
+
+});
+
+</script>
+
+<div id="loading" style="margin:50px;text-align:center;color:#999">loading map...</div>
+<div id="cnt" style="display:none">
+    <a id="gist-link" style="float:right" href=""></a>
+    <h1 id="title"></h1>
+
+    <div id="map">
+
+    </div>
+
+    <h2>Map configuration</h2>
+    <pre id="map-cfg">
+
+    </pre>
+
+    <h2>Map styles</h2>
+    <pre id="map-styles">
+    </pre>
+</div>
