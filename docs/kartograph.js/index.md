@@ -5,7 +5,11 @@ toc:
     loading-svg: Loading SVG maps
 ---
 
-# Using Kartograph.js
+# Kartograph.js Documentation
+
+*Work in progress.*
+
+## Getting started
 
 The first step is to create an empty HTML document, include ``jQuery``, ``RaphaelJS`` and ``Kartograph.js``. You also need a container element for your map.
 
