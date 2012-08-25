@@ -76,7 +76,7 @@ Internally, Kartograph.py works with WGS84 coordinate system (EPSG:4326). It wil
 
 ### Filtering
 
-Sometimes you don't want your entire shapefile to be added to the map. You can use the ``layer.filter`` attribute to define which shapes you want. The following definition would add only those shapes that have a data attribute *ISO* set to "*FRA*".
+Sometimes you don't want your entire shapefile to be added to the map. You can use the ``layer.filter`` attribute to define which shapes you want. The following definition would add only those shapes that have the data attribute *ISO3* set to "*FRA*".
 
     "mylayer":  {
         "src": "countries.shp",
@@ -85,7 +85,7 @@ Sometimes you don't want your entire shapefile to be added to the map. You can u
     
 Of course, you can build more complex filters, too. Read more about it in the [extended filter documentation](/docs/kartograph.py/filter.html).
 
-### Keeping data attributes
+### Storing data attributes in SVG output
 
 Most of the time you want Kartograph.py to include some of the data attributes defined in your shapefile. That's what you can use ``layer.attributes`` for.
 
@@ -119,6 +119,8 @@ This would change the path in the resulting SVG to:
             "id": "ISO3"
         }
     }
+
+**Note2:** You can now also set ``layer.attributes`` to *"all"* in case you really want to store **all** data attributes in the SVG map. 
 
 ### Specifying the input charset
 
