@@ -1,12 +1,27 @@
 ---
 layout: core
 scripts: [[jquery, '/js/jquery.min.js'], [kartograph, '/js/raphael.min.js', '/js/kartograph.js', '/js/chroma.min.js']]
+showcases:
+- id: eastcoast
+  title: High-res vector mapping
+- id: italia
+  title: La Bella Italia
+- id: choropleth
+  title: Choropleth Maps
+- id: charts
+  title: Chart Maps
+- id: dotgrid
+  title: Dot-grid Maps
+- id: 3d
+  title: 3D-Projections
+- id: projections
+  title: Map Projections
 ---
 
 <div class="container">
 	<div class="row" style="margin-top:20px">
 		<div class="span3">
-			<a href="/#showcase"><img src="/img/logo.png" alt="Kartograph" /></a>
+			<a href="/#showcase"><img src="/img/logotype.png" style="position:relative;top:-10px;" alt="Kartograph" /></a>
 		</div>
 		<div class="span7 content">
 
@@ -14,17 +29,22 @@ scripts: [[jquery, '/js/jquery.min.js'], [kartograph, '/js/raphael.min.js', '/js
 			<p>{{ page.about }}</p>
 		</div>
 		<div class="span2">
-			<ul class="pager">
-				{% if page.next %}
-				<li class="next">
-					<a href="/showcase/{{ page.next }}">Next &rarr;</a>
-				</li>
-				{% endif %}{% if page.prev %}
-				<li class="next">
-					<a style="margin-right:13px" href="/showcase/{{ page.prev }}">&larr;</a>
-				</li>
-				{% endif %}
-			</ul>
+			<label>Jump to another showcase:</label>
+			<select id="jump-nav" class="span2">
+				<option></option>
+				{% for s in page.showcases %}
+				<option value="{{ s.id }}">{{ s.title }}</option>
+				{% endfor %}
+			</select>
+			<script type="text/javascript">
+			$script.ready('jquery', function() {
+				$(function() {
+					$('#jump-nav').change(function() {
+						location.href = '/showcase/' + $('#jump-nav').get(0).value;
+					});
+				});
+			});
+			</script>
 		</div>
 	</div>
 	{{ content }}

@@ -1,7 +1,7 @@
 ---
 layout: showcase
 title: Choropleth Maps
-about: This choropleth map shows population data for each of the departements of metropolean France.  In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived. Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.
+about: 
 prev: italia
 next: charts
 ---
@@ -75,6 +75,9 @@ $script.ready(['kartograph'], function() {
 </script>
 
 <div class="row">
+	<div class="span8">
+		<div id="map">&nbsp;</div>
+	</div>
 	<div class="span4 content">
 
 		<!--<h2>Variable</h2>
@@ -83,6 +86,7 @@ $script.ready(['kartograph'], function() {
 			<a class="measure btn btn-custom" data-value="density">Population Density</a>
 			<a class="measure btn" data-value="pop">Population</a>
 		</p>-->
+		<p>This choropleth map shows population data for each of the departements of metropolean France.  In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived. Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.</p>
 		<h2>Classes</h2>
 		<p>The class limits are computed using <a href="https://github.com/gka/chroma.js">chroma.js</a>.
 		<p>
@@ -116,7 +120,5 @@ $script.ready(['kartograph'], function() {
 			
 		</p>
 	</div>
-	<div class="span8">
-		<div id="map">&nbsp;</div>
-	</div>
+
 </div>
