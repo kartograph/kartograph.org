@@ -55,9 +55,7 @@ The following chapters will cover the details of the map configuration syntax. T
 
 ## Adding Map Layers
 
-The most important configuration (and the only one which you cannot leave out) is ``layers``. 
-    
-The layer configuration accepts either two formats. The first is a dictionary of dictionaries, with layer ids as keys. This was added lately.
+The most important configuration (and the only one which is required) is ``layers``. Kartograph accepts a dictionary of dictionaries, with layer ids as keys.
 
     {
         "layers": {
@@ -66,7 +64,7 @@ The layer configuration accepts either two formats. The first is a dictionary of
         }
     }
 
-The old syntax is still supported (but possibly deprecated in the future). It accepts the layers as a list of dictionaries. You can name (and should) name the layer using ``layer.id``.
+For compatibility reasons, the old syntax is still supported (but possibly deprecated in the future). It accepted the layers as a list of dictionaries. You can name (and should) name the layer using ``layer.id``.
 
     {
         "layers": [{
