@@ -39,7 +39,7 @@ svg .fg {
 	fill-opacity: 0;
 }
 svg .fg:hover {
-	fill: #daa;
+	fill: #eda;
 	fill-opacity: .37;
 }
 svg .dotMarker {

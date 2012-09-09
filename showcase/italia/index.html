@@ -22,13 +22,35 @@ $script.ready('kartograph', function() {
 
         map.loadMap('italy.svg', function(map) {
 
-            map
-                .addLayer('graticule')
-                .addLayer('land', 'bgback')
-                .addLayer('land', 'bg')
-                .addLayer('land', 'bgstroke')
-                .addLayer('context')
-                .addLayer('ITA', 'fg');
+                map.addLayer('graticule', {
+                    styles: {
+                        'stroke-width': 0.2
+                    }
+                }).addLayer('land', {
+                    name: 'bgback'
+                }).addLayer('land', {
+                    name: 'bg'
+                }).addLayer('land', {
+                    name: 'bgstroke'
+                }).addLayer('context')
+                 .addLayer('ITA', {
+                    name: 'fg'
+                });
+
+                map.getLayer('context').applyTexture('t0.png');
+                map.addFilter('oglow', 'glow', {
+                    size: 1,
+                    color: '#988',
+                    strength: 1,
+                    inner: false
+                });
+                map.getLayer('bgback').applyFilter('oglow');
+                map.addFilter('myglow', 'glow', {
+                    size: 2,
+                    color: '#945C1B',
+                    inner: true
+                });
+                map.getLayer('bg').applyFilter('myglow');
 
             map.getLayer('context').applyTexture('t0.png');
 
@@ -37,7 +59,6 @@ $script.ready('kartograph', function() {
 
             map.addFilter('myglow', 'glow', { size: 2, color: '#945C1B', inner: true });
             map.getLayer('bg').applyFilter('myglow');
-            
 
             resize();
 
