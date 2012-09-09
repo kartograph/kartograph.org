@@ -43,7 +43,7 @@ For map styling you can use the ``--style`` / ``-s`` option;
     
 
     
-### Using Kartograph.py within Python
+### Using Kartograph.py as Python module
 
 The second way is to include Kartograph in a Python script. You could
 
@@ -51,7 +51,7 @@ The second way is to include Kartograph in a Python script. You could
     K = Kartograph()
     K.generate(config, outfile='mymap.svg')
     
-The following chapters will cover the details of the map configuration syntax. 
+The following chapters will cover the details of the map configuration syntax. The example configurations are shown in JSON format.
 
 ## Adding Map Layers
 
