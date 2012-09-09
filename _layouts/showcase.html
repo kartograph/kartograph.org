@@ -1,56 +1,20 @@
 ---
-layout: core
-scripts: [[jquery, '/js/jquery.min.js'], [kartograph, '/js/raphael.min.js', '/js/kartograph.js', '/js/chroma.min.js']]
-showcases:
-- id: eastcoast
-  title: High-res vector mapping
-- id: italia
-  title: La Bella Italia
-- id: choropleth
-  title: Choropleth Maps
-- id: charts
-  title: Chart Maps
-- id: dotgrid
-  title: Dot-grid Maps
-- id: 3d
-  title: 3D-Projections
-- id: projections
-  title: Map Projections
+layout: default
+scripts: [[kartograph, '/js/jquery.min.js', '/js/raphael.min.js', '/js/kartograph.js', '/js/chroma.min.js']]
+toctitle: Showcases
+toc:
+    Showcases:
+        - ['/showcase/eastcoast', 'High-res vector mapping']
+        - ['/showcase/italia', 'La Bella Italia']
+        - ['/showcase/choropleth', 'Choropleth Maps']
+        - ['/showcase/charts', 'Chart Maps']
+        - ['/showcase/dotgrid', 'Dot-grid Maps']
+        - ['/showcase/3d', '3D-Projections']
+        - ['/showcase/projections', 'Map Projections']
 ---
 
-<div class="container">
-	<div class="row" style="margin-top:20px">
-		<div class="span3">
-			<a href="/#showcase"><img src="/img/logotype.png" style="position:relative;top:-10px;" alt="Kartograph" /></a>
-		</div>
-		<div class="span7 content">
+	<h1>{{ page.title }}</h1>
 
-			<h1>{{ page.title }}</h1>
-			<p>{{ page.about }}</p>
-		</div>
-		<div class="span2">
-			<label>Jump to another showcase:</label>
-			<select id="jump-nav" class="span2">
-				<option></option>
-				{% for s in page.showcases %}
-				<option value="{{ s.id }}">{{ s.title }}</option>
-				{% endfor %}
-			</select>
-			<script type="text/javascript">
-			$script.ready('jquery', function() {
-				$(function() {
-					$('#jump-nav').change(function() {
-						location.href = '/showcase/' + $('#jump-nav').get(0).value;
-					});
-				});
-			});
-			</script>
-		</div>
-	</div>
 	{{ content }}
-	<div class="row k-footer">
-		<div class="span12">
-			
-		</div>
-	</div>
+
 </div>

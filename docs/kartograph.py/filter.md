@@ -8,7 +8,7 @@ title: Kartograph.py Docs
 # Kartograph.py Filter Syntax
 
 
-Sometimes the shapefile you are using contains more features that you actually need in your map. Kartograph.py allows you to filter the features that should be included in each layer. 
+Sometimes the shapefile you are using contains more features that you actually need in your map. Kartograph.py allows you to filter the features that should be included in each layer.
 
 ## Basic expressions
 
@@ -30,7 +30,7 @@ There is a third syntax
 
 
 ### Like
-Checks whether a shape property matches partly against a given value. This works just like the ``LIKE`` you know from SQL. Note that **like** has a higher priority than **is**, so ``is like`` would be still interpreted as ``LIKE``.
+Checks whether a shape property matches partly against a given value. This works just like the ``LIKE`` you know from SQL. You can use "%" as wildcard.
 
     "filter": ["NUTS", "like", "FR%"]
 
@@ -45,8 +45,13 @@ You can test a property against a set of values at once by using the **in** oper
 
     "filter": ["ISO", "in", ["FRA", "DEU", "ESP", "GBR"]]
 
+You can achieve the same using the following short-hand syntax:
+
+    "filter": { "ISO": ["FRA", "DEU", "ESP", "GBR"] }
 
 ### Numerical filter: greater, less
+
+Using the ``greater`` and ``less`` operators you can filter by numerical attributes:
 
     "filter": ["AREA", "greater", 100000]
 
@@ -59,7 +64,7 @@ If Kartograph.py finds the word "not" in the operator term, the result will be l
     "filter": ["ISO", "not like", "F%"]
 
 
-## Combined expressions
+## Nested expressions
 
 You can combine multiple expressions using **and** and **or** operations.
 
@@ -72,7 +77,7 @@ You can combine multiple expressions using **and** and **or** operations.
     }
 
 
-You can even recursively nest **and** and **or** expressions:
+You can even recursively nest **and** and **or** expressions to build complex filters:
 
 
     "filter": {

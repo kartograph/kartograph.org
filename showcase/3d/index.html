@@ -1,27 +1,32 @@
 ---
 layout: showcase
 title: Three-dimensional Mapping
-about: This map shows crime data for some cities in the United States. You can choose between showing actual quantities of incidents or the rates. Note that the purpose of this demo is not to promote 3D bar charts (which are fairly ineffective), but to showcase the satellite projection along with the possibility to project three dimensional geo-coordinates. In fact, the height of the bars in this example is given in km above ground.
+jsplugins:
+   qtip: '/js/jquery.qtip.min.js'
 ---
 
+<link rel="stylesheet" type="text/css" href="/css/jquery.qtip.css">
+
 <script type="text/javascript">
-$script.ready(['jquery', 'kartograph'], function() {
+$script.ready(['kartograph', 'qtip'], function() {
     $(function() {
         var map, c, scale, updateMap, symbols = [];
+
+        $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+        $.fn.qtip.defaults.style.def = false;
 
         c = $('#map');
         c.height(c.width()*.5);
 
-        map = window.m = $K.map('#map');
+        map = $K.map('#map');
 
         map.loadMap('map-usa.svg', function() {
 
-            map.loadStyles('style.css', function() {
+            map.loadCSS('style.css', function() {
 
                 map.addLayer('graticule');
                 map.addLayer('graticule_1');
                 map.addLayer('usa');
-
 
                 $.getJSON('us-crime-cities.json', function(crimeCities) {
 
@@ -68,6 +73,19 @@ $script.ready(['jquery', 'kartograph'], function() {
                                 if (Raphael.svg) {
                                     bar.animate({ path: map.getGeoPathStr(pts) }, 500);
                                     bar.node.setAttribute('title', c.City);
+                                    setTimeout(function() {
+                                        $(bar.node).qtip({
+                                            content: {
+                                                title: c.City,
+                                                text: c[prop]
+                                            },
+                                            position: {
+                                                target: 'mouse',
+                                                viewport: $(window),
+                                                adjust: { x:7, y:7}
+                                            },
+                                        }, 800);
+                                    });
                                 } else {
                                     bar.attr('path', map.getGeoPathStr(pts));
                                 }
@@ -93,14 +111,9 @@ $script.ready(['jquery', 'kartograph'], function() {
     });
 });
 </script>
-<div class="row">
-    <div class="span12">
+<p>This map shows crime data for some cities in the United States. You can choose between showing actual quantities of incidents or the rates. Note that the purpose of this demo is not to promote 3D bar charts (which are fairly ineffective), but to showcase the satellite projection along with the possibility to project three dimensional geo-coordinates. In fact, the height of the bars in this example is given in km above ground.</p>
         <div id="map"></div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="span12" style="text-align:right">
 
         <span style="margin-right:1em">
             <a class="dataset btn btn-primary" data-val="ViolentCrime">Violent Crime</a>
@@ -115,6 +128,3 @@ $script.ready(['jquery', 'kartograph'], function() {
             <a class="type btn btn-primary" data-val="" data-maxrad="500">Quantity</a>
             <a class="type btn" data-val="Rate" data-maxrad="250">Density</a>
         </span>
-
-    </div>
-</div>

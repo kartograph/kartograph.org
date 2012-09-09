@@ -6,7 +6,7 @@ prev: charts
 ---
 
 <script type="text/javascript">
-$script.ready(['jquery', 'kartograph'], function() {
+$script.ready(['kartograph'], function() {
 
 	$(function() {
 		var map, 
@@ -22,8 +22,7 @@ $script.ready(['jquery', 'kartograph'], function() {
 	
 				window.m = map = $K.map('#map', w, w);	
 				map.loadMap('france-departments.svg', function() {	
-					map.addLayer({
-						id: 'departments',
+					map.addLayer('departments', {
 						key: 'id'
 					});
 					updateMap();
@@ -38,7 +37,7 @@ $script.ready(['jquery', 'kartograph'], function() {
 			
 			var 
 				scale_type = $('.scale.btn-primary').data('type'),
-				scale = kartograph.scale[scale_type](dep_data, 'density'),
+				scale = Kartograph.scale[scale_type](dep_data, 'density'),
 				max_dot_size = Number($('.scale.btn-primary').data('mds')),
 				dotsize = function(d) {
 					return 1+Math.sqrt(scale(d.density))*max_dot_size;
@@ -75,27 +74,22 @@ $script.ready(['jquery', 'kartograph'], function() {
 #map path { stroke-width: 0.3px; }
 </style>
 
-<div class="row">
-	<div class="span7">
-		<div id="map"></div>
-	</div>
-	<div class="span5">
-		<div class="page-header">
-			<h1>Dot Grid Map</h1>
-		</div>
-		<p>
-		In 1967, the French cartographer <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jaques Bertin</a> suggested the use of graduated sizes in a regular pattern as alternative to <a href="/showcase/choropleth/">chroropleth maps</a>.
-		</p>
-		<p>The map shows the population distribution across departments in France. The country is overlayed by a regular grid of circles of which each is sized according to the population density of the department the circle falls into.
-		<p>
-		The most notable advantage is that one no longer need to choose between showing the quantity or density of a distribution, since the regular pattern shows both at the same time: You can compare the population density by looking at individual circles while still getting an impression of the total population for each department.
-		</p>
-		<h3>Scale</h3>
-		<p>
-			<a class="scale btn btn-primary" data-type="linear" data-mds="60">Linear</a>
-			<a class="scale btn" data-type="quantile" data-mds="8">Quantiles</a>
-			<a class="scale btn" data-type="log" data-mds="10">Logarithmic</a>
-			
-		</p>
-	</div>
-</div>
+<div id="map"></div>
+
+
+<p>
+	In 1967, the French cartographer <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jaques Bertin</a> suggested the use of graduated sizes in a regular pattern as alternative to <a href="/showcase/choropleth/">chroropleth maps</a>.
+</p>
+<p>
+	The map shows the population distribution across departments in France. The country is overlayed by a regular grid of circles of which each is sized according to the population density of the department the circle falls into.
+<p>
+	The most notable advantage is that one no longer need to choose between showing the quantity or density of a distribution, since the regular pattern shows both at the same time: You can compare the population density by looking at individual circles while still getting an impression of the total population for each department.
+</p>
+<h3>Dot radius scale</h3>
+<p>
+	<a class="scale btn btn-primary" data-type="linear" data-mds="60">Linear</a>
+	<a class="scale btn" data-type="quantile" data-mds="8">Quantiles</a>
+	<a class="scale btn" data-type="log" data-mds="10">Logarithmic</a>
+	
+</p>
+

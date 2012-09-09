@@ -1,9 +1,6 @@
 ---
 layout: showcase
 title: La Bella Italia
-about: This example map of Italy showcases some ways you can style Kartograph maps. The base colors are defined in CSS, glow filters and image textures are applied in SVG. Also you can see heavy use of symbols (labels and icons) as well as geo paths. The labels are set in the <a href="http://www.fontsquirrel.com/fonts/Aquiline" target="_blank">Aquiline</a> font, created by Manfred Klein.
-prev: eastcoast
-next: choropleth
 ---
 
 
@@ -40,6 +37,7 @@ $script.ready('kartograph', function() {
 
             map.addFilter('myglow', 'glow', { size: 2, color: '#945C1B', inner: true });
             map.getLayer('bg').applyFilter('myglow');
+            
 
             resize();
 
@@ -150,26 +148,30 @@ $script.ready('kartograph', function() {
 });
 </script>
 
-<div class="row">
-    <div class="span3 content">
 
-        <div class="k-layer-toggle">
-            <h2>Toggle Layer Visibility</h2>
+<p>This example map of Italy showcases some ways you can style Kartograph maps. The base colors are defined in CSS, glow filters and image textures are applied in SVG. Also you can see heavy use of symbols (labels and icons) as well as geo paths. The labels are set in the <a href="http://www.fontsquirrel.com/fonts/Aquiline" target="_blank">Aquiline</a> font, created by Manfred Klein.</p>
+
+
+<div id="map"></div>
+
+<div class="k-layer-toggle">
+    <h2>Toggle Layer Visibility</h2>
+    <div class="row">
+        <div class="span3">
             <label class="checkbox"><input type="checkbox" checked value="graticule"> Graticule</label>
             <label class="checkbox"><input type="checkbox" checked value="bgback"> Land Outer Glow</label>
             <label class="checkbox"><input type="checkbox" checked value="bg"> Land Inner Glow</label>
             <label class="checkbox"><input type="checkbox" checked value="bgstroke"> Land Outline</label>
+        </div><div class="span3">
             <label class="checkbox"><input type="checkbox" checked value="context"> Surrounding Countries</label>
             <label class="checkbox"><input type="checkbox" checked value="fg"> Italian Provinces</label>
             <label class="checkbox"><input type="checkbox" checked value="citylbl"> City Label</label>
             <label class="checkbox"><input type="checkbox" checked value="cityico"> City Icons</label>
+        </div><div class="span3">
             <label class="checkbox"><input type="checkbox" checked value="clblbg"> Country Label Background</label>
             <label class="checkbox"><input type="checkbox" checked value="clblfg"> Country Label Foreground</label>
             <label class="checkbox"><input type="checkbox" checked value="ferry"> Ferry Routes</label>
         </div>
-    </div>
-    <div class="span9">
-        <div id="map"></div>
     </div>
 </div>
 

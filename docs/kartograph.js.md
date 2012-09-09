@@ -1,8 +1,6 @@
 ---
 layout: docs
 title: Kartograph.js Docs
-toc:
-    loading-svg: Loading SVG maps
 ---
 
 # Using Kartograph.js

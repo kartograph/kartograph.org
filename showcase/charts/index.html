@@ -1,14 +1,13 @@
 ---
 layout: showcase
 title: Chart Maps
-jsplugins: ['/js/jquery.csv.js']
-prev: choropleth
-next: dotgrid
+jsplugins:
+    csv: '/js/jquery.csv.js'
 ---
 
 <script type="text/javascript">
 
-$script.ready(['jquery','kartograph'], function() {
+$script.ready(['kartograph', 'csv'], function() {
 
     $(function() {
         var map, updateMap, symbols,
@@ -18,11 +17,11 @@ $script.ready(['jquery','kartograph'], function() {
 
         map = $K.map('#map');
 
-        map.loadStyles('style.css', function() {
+        map.loadCSS('style.css', function() {
 
             map.loadMap('spain.svg', function() {
                 map.addLayer('context');
-                map.addLayer({ id: 'spain', key: 'nuts', title: function(d) {
+                map.addLayer('spain', { key: 'nuts', title: function(d) {
                     return d.nuts
                 } });
 
@@ -81,11 +80,12 @@ $script.ready(['jquery','kartograph'], function() {
     });
 });
 </script>
+
+<div class="map-container">
+    <div id="map-overlay"></div>
+    <div id="map"></div>
+</div>
 <div class="row">
-    <div class="span8 map-container">
-        <div id="map-overlay"></div>
-        <div id="map"></div>
-    </div>
     <div class="span4 content">
         <p>
         One disadvantage of choropleth maps is that you always need to look at the legend in order to read the actual numbers. While this is inevitable for absolute quantities, there are more effective ways for visualizing percentages.
@@ -93,6 +93,8 @@ $script.ready(['jquery','kartograph'], function() {
         <p>
         This map shows how unemployment rates in Spain.
         </p>
+    </div>
+    <div class="span3">
         <p>
             <label>Gender: </label>
             <a class="gender btn btn-primary" data-val="T">Total</a>

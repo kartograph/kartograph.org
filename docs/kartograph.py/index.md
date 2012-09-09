@@ -83,7 +83,23 @@ Sometimes you don't want your entire shapefile to be added to the map. You can u
         "filter": { "ISO3": "FRA" }
     }
     
-Of course, you can build more complex filters, too. Read more about it in the [extended filter documentation](/docs/kartograph.py/filter.html).
+Of course, you can build more complex filters, too. Read more about it in the [filter documentation](/docs/kartograph.py/filter.html).
+
+**Hint:** If you use Kartograph directly as a Python module you might pass a function as well:
+
+    def myfilter(record):
+        return record['ISO'] == "FRA"
+    
+    cfg = {
+        "layers": {
+            "mylayer": {
+                "src": "countries.shp",
+                "filter": myfilter
+            }
+        }
+    }
+    K = Kartograph()
+    K.generate(cfg, output='mymap.svg')
 
 ### Storing data attributes in SVG output
 

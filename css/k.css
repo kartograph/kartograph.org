@@ -6,7 +6,7 @@ body {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-color: white;
-	padding: 30px; 
+	padding: 30px;
 }
 
 .sidebar {
@@ -18,7 +18,7 @@ body {
 	font-size: 15px;
 	text-align: center;
 	color: #888;
-	padding: 0 12%;
+	padding: 5px 18% 20px;
 }
 
 .sidebar h3 {
@@ -363,4 +363,24 @@ h3:hover .headerlink {
 	text-decoration: none;
 	border-bottom: 1px solid #555;
 	color: #555;
+}
+
+@media screen and (max-width: 979px) {
+
+	.sidebar .tagline {
+		padding: 5px 0 10px;
+	}
+
+	.content p, .content li {
+		font-size: 13px;
+		line-height: 19px;
+	}
+
+	.content h1 {
+		font-size: 32px;
+	}
+
+	.content h2 {
+		font-size: 23px;
+	}
 }

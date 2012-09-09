@@ -28,27 +28,36 @@ layout: core
 				</div>
 
 				{% if page.toc %}
-				<div class="toc">
-					<h3>{% if page.toctitle %}{{ page.toctitle }}{% else %}Table of Contents{% endif %}</h3>
+					{% if page.toc == true %}
+						<div class="toc">
+							<h3>Table of Contents</h3>
+						</div>
+					{% else %}
+						{% for tocinfo in page.toc %}
+						<div class="toc">
+							<h3>{{ tocinfo[0] }}</h3>
 
-					<ul>
-						{% for l in page.toc %}
-							{% if l[1]['_'] %}
-							<li><a href="{{ l[0] }}">{{ l[1]['_'] }}</a>
-								<ul>
-								{% for s in l[1] %}
-								{% if s[0] != '_' %}
-								<li><a href="{{ s[0] }}">{{ s[1] }}</a></li>
-								{% endif %}
+							<ul>
+								{% for l in tocinfo[1] %}
+									{% if l[1]['_'] %}
+									<li><a href="{{ l[0] }}">{{ l[1]['_'] }}</a>
+										<ul>
+										{% for s in l[1] %}
+										{% if s[0] != '_' %}
+										<li><a href="{{ s[0] }}">{{ s[1] }}</a></li>
+										{% endif %}
+										{% endfor %}
+										</ul>
+									</li>
+									{% else %}
+									{% capture longurl %}{{ l[0] | append:'/index.html' }}{% endcapture %}
+									<li{% if longurl == page.url %} class="active"{% endif %}><a href="{{ l[0] }}">{{ l[1] }}</a></li>
+									{% endif %}
 								{% endfor %}
-								</ul>
-							</li>
-							{% else %}
-							<li><a href="{{ l[0] }}">{{ l[1] }}</a></li>
-							{% endif %}
+							</ul>
+						</div>
 						{% endfor %}
-					</ul>
-				</div>
+					{% endif %}
 				{% endif %}
 
 
