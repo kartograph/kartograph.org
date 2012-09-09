@@ -25,9 +25,23 @@ Essentially there are two different ways of using Kartograph.py: the command-lin
 
 ### Kartograph.py as a command line utility
 
-After installing. The map configuration can be written in JSON or YAML.
+The installation script should provide you the Kartograph command line interface. To create a map, you need to write a map configuration first. Kartograph accepts JSON or YAML.
+
+The basic usage is
+
+    kartograph [MAP CONFIG]
+    
+This will write the map to ``tmp.svg`` in the same folder and call ``firefox tmp.svg`` after that to preview the results.
+
+You can write maps to a different file name using ``-o`` or ``--output`` option.
+
+    kartograph config.json -o mymap.svg
+    
+For map styling you can use the ``--style`` / ``-s`` option;
 
     kartograph -s styles.css config.json -o mymap.svg
+    
+
     
 ### Using Kartograph.py within Python
 
