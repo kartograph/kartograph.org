@@ -84,20 +84,20 @@ If your geodata is stored in a shapefile, just pass the filename at ``layer.src`
         "src": "countries.shp"
     }
     
-Internally, Kartograph.py works with WGS84 coordinate system (EPSG:4326). It will look for a projection definition (which in the above example would be a file named **countries.prj**) and eventually project the geometry back to WGS84.
+Internally, Kartograph.py works with WGS84 coordinate system (EPSG:4326). It will look for a projection definition (which in the above example would be a file named **countries.prj**) and project the geometry back to WGS84 during import.
 
-### Filtering
+### Filtering map features
 
-Sometimes you don't want your entire shapefile to be added to the map. You can use the ``layer.filter`` attribute to define which shapes you want. The following definition would add only those shapes that have the data attribute *ISO3* set to "*FRA*".
+Sometimes you don't want your entire shapefile to be added to the map but only some selected featues. You can use ``layer.filter`` to define which shapes you want. For instance, the following definition would add only those shapes that have the data attribute *ISO3* set to "*FRA*".
 
     "mylayer":  {
         "src": "countries.shp",
         "filter": { "ISO3": "FRA" }
     }
     
-Of course, you can build more complex filters, too. Read more about it in the [filter documentation](/docs/kartograph.py/filter.html).
+You can build more complex filters, too. Read more about it in the [filter documentation](/docs/kartograph.py/filter.html).
 
-**Hint:** If you use Kartograph directly as a Python module you might pass a function as well:
+**Hint:** If you use Kartograph as a Python module you might pass a function as well:
 
     def myfilter(record):
         return record['ISO'] == "FRA"
@@ -139,7 +139,14 @@ This would change the path in the resulting SVG to:
 
     <path data-iso="USA" … />
     
-**Note:** there's one specialty with the attribute name **id**. This would not only be added to ``data-id`` but also to the plain ``id`` attribute. This comes in handy if you want to post-process your SVG in graphic software like Illustrator, which ignores any data attributes, but displays the path ids.
+You can also set ``layer.attributes`` to *"all"* in case you really want to store **all** data attributes in the SVG map. 
+
+    "mylayer": {
+        "src": "countries.shp",
+        "attributes": "all"
+    }
+    
+**Note:** there's a special treatment of the attribute name **id**. This would not only be added to ``data-id`` but also to the plain ``id`` attribute. This comes in handy if you want to post-process your SVG in graphic software like Illustrator, which ignores any data attributes, but displays the path ids.
 
     "mylayer": {
         "src": "countries.shp",
@@ -148,7 +155,7 @@ This would change the path in the resulting SVG to:
         }
     }
 
-**Note2:** You can now also set ``layer.attributes`` to *"all"* in case you really want to store **all** data attributes in the SVG map. 
+
 
 ### Specifying the input charset
 
