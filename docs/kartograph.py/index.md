@@ -48,6 +48,14 @@ For map styling you can use the ``--style`` / ``-s`` option;
 
     kartograph -s styles.css config.json -o mymap.svg
 
+**Hint:** If you have some specific locations on your system where you store your raw geo data (such as shapefiles), you can tell Kartograph about them by setting the ``KARTOGRAPH_DATA`` environment variable. Kartograph will then look in these directories if it cannot find a shapefile.
+
+    # on mac/linux:
+    export KARTOGRAPH_DATA=/path/to/my/shapefiles:/another/path
+
+    # on windows
+    set KARTOGRAPH_DATA=c:\path\to\my\shapefiles;c:\another\path
+
 ### Using Kartograph.py as Python module
 
 The second way is to include Kartograph in a Python script. You could
