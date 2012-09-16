@@ -9,8 +9,8 @@ This documentation refers to the latest version of Kartograph. *Work in progress
 
 ## Installing Kartograph.py
 
-To install Kartograph.py you need to run Python (something like 2.7) and a couple of other frameworks. 
-    
+To install Kartograph.py you need to run Python (something like 2.7) and a couple of other frameworks.
+
 * Installing on [Ubuntu](install-ubuntu.html)
 * Installing on [Mac OS X](install-macosx.html)
 * Installing on [Windows](install-windows.html)
@@ -30,19 +30,24 @@ The installation script should provide you the Kartograph command line interface
 The basic usage is
 
     kartograph [MAP CONFIG]
-    
-This will write the map to ``tmp.svg`` in the same folder and call ``firefox tmp.svg`` after that to preview the results.
 
-You can write maps to a different file name using ``-o`` or ``--output`` option.
+This will write the map to standard output. You can write maps to a file using ``-o`` or ``--output`` option.
 
     kartograph config.json -o mymap.svg
-    
+
+Using ``--preview`` or ``-p` you can write the map to a temporary file and open it right after launch. The command to open the SVG depends on your operating system.
+
+    kartograph config.json --preview
+
+You can overwrite the default command by setting the environment variable ``KARTOGRAPH_PREVIEW``.
+
+    export KARTOGRAPH_PREVIEW=firefox
+    kartograph config.json --preview
+
 For map styling you can use the ``--style`` / ``-s`` option;
 
     kartograph -s styles.css config.json -o mymap.svg
-    
 
-    
 ### Using Kartograph.py as Python module
 
 The second way is to include Kartograph in a Python script. You could
