@@ -216,9 +216,6 @@ Kartograph.js provides an easy API to add symbols to your map.
 
 In the above example, ``myDataset`` could be an array or dictionary of items. Kartograph would create one symbol for each item.
 
-### Labels
-
-sdsd
 
 ### Label a map layer
 
@@ -233,13 +230,40 @@ To label a layer in your map you can use . If ``location()`` returns a string in
     });
 
 
-### Circles
+### Circles/Bubbles
 
+    map.addSymbols({
+        type: Kartograph.Bubble,
+        data: map.getLayer('countries').getPathsData(),
+        location: function(d) { return 'countries.' + d.id; },
+        radius: function(d) { return 20; },
+        style: 'fill:red',
+        title: function(d) { return d.name; }
+    });
 
 
 ### Images
 
 You can use the symbol API to add image marker to your map.
+
+### Sorting Symbols
+
+Sometimes it's useful to control the order in which symbols are drawn to the map. A typical example are sized circles that are more usable when drawn from largest to smallest.
+
+    map.addSymbols({
+        type: Kartograph.Bubble,
+        sortBy: ['radius', 'desc'],
+        radius: function(d) { return Math.sqrt(d.value); }
+    });
+
+### Removing Symbols
+
+To remove a group of symbols from your map, simply call ``map.removeSymbols()``. If you added multiple symbol layers, you can pass and index to specify the one to remove. Otherwise, all symbols will be removed.
+
+    // remove the second symbol group
+    map.removeSymbols(1);
+    // remove all symbol groups
+    map.removeSymbols();
 
 ## Dot-Grids
 
