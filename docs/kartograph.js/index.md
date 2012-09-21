@@ -172,7 +172,6 @@ Of course you can add event handlers later, too.
 		});
 
 
-
 ## Tooltips
 
 ### Setting simple built-in tooltips
@@ -192,12 +191,45 @@ Using the ``titles`` property you can set the ``title`` attribute for each path 
 For more advanced tooltips you need to include the jQuery qTips plugin.
 
     <script src="jquery.qtips.js"></script>
+    <link rel="stylesheet" type="text/css" href="jquery.qtip.css">
+
+In the tooltip callback you can either return a single string or and array of two strings, of which the first will be shown as tooltip header and the second as tooltip body.
+
+    map.addLayer('mylayer', {
+        tooltips: function(d) {
+            return d.name;
+        }
+    });
+
+You can update the tooltips later, too:
+
+    map.getLayer('mylayer').tooltips(callback):
+
 
 ### Create your own tooltips
 
 Of course, if you don't want to use qTips you can also implement your own tooltip solution using the mouse event handlers ``mouseenter`` and ``mouseleave``. See [Events](#events).
 
+## Working with layers and paths
 
+There are several ways to access and manipulate layers and paths after you created them. First of all you can use ``getLayer`` to get a Layer object.
+
+    var layer = map.getLayer('mylayer')
+
+### Query for specific paths
+
+The following returns all paths that have an attribute *iso3* set to "DEU".
+
+    layer.getPaths({ iso3: "DEU" });
+
+    
+
+
+### Accessing data of all paths
+
+You can get the data of all the paths of one layer using ``getPathsData``. This is useful if you want to add map symbols based on data that is already included in the SVG map. The call will return an array of data dictionaries.
+
+    layer.getPathsData();
 
 ## Symbol Maps
 

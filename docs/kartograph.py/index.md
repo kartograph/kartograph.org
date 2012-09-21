@@ -522,3 +522,24 @@ If you set ``export.round`` to other values than **false** (which is the default
        "round": 1
     }
 
+## Labeling of map features
+
+You can add text labels to your map features using the ``layer.labeling`` configuration. To make it work you at least need to specify the attribute to use as label texts using the ``key`` property.
+
+    "mylayer": {
+        "src": "…",
+        "labeling": {
+            "key": "NAME_1"
+        }
+    }
+    
+### Styling map labels
+
+To change fonts and colors of your map labels, simply add a CSS rule for ``YOURLAYERID-label``. In the above example this would be:
+
+    #mylayer-label {
+        font-family: Georgia;
+        font-size: 14px;
+    }
+    
+ 
