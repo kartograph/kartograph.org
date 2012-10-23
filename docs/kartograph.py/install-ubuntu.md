@@ -21,24 +21,11 @@ At first you need to make sure that you have the following libraries installed. 
     sudo apt-get install python-pyproj
 
 
-## Setup a virtual environment
-
-Then you probably want to install virtualenv which allows you to run Kartograph in a safe environment:
-
-    sudo apt-get install python-virtualenv
-    sudo pip install virtualenvwrapper
-    mkdir ~/.virtualenvs
-    echo source /usr/local/bin/virtualenvwrapper.sh >> ~/.profile
-
-Now create and activate a new virtual environment for Kartograph. We name it just "K" in this case. Later, whenever you want to work with Kartograph you simply call ``workon K`` to start your session.
-
-    mkvirtualenv K
-
 ## Install Kartograph.py
 
 Install Kartograph.py directly from Github
 
-    pip install https://github.com/kartograph/kartograph.py/zipball/master
+    sudo pip install https://github.com/kartograph/kartograph.py/zipball/master
 
 ## Test Installation
 
