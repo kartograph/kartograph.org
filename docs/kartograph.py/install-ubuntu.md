@@ -7,16 +7,18 @@ title: Installing Kartograph.py on Ubuntu
 
 # Installing Kartograph.py on Ubuntu
 
-This is how install Kartograph.py on a fresh Ubuntu 12.04 system.
+This is how install Kartograph.py on a fresh Ubuntu 12.10 system. Might work on older 12.X systems as well.
 
 ## Installing the pre-requisites
 
-At first you need to make sure that you have the following libraries installed. They are needed to compile the dependencies for Kartograph. Note that this instructions work with version 0.4.6 and will probably not work with older versions.
+At first you need to make sure that you have the following libraries installed. They are needed to compile the dependencies for Kartograph.
 
 
     sudo apt-get install libxslt1-dev
     sudo apt-get install python-dev
     sudo apt-get install python-shapely
+    sudo apt-get install python-gdal
+    sudo apt-get install python-pyproj
 
 
 ## Setup a virtual environment
@@ -24,24 +26,19 @@ At first you need to make sure that you have the following libraries installed. 
 Then you probably want to install virtualenv which allows you to run Kartograph in a safe environment:
 
     sudo apt-get install python-virtualenv
+    sudo pip install virtualenvwrapper
+    mkdir ~/.virtualenvs
+    echo source /usr/local/bin/virtualenvwrapper.sh >> ~/.profile
 
-Now create and activate a new virtual environment for Kartograph. We name it just "K" and locate it in your home folder:
+Now create and activate a new virtual environment for Kartograph. We name it just "K" in this case. Later, whenever you want to work with Kartograph you simply call ``workon K`` to start your session.
 
-
-    cd ~
-    virtualenv K
-    cd K
-    source bin/activate
-
+    mkvirtualenv K
 
 ## Install Kartograph.py
 
-Download and install Kartograph.py
+Install Kartograph.py directly from Github
 
-
-    git clone https://github.com/kartograph/kartograph.py.git kartograph-src
-    cd kartograph-src
-    python setup.py install
+    pip install https://github.com/kartograph/kartograph.py/zipball/master
 
 ## Test Installation
 
@@ -57,7 +54,7 @@ Create a very basic map configuration by creating a new text file named "world.j
 
     {
        "layers": {
-           "src": "ne_50m_admin_0_countries.shp" 
+           "src": "ne_50m_admin_0_countries.shp"
        }
     }
 
@@ -71,3 +68,5 @@ Then you create the map using the following command:
 Congrats, that's it. Here's what you should see now.
 
 ![resulting map](http://new.tinygrab.com/f3aa221ede0ee6a8f06d0423a6e763d2526c9466a6.png)
+
+There are more tests included in the Kartograph.py repository on Github.
