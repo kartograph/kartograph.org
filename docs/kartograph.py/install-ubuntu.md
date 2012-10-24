@@ -40,9 +40,9 @@ Download the 1:50m Admin 0 Countries shapefile from Natural Earth into a newly c
 Create a very basic map configuration by creating a new text file named "world.json" and paste the following content into it:
 
     {
-       "layers": {
+       "layers": [{
            "src": "ne_50m_admin_0_countries.shp"
-       }
+       }]
     }
 
 
