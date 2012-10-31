@@ -193,6 +193,11 @@ For more advanced tooltips you need to include the jQuery qTips plugin.
     <script src="jquery.qtips.js"></script>
     <link rel="stylesheet" type="text/css" href="jquery.qtip.css">
 
+You can download both files from Github:
+
+* [jquery.qtip.js](https://raw.github.com/Craga89/qTip2/master/dist/jquery.qtip.js)
+* [jquery.qtip.css](https://raw.github.com/Craga89/qTip2/master/dist/jquery.qtip.css)
+
 In the tooltip callback you can either return a single string or and array of two strings, of which the first will be shown as tooltip header and the second as tooltip body.
 
     map.addLayer('mylayer', {
