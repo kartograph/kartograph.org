@@ -184,7 +184,7 @@ Using the ``title`` property you can set the ``title`` attribute for each path o
 
 ### Advanced tooltips using jQuery.qtips
 
-For more advanced tooltips you need to include the jQuery qTips plugin.
+For more advanced tooltips you need to include the [jQuery qTips](http://craigsworks.com/projects/qtip2/) plugin.
 
     <script src="jquery.qtips.js"></script>
 
