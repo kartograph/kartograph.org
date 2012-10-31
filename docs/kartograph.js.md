@@ -172,11 +172,11 @@ Of course you can add event handlers later, too.
 
 ### Setting simple built-in tooltips
 
-Using the ``titles`` property you can set the ``title`` attribute for each path of a layer. If you provide a function it will be evaluated for each layer path. The path data will be passed as the first argument.
+Using the ``title`` property you can set the ``title`` attribute for each path of a layer. If you provide a function it will be evaluated for each layer path. The path data will be passed as the first argument.
 
 
 	map.addLayer('mylayer', {
-		titles: function(data) { 
+		title: function(data) { 
 			return data.name; 
 		}
 	});
