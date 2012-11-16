@@ -214,7 +214,7 @@ In the tooltip callback you can either return a single string or and array of tw
         }
     });
 
-You can use any of the available tooltip themes, or write your own custom tooltip style. The following line will force qtip to use the bootstrap tooltips:
+You can use any of the available [tooltip themes](https://github.com/Craga89/qTip2/blob/master/dist/jquery.qtip.css), or write your own custom tooltip style. The following line will force qtip to use the [bootstrap tooltips](https://github.com/Craga89/qTip2/blob/master/dist/jquery.qtip.css#L457):
 
     $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
 
