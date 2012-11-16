@@ -200,18 +200,31 @@ You can download both files from Github:
 
 In the tooltip callback you can either return a single string or and array of two strings, of which the first will be shown as tooltip header and the second as tooltip body.
 
+    // single string
     map.addLayer('mylayer', {
         tooltips: function(d) {
-            return d.name;
+            return 'Some html code here: '+d.name;
         }
     });
+
+    // array [title, body]
+    map.addLayer('mylayer', {
+        tooltips: function(d) {
+            return [d.name, 'some html code for the body'];
+        }
+    });
+
+You can use any of the available tooltip themes, or write your own custom tooltip style. The following line will force qtip to use the bootstrap tooltips:
+
+    $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+
 
 You can update the tooltips later, too:
 
     map.getLayer('mylayer').tooltips(callback):
 
 
-### Create your own tooltips
+### Create your own tooltips (without qtip)
 
 Of course, if you don't want to use qTips you can also implement your own tooltip solution using the mouse event handlers ``mouseenter`` and ``mouseleave``. See [Events](#events).
 

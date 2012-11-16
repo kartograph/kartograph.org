@@ -21,7 +21,7 @@
 
 
 /*
-    kartograph - a svg mapping library
+    Kartograph - a svg mapping library
     Copyright (C) 2011,2012  Gregor Aisch
 
     This library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@
 
   kartograph = root.$K = window.Kartograph = (_ref = root.Kartograph) != null ? _ref : root.Kartograph = {};
 
-  kartograph.version = "0.3.1";
+  kartograph.version = "0.3.2";
 
   __verbose__ = false && (typeof console !== "undefined" && console !== null);
 
@@ -503,11 +503,14 @@
     };
 
     Kartograph.prototype.addLayer = function(id, opts) {
+      var $paths, checkEvents, evt, layer, layer_id, me, path_id, prop, src_id, svgLayer, svg_path, titles, val, _i, _j, _len, _len1, _ref4, _ref5, _ref6;
+      if (opts == null) {
+        opts = {};
+      }
       /*
               add new layer
       */
 
-      var $paths, checkEvents, evt, layer, layer_id, me, path_id, prop, src_id, svgLayer, svg_path, titles, val, _i, _j, _len, _len1, _ref4, _ref5, _ref6;
       me = this;
       if ((_ref4 = me.layerIds) == null) {
         me.layerIds = [];
@@ -674,7 +677,9 @@
         h = cnt.height();
       }
       me.viewport = vp = new kartograph.BBox(0, 0, w, h);
-      me.paper.setSize(vp.width, vp.height);
+      if (me.paper != null) {
+        me.paper.setSize(vp.width, vp.height);
+      }
       vp = me.viewport;
       padding = (_ref4 = me.opts.padding) != null ? _ref4 : 0;
       halign = (_ref5 = me.opts.halign) != null ? _ref5 : 'center';
