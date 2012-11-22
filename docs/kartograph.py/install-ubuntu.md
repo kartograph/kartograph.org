@@ -13,13 +13,7 @@ This is how install Kartograph.py on a fresh Ubuntu 12.10 system. Might work on 
 
 At first you need to make sure that you have the following libraries installed. They are needed to compile the dependencies for Kartograph.
 
-
-    sudo apt-get install libxslt1-dev
-    sudo apt-get install python-dev
-    sudo apt-get install python-shapely
-    sudo apt-get install python-gdal
-    sudo apt-get install python-pyproj
-
+    sudo apt-get install libxslt1-dev python-dev python-shapely python-gdal python-pyproj python-pip
 
 ## Install Kartograph.py
 
