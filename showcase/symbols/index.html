@@ -11,7 +11,6 @@ jsplugins:
 $script.ready(['kartograph', 'qtip'], function() {
 
     $(function() {
-        var piwik_api_url = 'http://piwik.vis4.net/index.php?module=API&method=UserCountry.getCity&format=JSON&idSite=14&period=year&date=today&token_auth=anonymous&segment=&enable_filter_excludelowpop=1&showRawMetrics=1&filter_column=country&filter_sort_column=nb_visits&filter_limit=100&filter_pattern=DE';
 
         // initialize tooltips
         $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
@@ -82,7 +81,7 @@ $script.ready(['kartograph', 'qtip'], function() {
 
 <p>It basically goes down to this:</p>
     <pre><code>// cities is a list of dictionaries such as
-cities = [{ city_name: "Berlin", nb_visits: 1496, long: 13.4, lat: 52.517 }, ...];
+cities = [{ city_name: "Berlin", nb_visits: 1496, lon: 13.4, lat: 52.517 }, ...];
 
 // create a scale for radii
 var scale = $K.scale.sqrt(cities, 'nb_visits').range([0, 40]);
@@ -92,7 +91,7 @@ map.addSymbols({
     type: $K.Bubble,
     data: cities,
     location: function(city) {
-        return [city.long, city.lat];
+        return [city.lon, city.lat];
     },
     radius: function(city) {
         return scale(city.nb_visits);

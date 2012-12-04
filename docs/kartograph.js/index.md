@@ -252,69 +252,23 @@ You can get the data of all the paths of one layer using ``getPathsData``. This 
 
 ## Symbol Maps
 
-### Add symbols
+Kartograph.js provides ``addSymbols`` as an easy API for adding symbols to your map. You at least need to pass a dictionary with the following properties:
 
-Kartograph.js provides an easy API to add symbols to your map.
+* ``type`` — defines which kind of symbols you want to use
+* ``data`` — an array of data objects of which each will be represented by a symbol
+* ``location`` — a function which returns an array [longitude, latitude]
 
-
-    map.addSymbols({
-        type: Kartograph.Label,
-        data: myDataset,
-        location: function(d) { return [] },
-        text: function(d) { return 'Foo'; } 
-    });
-
-
-In the above example, ``myDataset`` could be an array or dictionary of items. Kartograph would create one symbol for each item.
-
-
-### Label a map layer
-
-To label a layer in your map you can use . If ``location()`` returns a string in the format *"LAYER_ID**.**PATH_ID"*, Kartograph will try to calculate a nice position in the center of that layer path.
-
+On top of that, each symbol type has some additional properties (such as ``radius`` for Bubble symbols).
 
     map.addSymbols({
-        type: Kartograph.Label,
-        data: map.getLayer('countries').getPathsData(),
-        location: function(d) { return 'countries.' + d.id; },
+        type: $K.Label,
+        data: [{ name: 'Berlin', lon: 13.4, lat: 52.517 }],
+        location: function(d) { return [d.lon, d.lat] },
         text: function(d) { return d.name; }
     });
 
+To learn more about symbol maps, please check out the [symbol map documentation](/docs/kartograph.js/symbols.md).
 
-### Circles/Bubbles
-
-    map.addSymbols({
-        type: Kartograph.Bubble,
-        data: map.getLayer('countries').getPathsData(),
-        location: function(d) { return 'countries.' + d.id; },
-        radius: function(d) { return 20; },
-        style: 'fill:red',
-        title: function(d) { return d.name; }
-    });
-
-
-### Images
-
-You can use the symbol API to add image marker to your map.
-
-### Sorting Symbols
-
-Sometimes it's useful to control the order in which symbols are drawn to the map. A typical example are sized circles that are more usable when drawn from largest to smallest.
-
-    map.addSymbols({
-        type: Kartograph.Bubble,
-        sortBy: ['radius', 'desc'],
-        radius: function(d) { return Math.sqrt(d.value); }
-    });
-
-### Removing Symbols
-
-To remove a group of symbols from your map, simply call ``map.removeSymbols()``. If you added multiple symbol layers, you can pass and index to specify the one to remove. Otherwise, all symbols will be removed.
-
-    // remove the second symbol group
-    map.removeSymbols(1);
-    // remove all symbol groups
-    map.removeSymbols();
 
 ## Dot-Grids
 
