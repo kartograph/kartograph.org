@@ -262,6 +262,8 @@ $script.ready(['kartograph', 'datgui'], function() {
                 globeopt.lat0 = latstart + globeopt.deltalat;
                 if (globeopt.lat0 > 90) {globeopt.lat0 = 90; }
                 if (globeopt.lat0 < -90) {globeopt.lat0 = -90; }
+                gui.__controllers[1].updateDisplay();
+                gui.__controllers[2].updateDisplay();
                 //$('#relxystatus').html(globeopt.deltalat +'Â°'+ globeopt.deltalon + 'Â°');
                 $('#latlonstatus').html((Math.floor(globeopt.lat0)) + 'Â°, ' + (Math.floor(globeopt.lon0)) + 'Â°');
                 if (globeopt.lat0 !== lastlat || globeopt.lon0 !== lastlon) {
