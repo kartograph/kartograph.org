@@ -1,12 +1,14 @@
 ---
 layout: default
-scripts: [[kartograph, '/js/jquery.min.js', '/js/raphael.min.js', '/js/kartograph.js', '/js/chroma.min.js']]
+scripts: [[kartograph, '/js/jquery.min.js', '/js/raphael.min.js', '/js/kartograph.js', '/js/chroma.min.js'], [highlightjs, '/js/highlight/highlight.pack.js']]
+styles: ['/js/highlight/styles/github.css']
 toctitle: Showcases
 toc:
     Showcases:
         - ['/showcase/eastcoast', 'High-res vector mapping']
         - ['/showcase/italia', 'La Bella Italia']
         - ['/showcase/choropleth', 'Choropleth Maps']
+        - ['/showcase/symbols', 'Symbol Maps']
         - ['/showcase/charts', 'Chart Maps']
         - ['/showcase/dotgrid', 'Dot-grid Maps']
         - ['/showcase/3d', '3D-Projections']
@@ -18,3 +20,28 @@ toc:
 	{{ content }}
 
 </div>
+
+<script type="text/javascript">
+
+$script.ready('highlightjs', function() {
+    $('pre code').each(function(i, e) {
+        var code = $(e).html().trim(), 
+            code2 = code.replace(/\s/g, ''),
+            last = code2.substr(code2.length-1, 1);
+
+        if (code.substr(0,1) == '"' && (last == '}' || last == ']')) {
+            e.className = 'json';
+            $(e).html('{'+code+'}');
+            hljs.highlightBlock(e);
+            var i = $(e).html()
+            $(e).html(i.substr(1, i.length-2));
+            return;
+        } else if (last == ';') {
+            e.className = 'javascript';
+        }
+
+        hljs.highlightBlock(e)
+    });
+});
+
+</script>

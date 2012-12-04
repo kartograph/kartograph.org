@@ -1,8 +1,6 @@
 ---
 layout: showcase
-title: Choropleth Maps
-prev: italia
-next: charts
+title: Symbol Maps
 jsplugins:
    qtip: '/js/jquery.qtip.min.js'
 ---
@@ -13,112 +11,97 @@ jsplugins:
 $script.ready(['kartograph', 'qtip'], function() {
 
     $(function() {
-        var map,
-            colorscale,
-            dep_data = {},
-            w = $('#map').parent().width();
+        var piwik_api_url = 'http://piwik.vis4.net/index.php?module=API&method=UserCountry.getCity&format=JSON&idSite=14&period=year&date=today&token_auth=anonymous&segment=&enable_filter_excludelowpop=1&showRawMetrics=1&filter_column=country&filter_sort_column=nb_visits&filter_limit=100&filter_pattern=DE';
 
+        // initialize tooltips
         $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
         $.fn.qtip.defaults.style.def = false;
 
-        $.ajax({
-            url: 'departments.json',
-            dataType: 'json',
-            success: function(data) {
+        var map = $K.map('#map');
 
-                $.each(data, function(i, r) {
-                    dep_data[r.id] = r;
-                })
-
-                map = $K.map('#map', w, w);
-                map.loadMap('france-departments.svg', function() {
-                    map.addLayer('departments', {
-                        titles: function(d) { return d.id },
-                        styles: {
-                            stroke: '0.5px'
-                        },
-                        tooltips: function(d) {
-                            return [d.name, dep_data[d.id].density + '/km<sup>2</sup>'];
-                        }
-                    });
-                    updateMap();
-                });
-            }
-        });
-
-        /*
-         * update map colors
-         */
-        function updateMap() {
-            var prop = 'density', // $('.measure.btn-custom').data('value'),
-                scale = 'quantiles', // $('.scale.btn-custom').data('value'),
-                colors = $('#colors').get(0).value;
-
-            colorscale = new chroma.ColorScale({
-                colors: chroma.brewer[colors],
-                limits: chroma.limits(dep_data, scale, 7, prop)
+        map.loadMap('DE.svg', function() {
+            map.addLayer('context', {
+                styles: {
+                    stroke: '#aaa',
+                    fill: '#f6f4f2'
+                }
             });
-            map.getLayer('departments').style({
-                fill: function(d) {
-                    return colorscale.getColor(dep_data[d.id][prop]);
+            map.addLayer('regions', {
+                id: 'bg',
+                styles: {
+                    stroke: '#d8d6d4',
+                    'stroke-width': 10,
+                    'stroke-linejoin': 'round'
                 }
             });
 
-        }
+            map.addLayer('regions', {
+                title: function(d) { return d.name },
+                styles: {
+                    stroke: '#333',
+                    fill: '#fff'
+                }
+            });
 
-        // init user interface
-        $('.btn').click(function(event) {
-            var tgt = $(event.target), par = tgt.parent();
-            $('.btn', par).removeClass('btn-custom');
-            tgt.addClass('btn-custom');
-            updateMap();
-        });
+            $.ajax({
+                url: 'cities.json',
+                dataType: 'json',
+                success: function(cities) {
 
-        $('#colors').change(updateMap);
-        $('#colors').keyup(updateMap);
+                    var scale = $K.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([0, 60]);
+
+                    map.addSymbols({
+                        type: $K.Bubble,
+                        data: cities,
+                        location: function(city) {
+                            return [city.long, city.lat];
+                        },
+                        radius: function(city) {
+                            return scale(city.nb_visits);
+                        },
+                        tooltip: function(city) {
+                            return '<h3>'+city.city_name+'</h3>'+city.nb_visits+' visits';
+                        },
+                        sortBy: 'radius desc',
+                        style: 'fill:#800; stroke: #fff; fill-opacity: 0.5;',
+                    });
+                }
+            });
+
+        }, { padding: -5 });
 
     });
 
 });
 </script>
 
+<p>This maps shows visitors to this website in 2012. It uses the <a href="/docs/kartograph.js/#symbol-maps">symbol map API</a> and <a href="/docs/kartograph.js/#advanced-tooltips-using-jquery-qtips">qTip tooltips</a>.</a></p>
 
-        <!--<h2>Variable</h2>
-        <p>Again, it's a bad idea to display absolute quantities (such as population) on a choropleth map.</p>
-        <p>
-            <a class="measure btn btn-custom" data-value="density">Population Density</a>
-            <a class="measure btn" data-value="pop">Population</a>
-        </p>-->
-        <p>This choropleth map shows population data for each of the departements of metropolean France.  In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived. Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.</p>
+<div id="map" style="border:1px solid #999; margin-bottom:1em">
+</div>
 
-        <div id="map">&nbsp;</div>
+<p>It basically goes down to this:</p>
+    <pre><code>// cities is a list of dictionaries such as
+cities = [{ city_name: "Berlin", nb_visits: 1496, long: 13.4, lat: 52.517 }, ...];
 
-        <h2>Colors</h2>
-        <select id="colors" class="span2">
-            <optgroup label="Single hue">
-                <option value="Grays">Grays</option>
-                <option value="Blues">Blues</option>
-                <option value="Reds">Reds</option>
-                <option value="Oranges">Oranges</option>
-                <option value="Greens">Greens</option>
-                <option value="Purples">Purples</option>
-            </optgroup>
-            <optgroup label="Multiple hues">
-                <option value="OrRd">Orange &rarr; Red</option>
-                <option value="PuBu">Purple &rarr; Blue</option>
-                <option value="PuRd">Purple &rarr; Red</option>
-                <option value="RdPu">Red &rarr; Purple</option>
-                <option value="BuPu">Blue &rarr; Purple</option>
-                <option value="BuGn">Blue &rarr; Green</option>
-                <option value="YlGn">Yellow &rarr; Green</option>
-                <option value="GnBu">Green &rarr; Blue</option>
-                <option value="YlGnBu" selected="selected">Yellow &rarr; Green &rarr; Blue</option>
-                <option value="YlOrBr">Yellow &rarr; Orange &rarr; Brown</option>
-                <option value="YlOrRd">Yellow &rarr; Orange &rarr; Red</option>
-                <option value="PuBuGn">Purple &rarr; Blue &rarr; Green</option>
-            </optgroup>
-        </select>
-        <p>The <b>colors</b> are taken from <a href="http://colorbrewer2.org">ColorBrewer</a>. They are included in <a href="https://github.com/gka/chroma.js">chroma.js</a>.</p>
-        <p>Map source: <a href="http://gadm.org">GADM</a>, <a href="/maps/#3683747">Kartograph config</a></p>
+// create a scale for radii
+var scale = $K.scale.sqrt(cities, 'nb_visits').range([0, 40]);
 
+// add bubbles to the map
+map.addSymbols({
+    type: $K.Bubble,
+    data: cities,
+    location: function(city) {
+        return [city.long, city.lat];
+    },
+    radius: function(city) {
+        return scale(city.nb_visits);
+    },
+    tooltip: function(city) {
+        return '&lt;h3&gt;'+city.city_name+'&lt;/h3&gt;'+city.nb_visits+' visits';
+    },
+    sortBy: 'radius desc',
+    style: 'fill:#800; stroke: #fff; fill-opacity: 0.5;',
+});
+</code></pre>
 
