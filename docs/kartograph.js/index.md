@@ -132,7 +132,7 @@ You can achieve the same using ``style()``.
 
 ### Conditional styling
 
-By passing functions instead of values you can apply conditional styling. This way you can easily create a choropleth map.
+By passing a function instead of static values you can apply conditional styling. This way you can create [choropleth maps](/showcase/choropleth/).
 
 
 	map.getLayer('mylayer').style('fill', function(data) {
@@ -224,6 +224,8 @@ You can update the tooltips later, too:
     map.getLayer('mylayer').tooltips(callback):
 
 
+See [choropleth showcase](/showcase/choropleth/) for a running tooltip demo.
+
 ### Create your own tooltips (without qtip)
 
 Of course, if you don't want to use qTips you can also implement your own tooltip solution using the mouse event handlers ``mouseenter`` and ``mouseleave``. See [Events](#events).
@@ -240,7 +242,6 @@ The following returns all paths that have an attribute *iso3* set to "DEU".
 
     layer.getPaths({ iso3: "DEU" });
 
-    
 
 
 ### Accessing data of all paths

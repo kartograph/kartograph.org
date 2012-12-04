@@ -1,0 +1,124 @@
+---
+layout: showcase
+title: Choropleth Maps
+prev: italia
+next: charts
+jsplugins:
+   qtip: '/js/jquery.qtip.min.js'
+---
+
+<link rel="stylesheet" type="text/css" href="/css/jquery.qtip.css">
+<script type="text/javascript">
+
+$script.ready(['kartograph', 'qtip'], function() {
+
+    $(function() {
+        var map,
+            colorscale,
+            dep_data = {},
+            w = $('#map').parent().width();
+
+        $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+        $.fn.qtip.defaults.style.def = false;
+
+        $.ajax({
+            url: 'departments.json',
+            dataType: 'json',
+            success: function(data) {
+
+                $.each(data, function(i, r) {
+                    dep_data[r.id] = r;
+                })
+
+                map = $K.map('#map', w, w);
+                map.loadMap('france-departments.svg', function() {
+                    map.addLayer('departments', {
+                        titles: function(d) { return d.id },
+                        styles: {
+                            stroke: '0.5px'
+                        },
+                        tooltips: function(d) {
+                            return [d.name, dep_data[d.id].density + '/km<sup>2</sup>'];
+                        }
+                    });
+                    updateMap();
+                });
+            }
+        });
+
+        /*
+         * update map colors
+         */
+        function updateMap() {
+            var prop = 'density', // $('.measure.btn-custom').data('value'),
+                scale = 'quantiles', // $('.scale.btn-custom').data('value'),
+                colors = $('#colors').get(0).value;
+
+            colorscale = new chroma.ColorScale({
+                colors: chroma.brewer[colors],
+                limits: chroma.limits(dep_data, scale, 7, prop)
+            });
+            map.getLayer('departments').style({
+                fill: function(d) {
+                    return colorscale.getColor(dep_data[d.id][prop]);
+                }
+            });
+
+        }
+
+        // init user interface
+        $('.btn').click(function(event) {
+            var tgt = $(event.target), par = tgt.parent();
+            $('.btn', par).removeClass('btn-custom');
+            tgt.addClass('btn-custom');
+            updateMap();
+        });
+
+        $('#colors').change(updateMap);
+        $('#colors').keyup(updateMap);
+
+    });
+
+});
+</script>
+
+
+        <!--<h2>Variable</h2>
+        <p>Again, it's a bad idea to display absolute quantities (such as population) on a choropleth map.</p>
+        <p>
+            <a class="measure btn btn-custom" data-value="density">Population Density</a>
+            <a class="measure btn" data-value="pop">Population</a>
+        </p>-->
+        <p>This choropleth map shows population data for each of the departements of metropolean France.  In general, mapping absolute quantities to values result in erroneous images since larger areas are perceived. Another way to get around this issue is to use <a href="/showcase/dotgrid/">dot grid maps</a>.</p>
+
+        <div id="map">&nbsp;</div>
+
+        <h2>Colors</h2>
+        <select id="colors" class="span2">
+            <optgroup label="Single hue">
+                <option value="Grays">Grays</option>
+                <option value="Blues">Blues</option>
+                <option value="Reds">Reds</option>
+                <option value="Oranges">Oranges</option>
+                <option value="Greens">Greens</option>
+                <option value="Purples">Purples</option>
+            </optgroup>
+            <optgroup label="Multiple hues">
+                <option value="OrRd">Orange &rarr; Red</option>
+                <option value="PuBu">Purple &rarr; Blue</option>
+                <option value="PuRd">Purple &rarr; Red</option>
+                <option value="RdPu">Red &rarr; Purple</option>
+                <option value="BuPu">Blue &rarr; Purple</option>
+                <option value="BuGn">Blue &rarr; Green</option>
+                <option value="YlGn">Yellow &rarr; Green</option>
+                <option value="GnBu">Green &rarr; Blue</option>
+                <option value="YlGnBu" selected="selected">Yellow &rarr; Green &rarr; Blue</option>
+                <option value="YlOrBr">Yellow &rarr; Orange &rarr; Brown</option>
+                <option value="YlOrRd">Yellow &rarr; Orange &rarr; Red</option>
+                <option value="PuBuGn">Purple &rarr; Blue &rarr; Green</option>
+            </optgroup>
+        </select>
+        <p>The <b>colors</b> are taken from <a href="http://colorbrewer2.org">ColorBrewer</a>. They are included in <a href="https://github.com/gka/chroma.js">chroma.js</a>.</p>
+        <p>Map source: <a href="http://gadm.org">GADM</a>, <a href="/maps/#3683747">Kartograph config</a></p>
+
+
