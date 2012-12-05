@@ -22,7 +22,7 @@ $script.ready('jquery', function() {
 
 		$('.docs h2, .docs h3').each(function(i, el) {
 			var h = $(el),
-				t = h.html(),
+				t = h.text(),
 				id = t.toLowerCase().replace(/[\s\.\:]+/g, '-'),
 				li = $('<li><a href="#'+id+'">'+t+'</a></li>');
 
