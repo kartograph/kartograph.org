@@ -82,7 +82,7 @@ To remove a group of symbols from your map, simply call ``map.removeSymbols()``.
 
 ## Clustering Map Symbols
 
-To activate the symbol clustering you need to add two things to the symbol config: the name clustering technique (either ``k-means`` or ``noverlap`) and a function that aggregates data objects. See [this map](/showcase/clustering) for demonstration.
+To activate the symbol clustering you need to add two things to the symbol config: the name clustering technique (either ``k-means`` or ``noverlap``) and a function that aggregates data objects. See [this map](/showcase/clustering) for demonstration.
 
 
     function sumVisits(cities) {
@@ -101,5 +101,33 @@ To activate the symbol clustering you need to add two things to the symbol confi
         // name of clustering technique
         clustering: 'noverlap',
         // aggregation function
+        aggregate: sumVisits
+    });
+
+### Fine-tuning *k*-Means
+
+The *k*-Means clustering allows you to control the final number of clusters. The default is set to 64.
+
+    map.addSymbols({
+        // ...
+        clustering: 'k-means',
+        clusteringOpts: {
+            size: 16
+        },
+        aggregate: sumVisits
+    });
+
+
+### Fine-tuning noverlap
+
+In noverlap clustering you can control the ``tolerance`` to which overlapping is accepted (0.1 means we tolerate 10% overlapping of adjacent symbols). The parameter ``maxRatio`` let's you prevent overlapping of equally sized symbols. A value of 0.8 means that no symbols are grouped it the radius of the smaller symbol is larger than 80% of the radius of the larger symbol.
+
+    map.addSymbols({
+        // ...
+        clustering: 'noverlap',
+        clusteringOpts: {
+            tolerance: 0.1,
+            maxRatio: 0.8
+        },
         aggregate: sumVisits
     });

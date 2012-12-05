@@ -18,8 +18,6 @@ $script.ready(['kartograph', 'qtip'], function() {
 
         $.getJSON('uk-visits.json', function(cities) {
 
-            console.log(cities.length);
-
             function map(cont, clustering) {
 
                 var map = $K.map(cont);
@@ -113,7 +111,7 @@ $script.ready(['kartograph', 'qtip'], function() {
 
 <div class="uk-map">
     <div id="map0"></div>
-    <p><b>no clustering</b> — The first map shows the +500 symbols without clustering. London (2k visits) is completely covered by cities with only a few visitors.</p>
+    <p><b>no clustering</b> — The first map shows the +500 symbols without clustering. London (2k visits) is completely covered by hundreds of cities with only a few visitors. Local maxima such as Leeds and Manchester are hidden, too.</p>
 </div>
 
 <div class="uk-map">
@@ -125,4 +123,27 @@ $script.ready(['kartograph', 'qtip'], function() {
     <p><b>noverlap</b> — Here symbols are combined only if they overlap, as <a href="http://vis4.net/blog/posts/clean-your-symbol-maps/">described here</a>. This has the advantage of retaining details in regions with less symbols. The name is inspired by a <a href="https://gephi.org/plugins/noverlap/">Gephi plugin</a>.</p>
 </div>
 
-<p>See <a href="/docs/kartograph.js/symbols.html#clustering-map-symbols">documentation</a> for details how to use symbol clustering.</p>
+<h2>How to do it</h2>
+
+<p>To activate the symbol clustering you need to add two things to the symbol config: the name of clustering technique (either <code>k-means</code> or <code>noverlap</code>) and a function that aggregates data objects of the grouped symbols.</p>
+
+<pre><code>function sumVisits(cities) {
+    var total = 0;
+    $.each(cities, function(i, city) {
+        total += city.visits;
+    });
+    return { visits: total };
+}
+
+map.addSymbols({
+    type: Kartograph.Bubble,
+    data: cities,
+    location: function(city) { return [city.lon, city.lat]; },
+    radius: function(d) { return Math.sqrt(city.nb_visits); },
+    // name of clustering technique
+    clustering: 'noverlap',
+    // aggregation function
+    aggregate: sumVisits
+});</code></pre>
+
+<p>For more details on fine-tuning the symbol clustering, please look up the <a href="/docs/kartograph.js/symbols.html#clustering-map-symbols">documentation</a>.</p>
