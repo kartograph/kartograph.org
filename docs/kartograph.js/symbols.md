@@ -12,16 +12,15 @@ You can add symbols to a map using the ``map.addSymbols`` function. You need to 
 * ``data`` — an array of data objects of which each will be represented by a symbol
 * ``location`` — a function which returns an array [longitude, latitude]
 
+The following example adds exactly one label to the map:
 
     map.addSymbols({
-        type: Kartograph.Label,
-        data: myDataset,
-        location: function(d) { return [] },
-        text: function(d) { return 'Foo'; } 
+        type: $K.Label,
+        data: [{ name: 'Berlin', lon: 13.4, lat: 52.517 }],
+        location: function(d) { return [d.lon, d.lat] },
+        text: function(d) { return d.name; }
     });
 
-
-In the above example, ``myDataset`` could be an array or dictionary of items. Kartograph would create one symbol for each item.
 
 ## Symbol Types
 
@@ -61,7 +60,6 @@ See this example
 
 You can use the symbol API to add image marker to your map.
 
-### Create your own symbol type
 
 ## Sorting Symbols
 
@@ -82,4 +80,26 @@ To remove a group of symbols from your map, simply call ``map.removeSymbols()``.
     // remove all symbol groups
     map.removeSymbols();
 
-## Advanced Symbol Layouts
+## Clustering Map Symbols
+
+To activate the symbol clustering you need to add two things to the symbol config: the name clustering technique (either ``k-means`` or ``noverlap`) and a function that aggregates data objects. See [this map](/showcase/clustering) for demonstration.
+
+
+    function sumVisits(cities) {
+        var total = 0;
+        $.each(cities, function(i, city) {
+            total += city.visits;
+        });
+        return { visits: total };
+    }
+
+    map.addSymbols({
+        type: Kartograph.Bubble,
+        data: cities,
+        location: function(city) { return [city.lon, city.lat]; },
+        radius: function(d) { return Math.sqrt(city.nb_visits); },
+        // name of clustering technique
+        clustering: 'noverlap',
+        // aggregation function
+        aggregate: sumVisits
+    });
