@@ -118,11 +118,11 @@ $script.ready(['kartograph', 'qtip'], function() {
 
 <div class="uk-map">
     <div id="map1"></div>
-    <p><b><em>k</em>-means</b> — Symbols are combined using <a href="http://en.wikipedia.org/wiki/K-means_clustering"><em>k</em>-Means clustering</a>. Inspired by and uses implementation released along with <a href="http://polymaps.org/ex/cluster.html">this Polymaps example</a>.</p>
+    <p><b><em>k</em>-means</b> — Symbols are combined using <a href="http://en.wikipedia.org/wiki/K-means_clustering"><em>k</em>-Means clustering</a>. While the algorithm ensures a fixed number of symbols, it doesn't care about overlappings. Inspired by and uses implementation released along with <a href="http://polymaps.org/ex/cluster.html">this Polymaps example</a>.</p>
 </div>
 <div class="uk-map">
     <div id="map2"></div>
-    <p><b>noverlap</b> — Here simply all overlapping symbols are combined, as <a href="http://vis4.net/blog/posts/clean-your-symbol-maps/">described here</a>. The name is inspired by a <a href="https://gephi.org/plugins/noverlap/">Gephi plugin</a>.</p>
+    <p><b>noverlap</b> — Here symbols are combined only if they overlap, as <a href="http://vis4.net/blog/posts/clean-your-symbol-maps/">described here</a>. This has the advantage of retaining details in regions with less symbols. The name is inspired by a <a href="https://gephi.org/plugins/noverlap/">Gephi plugin</a>.</p>
 </div>
 
 <p>See <a href="/docs/kartograph.js/symbols.html#clustering-map-symbols">documentation</a> for details how to use symbol clustering.</p>
