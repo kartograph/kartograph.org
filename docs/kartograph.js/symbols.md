@@ -80,9 +80,10 @@ To remove a group of symbols from your map, simply call ``map.removeSymbols()``.
     // remove all symbol groups
     map.removeSymbols();
 
+
 ## Clustering Map Symbols
 
-To activate the symbol clustering you need to add two things to the symbol config: the name clustering technique (either ``k-means`` or ``noverlap``) and a function that aggregates data objects. See [this map](/showcase/clustering) for demonstration.
+In some cases where you have too many symbols to show, it makes sense to cluster symbols in order to preserve the overall readability of the map. To activate clustering you need to add two things to the symbol config: the name of clustering technique (either ``k-means`` or ``noverlap``) and a function that aggregates data objects of the grouped symbols. See [this map](/showcase/clustering) for demonstration.
 
 
     function sumVisits(cities) {
