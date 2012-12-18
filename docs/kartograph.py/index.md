@@ -215,6 +215,27 @@ Keeping the attributes (read: non-geometry columns) of your PostGIS table works 
 
 [How to use Kartograph.py to render nice SVG maps from OpenStreetMap data](/docs/kartograph.py/osm.html)
 
+## Simplifying map features
+
+To reduce the file size of your SVG, Kartograph supports topology-preserving simplification. The default algorithm is the [Visvalingam-Whyatt simplification](http://www2.dcs.hull.ac.uk/CISRG/publications/DPs/DP10/DP10.html), which has nicely explained by [Mike Bostock](http://bost.ocks.org/mike/simplify/).
+
+    "mylayer": {
+        "src": "countries.shp",
+        "simplify": 3
+    }
+    
+
+However, Kartograph also includes two other algorithms (``douglas-peucker`` and ``distance``) which you can use by providing the following dictionary:
+
+    "mylayer": {
+        "src": "countries.shp",
+        "simplify": {
+            "method": "douglas-peucker",
+            "tolerance": 10
+        }
+    }
+    
+The meaning of ``tolerance`` varies between the different algorithms, but in general it's the higher the tolerance, the stronger the simplification (and the smaller the file size).
 
 ## Joining features within a layer
 
