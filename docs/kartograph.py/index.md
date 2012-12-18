@@ -256,6 +256,31 @@ In the above example, the regions of Germany would be joined into the groups "ea
 
 ![joined polygon features](join.png)
 
+### Adding attributes to joined features
+
+There are two ways you can add attributes to joined features. You can define them per group-id, or use copy them from one of the source features.
+
+The first example shows how to copy an attribute from one source feature to the joined feature. Assuming we have a list of features with an attribute REGION_ID and REGION_NAME, which we want to join by region. This is how you include the region names as new attribute "name".
+
+    "join": {
+        "group-by": "REGION_ID",
+        "attributes": {
+            "name": "REGION_NAME"
+        }
+    }
+
+By passing a dictionary you can define new attribute values for each joined feature. The keys must be group ids (as defined by ``group-by`` column).
+
+    "join": {
+        "group-by": "REGION_ID",
+        "attributes": {
+            "name": {
+                "01": "Bordeaux",
+                "02": "Normandie"
+            }
+        }
+    }
+
 ## Layer Subtraction and Cropping
 
 Sometimes you need to subtract polygons from one layer from the polygons of another layer. One example use case is when you have state boundaries and lakes in different shapefiles. You can make Kartograph do this by setting the ``layer.subtract-from`` attribute to the id of the layer you want to subtract from. You can also subtract a layer from more than one other layers by providing an array of layer ids.
