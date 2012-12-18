@@ -40,7 +40,7 @@
 
 
 (function() {
-  var Aitoff, Azimuthal, BBox, Balthasart, Behrmann, BlurFilter, Bubble, CEA, CantersModifiedSinusoidalI, Circle, CohenSutherland, Conic, Cylindrical, EckertIV, EquidistantAzimuthal, Equirectangular, Filter, GallPeters, GlowFilter, GoodeHomolosine, Hatano, HoboDyer, HtmlLabel, Icon, Kartograph, LAEA, LCC, LabeledBubble, LatLon, Line, LinearScale, LogScale, LonLat, Loximuthal, MapLayer, MapLayerPath, Mercator, Mollweide, NaturalEarth, Nicolosi, Orthographic, PanAndZoomControl, Path, PieChart, Proj, PseudoConic, PseudoCylindrical, QuantileScale, REbraces, REcomment_string, REfull, REmunged, Robinson, Satellite, Scale, Sinusoidal, SqrtScale, StackedBarChart, Stereographic, SvgLabel, Symbol, SymbolGroup, View, WagnerIV, WagnerV, Winkel3, drawPieChart, filter, kartograph, log, map_layer_path_uid, munge, munged, parsedeclarations, resolve, restore, root, uid, warn, __point_in_polygon, __proj, __type, __verbose__, _base, _base1, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
+  var $, Aitoff, Azimuthal, BBox, Balthasart, Behrmann, BlurFilter, Bubble, CEA, CantersModifiedSinusoidalI, Circle, CohenSutherland, Conic, Cylindrical, EckertIV, EquidistantAzimuthal, Equirectangular, Filter, GallPeters, GlowFilter, GoodeHomolosine, Hatano, HoboDyer, HtmlLabel, Icon, Kartograph, LAEA, LCC, LabeledBubble, LatLon, Line, LinearScale, LogScale, LonLat, Loximuthal, MapLayer, MapLayerPath, Mercator, Mollweide, NaturalEarth, Nicolosi, Orthographic, PanAndZoomControl, Path, PieChart, Proj, PseudoConic, PseudoCylindrical, QuantileScale, REbraces, REcomment_string, REfull, REmunged, Robinson, Satellite, Scale, Sinusoidal, SqrtScale, StackedBarChart, Stereographic, SvgLabel, Symbol, SymbolGroup, View, WagnerIV, WagnerV, Winkel3, drawPieChart, filter, kartograph, log, map_layer_path_uid, munge, munged, parsedeclarations, resolve, restore, root, uid, warn, __point_in_polygon, __proj, __type, __verbose__, _base, _base1, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -50,7 +50,9 @@
 
   kartograph = root.$K = window.Kartograph = (_ref = root.Kartograph) != null ? _ref : root.Kartograph = {};
 
-  kartograph.version = "0.4.0";
+  kartograph.version = "0.4.1";
+
+  $ = root.jQuery;
 
   __verbose__ = false && (typeof console !== "undefined" && console !== null);
 
@@ -442,14 +444,16 @@
     };
 
     Kartograph.prototype.loadMap = function(mapurl, callback, opts) {
-      var me, _base2, _ref4;
+      var def, me, _base2, _ref4;
       me = this;
+      def = $.Deferred();
       me.clear();
       me.opts = opts != null ? opts : {};
       if ((_ref4 = (_base2 = me.opts).zoom) == null) {
         _base2.zoom = 1;
       }
       me.mapLoadCallback = callback;
+      me._loadMapDeferred = def;
       me._lastMapUrl = mapurl;
       if (me.cacheMaps && (kartograph.__mapCache[mapurl] != null)) {
         me._mapLoaded(kartograph.__mapCache[mapurl]);
@@ -464,6 +468,18 @@
           }
         });
       }
+      return def.promise();
+    };
+
+    Kartograph.prototype.setMap = function(svg, opts) {
+      var me, _base2, _ref4;
+      me = this;
+      me.opts = opts != null ? opts : {};
+      if ((_ref4 = (_base2 = me.opts).zoom) == null) {
+        _base2.zoom = 1;
+      }
+      me._lastMapUrl = 'string';
+      me._mapLoaded(svg);
     };
 
     Kartograph.prototype._mapLoaded = function(xml) {
@@ -479,6 +495,7 @@
         xml = $(xml);
       } catch (err) {
         warn('something went horribly wrong while parsing svg');
+        me._loadMapDeferred.reject('could not parse svg');
         return;
       }
       me.svgSrc = xml;
@@ -500,7 +517,12 @@
       zoom = (_ref8 = me.opts.zoom) != null ? _ref8 : 1;
       me.viewBC = new kartograph.View(me.viewAB.asBBox(), vp.width * zoom, vp.height * zoom, padding, halign, valign);
       me.proj = kartograph.Proj.fromXML($('proj', $view)[0]);
-      return me.mapLoadCallback(me);
+      if (me.mapLoadCallback != null) {
+        me.mapLoadCallback(me);
+      }
+      if (me._loadMapDeferred != null) {
+        me._loadMapDeferred.resolve(me);
+      }
     };
 
     Kartograph.prototype.addLayer = function(id, opts) {
@@ -4339,11 +4361,10 @@
 
       this.kMeans = __bind(this.kMeans, this);
 
-      var SymbolType, d, dly, i, id, l, layer, maxdly, nid, node, optional, p, required, s, sortBy, sortDir, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _ref10, _ref11, _ref6, _ref7, _ref8, _ref9,
-        _this = this;
+      var SymbolType, d, dly, i, id, l, layer, maxdly, nid, node, optional, p, required, s, sortBy, sortDir, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _ref10, _ref11, _ref6, _ref7, _ref8, _ref9;
       me = this;
       required = ['data', 'location', 'type', 'map'];
-      optional = ['filter', 'tooltip', 'click', 'delay', 'sortBy', 'clustering', 'aggregate', 'clusteringOpts'];
+      optional = ['filter', 'tooltip', 'click', 'delay', 'sortBy', 'clustering', 'aggregate', 'clusteringOpts', 'mouseenter', 'mouseleave'];
       for (_i = 0, _len = required.length; _i < _len; _i++) {
         p = required[_i];
         if (opts[p] != null) {
@@ -4442,21 +4463,45 @@
           me.initTooltips();
         }
       }
-      if (__type(me.click) === "function") {
-        _ref10 = me.symbols;
-        for (_n = 0, _len5 = _ref10.length; _n < _len5; _n++) {
-          s = _ref10[_n];
-          _ref11 = s.nodes();
-          for (_o = 0, _len6 = _ref11.length; _o < _len6; _o++) {
-            node = _ref11[_o];
-            node.symbol = s;
-            $(node).click(function(e) {
-              e.stopPropagation();
-              return me.click(e.target.symbol.data);
-            });
-          }
+      _ref10 = me.symbols;
+      for (_n = 0, _len5 = _ref10.length; _n < _len5; _n++) {
+        s = _ref10[_n];
+        _ref11 = s.nodes();
+        for (_o = 0, _len6 = _ref11.length; _o < _len6; _o++) {
+          node = _ref11[_o];
+          node.symbol = s;
         }
       }
+      $.each(['click', 'mouseenter', 'mouseleave'], function(i, evt) {
+        var _len7, _p, _ref12, _results;
+        if (__type(me[evt]) === "function") {
+          _ref12 = me.symbols;
+          _results = [];
+          for (_p = 0, _len7 = _ref12.length; _p < _len7; _p++) {
+            s = _ref12[_p];
+            _results.push((function() {
+              var _len8, _q, _ref13, _results1,
+                _this = this;
+              _ref13 = s.nodes();
+              _results1 = [];
+              for (_q = 0, _len8 = _ref13.length; _q < _len8; _q++) {
+                node = _ref13[_q];
+                _results1.push($(node)[evt](function(e) {
+                  var tgt;
+                  tgt = e.target;
+                  while (!tgt.symbol) {
+                    tgt = $(tgt).parent().get(0);
+                  }
+                  e.stopPropagation();
+                  return me[evt](tgt.symbol.data, tgt.symbol);
+                }));
+              }
+              return _results1;
+            }).call(this));
+          }
+          return _results;
+        }
+      });
       me.map.addSymbolGroup(me);
     }
 
@@ -5002,13 +5047,14 @@ function kdtree() {
 
       this.overlaps = __bind(this.overlaps, this);
 
-      var me, _ref6, _ref7, _ref8;
+      var me, _ref6, _ref7;
       me = this;
       Bubble.__super__.constructor.call(this, opts);
       me.radius = (_ref6 = opts.radius) != null ? _ref6 : 4;
-      me.style = (_ref7 = opts.style) != null ? _ref7 : '';
+      me.style = opts.style;
+      me.attrs = opts.attrs;
       me.title = opts.title;
-      me["class"] = (_ref8 = opts["class"]) != null ? _ref8 : 'bubble';
+      me["class"] = (_ref7 = opts["class"]) != null ? _ref7 : 'bubble';
     }
 
     Bubble.prototype.overlaps = function(bubble) {
@@ -5045,8 +5091,15 @@ function kdtree() {
         cy: me.y,
         r: me.radius
       });
-      path.node.setAttribute('style', me.style);
-      path.node.setAttribute('class', me["class"]);
+      if (me.attrs != null) {
+        path.attr(me.attrs);
+      }
+      if (me.style != null) {
+        path.node.setAttribute('style', me.style);
+      }
+      if (me["class"] != null) {
+        path.node.setAttribute('class', me["class"]);
+      }
       if (me.title != null) {
         path.attr('title', me.title);
       }
@@ -5070,7 +5123,7 @@ function kdtree() {
 
   })(Symbol);
 
-  Bubble.props = ['radius', 'style', 'class', 'title'];
+  Bubble.props = ['radius', 'style', 'class', 'title', 'attrs'];
 
   Bubble.layers = [];
 
@@ -5344,20 +5397,23 @@ function kdtree() {
 
       this.render = __bind(this.render, this);
 
-      var me;
+      var me, _ref6, _ref7;
       me = this;
       LabeledBubble.__super__.constructor.call(this, opts);
-      me.labelattrs = opts.labelattrs;
+      me.labelattrs = (_ref6 = opts.labelattrs) != null ? _ref6 : {};
       me.buffer = opts.buffer;
+      me.center = (_ref7 = opts.center) != null ? _ref7 : true;
     }
 
     LabeledBubble.prototype.render = function(layers) {
       var me;
       me = this;
-      if (me.buffer) {
-        me.bufferlabel = me.layers.mapcanvas.text(me.x, me.y, me.title);
+      if ((me.title != null) && String(me.title).trim() !== '') {
+        if (me.buffer) {
+          me.bufferlabel = me.layers.mapcanvas.text(me.x, me.y, me.title);
+        }
+        me.label = me.layers.mapcanvas.text(me.x, me.y, me.title);
       }
-      me.label = me.layers.mapcanvas.text(me.x, me.y, me.title);
       LabeledBubble.__super__.render.call(this, layers);
       return me;
     };
@@ -5366,33 +5422,35 @@ function kdtree() {
       var attrs, me, vp, x, y;
       me = this;
       LabeledBubble.__super__.update.apply(this, arguments);
-      vp = me.map.viewport;
-      attrs = me.labelattrs;
-      if (attrs == null) {
-        attrs = {};
+      if (me.label != null) {
+        vp = me.map.viewport;
+        attrs = $.extend({}, me.labelattrs);
+        x = me.x;
+        y = me.y;
+        if (me.center) {
+          y -= 0;
+        } else if (x > vp.width * 0.5) {
+          attrs['text-anchor'] = 'end';
+          x -= me.radius + 5;
+        } else if (x < vp.width * 0.5) {
+          attrs['text-anchor'] = 'start';
+          x += me.radius + 5;
+        }
+        attrs['x'] = x;
+        attrs['y'] = y;
+        if (me.buffer) {
+          me.bufferlabel.attr(attrs);
+          me.bufferlabel.attr({
+            stroke: '#fff',
+            fill: '#fff',
+            'stroke-linejoin': 'round',
+            'stroke-linecap': 'round',
+            'stroke-width': 6
+          });
+        }
+        me.label.attr(attrs);
+        me.label.toFront();
       }
-      x = me.x;
-      y = me.y;
-      if (x > vp.width * 0.5) {
-        attrs['text-anchor'] = 'end';
-        x -= me.radius + 5;
-      } else if (x < vp.width * 0.5) {
-        attrs['text-anchor'] = 'start';
-        x += me.radius + 5;
-      }
-      attrs['x'] = x;
-      attrs['y'] = y;
-      if (me.buffer) {
-        me.bufferlabel.attr(attrs);
-        me.bufferlabel.attr({
-          stroke: '#fff',
-          fill: '#fff',
-          'stroke-linejoin': 'round',
-          'stroke-linecap': 'round',
-          'stroke-width': 6
-        });
-      }
-      me.label.attr(attrs);
       return me;
     };
 
@@ -5406,6 +5464,12 @@ function kdtree() {
       var me, nodes;
       me = this;
       nodes = LabeledBubble.__super__.nodes.apply(this, arguments);
+      if (me.label) {
+        nodes.push(me.label.node);
+      }
+      if (me.bufferlabel) {
+        nodes.push(me.bufferlabel.node);
+      }
       return nodes;
     };
 
@@ -5413,7 +5477,7 @@ function kdtree() {
 
   })(Bubble);
 
-  LabeledBubble.props = ['radius', 'style', 'class', 'title', 'labelattrs', 'buffer'];
+  LabeledBubble.props = ['radius', 'style', 'class', 'title', 'labelattrs', 'buffer', 'center', 'attrs'];
 
   LabeledBubble.layers = [];
 

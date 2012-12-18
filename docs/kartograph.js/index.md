@@ -46,9 +46,6 @@ Now you want to load your SVG using ``loadMap(map_url, callback)``.
 	});
 
 
-**Note:** Due to cross-domain access restrictions, you probably need to store your SVG files on the same domain as your map.
-
-
 In case that your callback function lives outside the scope of your map the map instance is passed to the callback function as the first argument.
 
 
@@ -60,6 +57,14 @@ In case that your callback function lives outside the scope of your map the map 
 
 **Note:** If you call ``loadMap`` again, any existing map content will be removed.
 
+### Deferred syntax
+
+Kartograph now supports the [Deferred object syntax](http://api.jquery.com/category/deferred-object/), too.
+
+    var mymap = Kartograph.map('#map');
+    mymap.loadMap('mymap.svg').done(function() {
+        // do something with your map
+    });
 
 ### Advanced options
 
@@ -74,6 +79,14 @@ The following options are available:
 * **halign**: Horizontal alignment of the map inside the map container. Possible values are ``left``, ``center`` and ``right``. Default is ``center``.
 * **valign**: Vertical alignment of the map inside the map container. Possible values are ``top``, ``center``, ``bottom``. Default is ``center``.
 * **zoom**: Zoom level. 1 = no zoom
+
+### Passing SVG as string
+
+In some situations you might not want to load SVGs. As of 0.4.1 you can pass SVG directly as string via ``setMap()``. You don't need to pass a callback function here.
+
+    mymap.setSVG(svgString);
+    
+This allows you to handle map loading yourself, for instance in situations where you need to load maps from other servers (cross-origin).
 
 ## Displaying Map Layers
 
