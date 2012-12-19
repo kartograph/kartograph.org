@@ -7,10 +7,24 @@ title: Installing Kartograph.py on Mac OS X
 
 # Installing Kartograph.py on Mac OS X
 
-    sudo pip install python-shapely
-    sudo pip install python-gdal
-    sudo pip install python-pyproj
-    sudo pip install https://github.com/kartograph/kartograph.py/zipball/master
+Before installing Kartograph, please install the GDAL Complete Framework as provided by William Kyngesburye on kyngchaos.com: [http://www.kyngchaos.com/software/frameworks](http://www.kyngchaos.com/software/frameworks). 
+
+Then install the required Python packages. The recommended way is to this in a [virtualenv](http://www.virtualenv.org/en/latest/). Otherwise you probably need to ``sudo`` every pip call.
+
+    pip install -r https://raw.github.com/kartograph/kartograph.py/master/requirements.txt
+    
+Some users reported that the install of the ``gdal`` package fails. The way around this is to use the pre-compiled package included in GDAL Complete Framework. You need to include them into your ``PYTHONPATH``. This can be done either in the ``activate`` script of your virtualenv or in your shell login script.
+
+    export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.9/Python/2.7/site-packages
+
+Use ``requirements-nogdal.txt`` to install all required packages except ``gdal``.
+
+    pip install -r https://raw.github.com/kartograph/kartograph.py/master/requirements-nogdal.txt
+    
+Then you should be ready to install Kartograph.    
+    
+    pip install https://github.com/kartograph/kartograph.py/zipball/master
+
 
 # Test Installation
 
@@ -45,7 +59,6 @@ There are more tests included in the Kartograph.py repository on Github.
 
 # Troubleshooting
 
-* Before installing Kartograph, install the complete GDAL Framework as provided by William Kyngesburye on kyngchaos.com: [http://www.kyngchaos.com/software/frameworks](http://www.kyngchaos.com/software/frameworks). This will add a lot libraries to your system that are needed in order to compile shapely.
 * Speaking about shapely, this [installation guide](http://tumblr.pauladamsmith.com/post/17663153373/howtoinstallgdalshapely) might help you getting it running on Mac OS.
 * During the install Python will need to compile packages, make sure that you have a working compiler on your system. Installing XCode with the Command line Utils helps.
 
