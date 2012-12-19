@@ -17,7 +17,7 @@ Kartograph.py needs a couple of Python packages. You can install them all at onc
 
     pip install -r https://raw.github.com/kartograph/kartograph.py/master/requirements.txt
     
-### Alternative if GDAL install fails
+### Alternative way if GDAL install fails
     
 Some users reported that the install of the [GDAL](http://pypi.python.org/pypi/GDAL/1.9.1) package fails on OSX. The way around this issue is to use the pre-compiled package included in GDAL Complete Framework, which you already installed.
 
@@ -25,7 +25,7 @@ You need to include their location in your ``PYTHONPATH`` environment variable. 
 
     export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.9/Python/2.7/site-packages
 
-Then use [``requirements-nogdal.txt``](https://raw.github.com/kartograph/kartograph.py/master/requirements-nogdal.txt) to install all required packages except ``GDAL``.
+Then use [requirements-nogdal.txt](https://raw.github.com/kartograph/kartograph.py/master/requirements-nogdal.txt) to install all required packages except ``GDAL``.
 
     pip install -r https://raw.github.com/kartograph/kartograph.py/master/requirements-nogdal.txt
 
