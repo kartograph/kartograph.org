@@ -9,17 +9,23 @@ title: Installing Kartograph.py on Mac OS X
 
 Before installing Kartograph, please install the GDAL Complete Framework as provided by William Kyngesburye on kyngchaos.com: [http://www.kyngchaos.com/software/frameworks](http://www.kyngchaos.com/software/frameworks). 
 
-Then install the required Python packages. The recommended way is to this in a [virtualenv](http://www.virtualenv.org/en/latest/). Otherwise you probably need to ``sudo`` every pip call.
+### Install required Python packages
+
+Then install the required Python packages. The recommended way is to do this in a [virtualenv](http://www.virtualenv.org/en/latest/). Otherwise you need to ``sudo`` every **pip** call.
 
     pip install -r https://raw.github.com/kartograph/kartograph.py/master/requirements.txt
     
-Some users reported that the install of the ``gdal`` package fails. The way around this is to use the pre-compiled package included in GDAL Complete Framework. You need to include them into your ``PYTHONPATH``. This can be done either in the ``activate`` script of your virtualenv or in your shell login script.
+### Alternative if GDAL install fails
+    
+Some users reported that the install of the [gdal](http://pypi.python.org/pypi/GDAL/1.9.1) package fails. The way around this is to use the pre-compiled package included in GDAL Complete Framework you already installed. You need to include them in your ``PYTHONPATH``. This can be done either in the ``activate`` script of your virtualenv or in your shell startup file (``.bashrc``, ``.profile``, etc.).
 
     export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.9/Python/2.7/site-packages
 
-Use ``requirements-nogdal.txt`` to install all required packages except ``gdal``.
+Then use ``requirements-nogdal.txt`` to install all required packages except ``gdal``.
 
     pip install -r https://raw.github.com/kartograph/kartograph.py/master/requirements-nogdal.txt
+
+### Install Kartograph.py
     
 Then you should be ready to install Kartograph.    
     
