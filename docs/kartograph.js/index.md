@@ -155,6 +155,15 @@ By passing a function instead of static values you can apply conditional styling
 
 **Hint:** You can also use [SVG filter](#filter) to style your maps.
 
+### Changing drawing order of paths in a layer
+
+You can change the order in which the paths of a map layer are drawn using ``sort()``. It takes a callback function which should return the value to sort by (either a string or number).
+
+    map.getLayer('mylayer').sort(function(data) {
+        // sort paths by name
+        return data.name;
+    });
+
 
 ## Events
 
