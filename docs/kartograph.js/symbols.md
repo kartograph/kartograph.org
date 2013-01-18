@@ -3,6 +3,9 @@ layout: docs
 title: Kartograph.js Docs — Symbol Maps
 ---
 
+*This documentation is work in progress. If you want to help improving it, you're invited to [fork it on Github](https://github.com/kartograph/kartograph.org/blob/master/docs/kartograph.js/symbols.md).*
+
+
 # Symbol Maps
 
 You can add symbols to a map using the ``map.addSymbols`` function. You need to provide a config dictionary filled with at least the following properties:
