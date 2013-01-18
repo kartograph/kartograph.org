@@ -71,6 +71,13 @@ Sometimes it's useful to control the order in which symbols are drawn to the map
         radius: function(d) { return Math.sqrt(d.value); }
     });
 
+You can sort by symbol data by passing a function that returns a numerical value or string:
+
+    map.addSymbols({
+        type: Kartograph.Bubble,
+        sortBy: function(d) { return d.someVar; },
+    });
+
 ## Removing Symbols
 
 To remove a group of symbols from your map, simply call ``map.removeSymbols()``. If you added multiple symbol layers, you can pass and index to specify the one to remove. Otherwise, all symbols will be removed.
@@ -132,3 +139,13 @@ In noverlap clustering you can control the ``tolerance`` to which overlapping is
         },
         aggregate: sumVisits
     });
+
+## Dorling cartograms
+
+See [Dorling cartogram tutorial](doring.html) for more information.
+
+    symbols = map.addSymbols({
+        // ...
+        type: Kartograph.Bubble
+    });
+    Kartograph.dorlingLayout(symbols);

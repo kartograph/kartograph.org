@@ -289,7 +289,7 @@ On top of that, each symbol type has some additional properties (such as ``radiu
         text: function(d) { return d.name; }
     });
 
-To learn more about symbol maps, please check out the [symbol map documentation](/docs/kartograph.js/symbols.md).
+To learn more about symbol maps, please check out the [symbol map documentation](/docs/kartograph.js/symbols/).
 
 
 ## Dot-Grids
