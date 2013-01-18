@@ -3,7 +3,7 @@ layout: docs
 title: Kartograph.js Docs — Symbol Maps
 ---
 
-*this is work in progress*
+*This tutorial is work in progress. If you want to help improving this, you're invited to [fork it on Github](https://github.com/kartograph/kartograph.org/blob/master/docs/kartograph.js/dorling.md)*
 
 # Creating Dorling Cartograms
 
