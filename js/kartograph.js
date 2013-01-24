@@ -3674,10 +3674,13 @@
     });
   };
 
-  MapLayer.prototype.applyTexture = function(url, filt) {
+  MapLayer.prototype.applyTexture = function(url, filt, defCol) {
     var lp, me, _i, _len, _ref6, _results;
     if (filt == null) {
       filt = false;
+    }
+    if (defCol == null) {
+      defCol = '#000';
     }
     me = this;
     filter.__patternFills += 1;
@@ -3690,7 +3693,7 @@
           fill: 'url(' + url + ')'
         }));
       } else {
-        _results.push(void 0);
+        _results.push(lp.svgPath.attr('fill', defCol));
       }
     }
     return _results;
