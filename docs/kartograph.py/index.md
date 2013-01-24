@@ -56,6 +56,9 @@ For map styling you can use the ``--style`` / ``-s`` option;
     # on windows
     set KARTOGRAPH_DATA=c:\path\to\my\shapefiles;c:\another\path
 
+As of version 0.6.3 you can force Kartograph to pretty-print the SVG using ``--pretty-print`` or ``-P``.
+
+
 ### Using Kartograph.py as Python module
 
 The second way is to include Kartograph in a Python script. You could
@@ -63,7 +66,7 @@ The second way is to include Kartograph in a Python script. You could
     from kartograph import Kartograph
     K = Kartograph()
     K.generate(config, outfile='mymap.svg')
-    
+
 The following chapters will cover the details of the map configuration syntax. The example configurations are shown in JSON format.
 
 ## Adding Map Layers
