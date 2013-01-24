@@ -9,6 +9,5 @@ Make this your document root and it should look fine.
 
 You can also run it without a webserver using
 
-```
 jekyll --server
-```
+
