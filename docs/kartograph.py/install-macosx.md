@@ -42,8 +42,8 @@ Download the 1:50m Admin 0 Countries shapefile from Natural Earth into a newly c
 
     mkdir ~/kartograph-test
     cd ~/kartograph-test;
-    wget http://www.nacis.org/naturalearth/50m/cultural/50m-admin-0-countries.zip
-    unzip 50m-admin-0-countries.zip
+    wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip
+    unzip ne_50m_admin_0_countries.zip
 
 
 Create a very basic map configuration by creating a new text file named "world.json" and paste the following content into it:
