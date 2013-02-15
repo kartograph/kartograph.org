@@ -54,17 +54,33 @@
 
   $ = root.jQuery;
 
-  __verbose__ = false && (typeof console !== "undefined" && console !== null);
+  __verbose__ = false;
 
   warn = function(s) {
     if (__verbose__) {
-      return console.warn('kartograph (' + kartograph.version + '): ', s);
+      try {
+        return console.warn.apply(console, arguments);
+      } catch (e) {
+        try {
+          return opera.postError.apply(opera, arguments);
+        } catch (e) {
+          return alert(Array.prototype.join.call(arguments, ' '));
+        }
+      }
     }
   };
 
   log = function(s) {
     if (__verbose__) {
-      return console.log('kartograph (' + kartograph.version + '): ', s);
+      try {
+        return console.log.apply(console, arguments);
+      } catch (e) {
+        try {
+          return opera.postError.apply(opera, arguments);
+        } catch (e) {
+          return alert(Array.prototype.join.call(arguments, ' '));
+        }
+      }
     }
   };
 
@@ -616,7 +632,12 @@
       return null;
     };
 
-    Kartograph.prototype.onLayerEvent = function(event, callback, layerId) {};
+    Kartograph.prototype.onLayerEvent = function(event, callback, layerId) {
+      var me;
+      me = this;
+      me.getLayer(layerId).on(event, callback);
+      return me;
+    };
 
     Kartograph.prototype.addMarker = function(marker) {
       var me, xy;
@@ -2339,8 +2360,8 @@
       }
       phi = s.deg(phi - s.RC1 * i);
       i *= 4;
-      x = s._poly(s.X, i, phi) * s.FXC * lplam;
-      y = s._poly(s.Y, i, phi) * s.FYC;
+      x = 1000 * s._poly(s.X, i, phi) * s.FXC * lplam;
+      y = 1000 * s._poly(s.Y, i, phi) * s.FYC;
       if (lpphi < 0.0) {
         y = -y;
       }
@@ -4862,8 +4883,11 @@
       }
     };
 
-    SymbolGroup.prototype.update = function(opts) {
+    SymbolGroup.prototype.update = function(opts, animate) {
       var p, s, _i, _j, _len, _len1, _ref6, _ref7;
+      if (animate == null) {
+        animate = false;
+      }
       me = this;
       _ref6 = me.symbols;
       for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
@@ -4875,7 +4899,7 @@
             s[p] = me._evaluate(opts[p], s.data);
           }
         }
-        s.update();
+        s.update(animate);
       }
       return me;
     };
@@ -5201,17 +5225,25 @@ function kdtree() {
       return me;
     };
 
-    Bubble.prototype.update = function() {
-      var me, path;
+    Bubble.prototype.update = function(animate) {
+      var attrs, me, path;
+      if (animate == null) {
+        animate = false;
+      }
       me = this;
       path = me.path;
-      path.attr({
+      attrs = {
         cx: me.x,
         cy: me.y,
         r: me.radius
-      });
+      };
       if (me.attrs != null) {
-        path.attr(me.attrs);
+        attrs = $.extend(attrs, me.attrs);
+      }
+      if (!animate) {
+        path.attr(attrs);
+      } else {
+        path.animate(attrs, 1000);
       }
       if (me.style != null) {
         path.node.setAttribute('style', me.style);

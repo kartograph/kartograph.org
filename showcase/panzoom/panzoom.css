@@ -1,0 +1,10 @@
+
+
+
+#map {
+    height: 700px;
+}
+
+#mapControls { position: absolute; left: 15px; top: 15px; width: 29px; z-index: 200; }
+#mapControls #up { background: url(iconUp.png) no-repeat center top; display: block; height: 26px; width: 29px; }
+#mapControls #down { background: url(iconDown.png) no-repeat center top; display: block; height: 27px; width: 29px; }
