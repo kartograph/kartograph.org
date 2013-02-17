@@ -7,7 +7,6 @@ toc:
 
 # Kartograph.js Documentation
 
-*This documentation is work in progress. If you want to help improving it, you're invited to [fork it on Github](https://github.com/kartograph/kartograph.org/blob/master/docs/kartograph.js/index.md).*
 
 ## Getting started
 
