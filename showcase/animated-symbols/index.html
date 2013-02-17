@@ -1,0 +1,98 @@
+---
+layout: showcase
+title: Animated Symbols
+prev: dotgrid
+next: 3d
+---
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/raphael.min.js"></script>
+<script type="text/javascript" src="/js/kartograph.min.js"></script>
+
+<script type="text/javascript">
+
+	$(function() {
+		var map, c, scale, updateMap, symbols,
+			key = 'ViolentCrime2011',
+			maxRad = 40;
+
+		c = $('#map');
+		c.height(c.width()*.65);
+
+		map = window.m = $K.map('#map');
+
+		map.loadMap('../bubbles/map-usa.svg', function() {
+			map.addLayer('usa', {
+				styles: {
+					fill: '#ddd',
+					stroke: '#fff'
+				}
+			});
+
+			$.getJSON('../bubbles/us-crime-cities.json', function(crimeCities) {
+
+				crimeCities = crimeCities.sort(function(a,b) {return a.Population - b.Population;}).slice(0, 100);
+
+				$.each(crimeCities, function(i,city) {
+					$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
+						$.each(['2011','2010'], function(i,yr) {
+							city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
+						});
+					});
+				});
+
+				scale = $K.scale.linear(crimeCities, key);
+				colscale = new chroma.Ramp();
+
+				function symbolAttrs(d) {
+					return {
+						r: Math.sqrt(scale(d[key]))*maxRad,
+						stroke: '#fff',
+						fill: colscale.getColor(scale(d[key])),
+						'fill-opacity': 0.3
+					};
+				}
+
+				symbols = new $K.SymbolGroup({
+					map: map,
+					data: crimeCities,
+					location: function(d) { return d.ll },
+					type: $K.Bubble,
+					attrs: symbolAttrs
+				});
+
+				updateMap = function() {
+					key = $('.dataset.btn-primary').data('val')
+						+ $('.year.btn-primary').html()
+						+ $('.type.btn-primary').data('val');
+					scale = $K.scale.linear(crimeCities, key);
+					maxRad = $('.type.btn-primary').data('maxrad');
+					symbols.update({
+						attrs: symbolAttrs
+					}, true);
+				}
+			});
+		});
+
+		$('.btn').click(function(event) {
+			var tgt = $(event.target), par = tgt.parent();
+			$('.btn', par).removeClass('btn-primary');
+			tgt.addClass('btn-primary');
+			updateMap();
+		});
+	});
+
+</script>
+
+<div id="map"></div>
+<div class="btn-group" style="display:inline-block">
+	<button class="dataset btn-large btn btn-primary" data-val="ViolentCrime">Violence</button>
+	<button class="dataset btn-large btn" data-val="Rape">Rape</button>
+	<button class="dataset btn-large btn" data-val="Murder">Murder</button>
+</div><div class="btn-group" style="display:none">
+	<button class="year btn btn-primary">2011</button>
+	<button class="year btn">2010</button>
+</div><div class="btn-group" style="display:none">
+	<button class="type btn" data-val="" data-maxrad="50">Quantity</button>
+	<button class="type btn btn-primary" data-val="Rate" data-maxrad="40">Density</button>
+</div>
