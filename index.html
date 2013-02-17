@@ -4,7 +4,17 @@ title: Kartograph – rethink mapping
 #headline: Goodbye, Mercator!
 #tagline: Nope, that's not the true size of Greenland..
 #headbg: /img/robinson.jpg
-showcase: ['eastcoast', 'italia', 'choropleth', 'symbols', 'clustering', 'charts', 'dotgrid', '3d', 'projections']
+showcase:
+ - animated-symbols
+ - italia
+ - choropleth
+ - symbols
+ - clustering
+ - charts
+ - dotgrid
+ - 3d
+ - projections
+ - eastcoast
 toc:
    API Docs:
       - ['docs/kartograph.py/', 'Kartograph.py']
@@ -71,7 +81,8 @@ toc:
 {% for item in page.showcase %}
     <li class="span3">
         <a href="/showcase/{{ item }}/" class="thumbnail">
-            <img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />
+            <img style="display:inline-block;background:url(/showcase/{{ item }}/t.png) no-repeat; width:260px; height:180px;border-radius:3px" src="blank" />
+            <!-- <img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />-->
         </a>
     </li>
 {% endfor %}
