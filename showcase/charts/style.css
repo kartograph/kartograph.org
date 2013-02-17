@@ -1,6 +1,6 @@
 .map-container { position: relative; }
 #map-overlay {
-    position: absolute; top:20px; left:0; width: 100%; z-index: 1000; height: 50px;
+    position: absolute; top:0px; left:0; width: 100%; z-index: 1000; height: 50px;
     background-image: linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
     background-image: -o-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);
     background-image: -moz-linear-gradient(bottom, rgba(255,255,255,0) 0%, rgb(255,255,255) 100%);

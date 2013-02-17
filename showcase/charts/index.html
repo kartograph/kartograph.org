@@ -1,89 +1,66 @@
 ---
 layout: showcase
 title: Chart Maps
-jsplugins:
-    csv: '/js/jquery.csv.js'
 ---
 
+<script type="text/javascript" src="/js/jquery.csv.js"></script>
 <script type="text/javascript">
 
-$script.ready(['kartograph', 'csv'], function() {
+$(function() {
+    var map, updateMap, symbols,
+        mc = $('#map');
 
-    $(function() {
-        var map, updateMap, symbols,
-            mc = $('#map');
+    map = $K.map('#map');
 
-        mc.height(mc.width()*.8);
+    map.loadCSS('style.css', function() {
 
-        map = $K.map('#map');
+        map.loadMap('spain.svg', function() {
+            map.addLayer('context');
+            map.addLayer('spain', { key: 'nuts', title: function(d) {
+                return d.nuts
+            } });
 
-        map.loadCSS('style.css', function() {
+            $.get('unemployment-es.csv', function(data) {
+                data = $.parseCSV(data);
 
-            map.loadMap('spain.svg', function() {
-                map.addLayer('context');
-                map.addLayer('spain', { key: 'nuts', title: function(d) {
-                    return d.nuts
-                } });
+                updateMap = function() {
+                    var scale,
+                        prop = $('.gender.btn-primary').data('val')+'-'+$('.age.btn-primary').data('val'),
+                        type = $('.chart.btn-primary').data('val');
 
-                $.get('unemployment-es.csv', function(data) {
-                    data = $.parseCSV(data);
+                    scale = $K.scale.linear(data.rows, 'AREA');
 
-                    updateMap = function() {
-                        var scale,
-                            prop = $('.gender.btn-primary').data('val')+'-'+$('.age.btn-primary').data('val'),
-                            type = $('.chart.btn-primary').data('val');
+                    if (symbols) symbols.remove();
 
-                        scale = $K.scale.linear(data.rows, 'AREA');
+                    symbols = map.addSymbols({
+                        data: data.rows,
+                        type: $K[type],
+                        colors: ['#1f68b4', '#aaceff'],
+                        border: '#fff',
+                        values: function(d) { return [d[prop],100-d[prop]] },
+                        location: function(d) { return 'spain.'+d.GEO; },
+                        radius: function(d) { return Math.max(8, Math.sqrt(scale(d.AREA))*35) }
+                    });
 
-                        if (symbols) symbols.remove();
+                };
 
-                        symbols = map.addSymbols({
-                            data: data.rows,
-                            type: $K[type],
-                            colors: ['#1f68b4', '#aaceff'],
-                            border: '#fff',
-                            values: function(d) { return [d[prop],100-d[prop]] },
-                            location: function(d) { return 'spain.'+d.GEO; },
-                            radius: function(d) { return Math.max(8, Math.sqrt(scale(d.AREA))*35) }
-                        });
-
-
-                        /* the same as choropleth
-                        var colorscale;
-                        colorscale = new chroma.ColorScale({
-                            colors: chroma.brewer.YlGnBu,
-                            limits: chroma.limits(data.rows, 'e', 7, prop)
-                        });
-                        map.choropleth({
-                            data: data.rows,
-                            key: 'GEO',
-                            colors: function(d) {
-                                if (d == null) return '#fff';
-                                return colorscale.getColor(d[prop]);
-                            },
-                            duration: 300
-                        });
-                        */
-                    };
-
-                    updateMap();
-                });
+                updateMap();
             });
         });
+    });
 
-        $('.btn').click(function(event) {
-            var tgt = $(event.target), par = tgt.parent();
-            $('.btn', par).removeClass('btn-primary');
-            tgt.addClass('btn-primary');
-            updateMap();
-        });
+    $('.btn').click(function(event) {
+        var tgt = $(event.target), par = tgt.parent();
+        $('.btn', par).removeClass('btn-primary');
+        tgt.addClass('btn-primary');
+        updateMap();
     });
 });
 </script>
 
 <div class="map-container">
     <div id="map-overlay"></div>
-    <div id="map"></div>
+    <div id="map" style="height:500px;margin-bottom:20px"></div>
 </div>
 <div class="row">
     <div class="span4 content">
@@ -94,21 +71,29 @@ $script.ready(['kartograph', 'csv'], function() {
         This map shows how unemployment rates in Spain.
         </p>
     </div>
-    <div class="span3">
-        <p>
-            <label>Gender: </label>
-            <a class="gender btn btn-primary" data-val="T">Total</a>
-            <a class="gender btn" data-val="M">Male</a>
-            <a class="gender btn" data-val="F">Female</a>
-        </p>
-        <p> <label>Age:</label>
-            <a class="age btn btn-primary" data-val="Y15-24">15-24</a>
-            <a class="age btn" data-val="Y-GE25">25+</a>
-        </p>
-        <p>
-            <label>Chart: </label>
-            <a class="chart btn btn-primary" data-val="PieChart">Pie</a>
-            <a class="chart btn" data-val="StackedBarChart">Bar</a>
-        </p>
+    <div class="span3" style="position:relative">
+
+        <div >
+            <label style="width:80px;vertical-align:text-bottom;display:inline-block">Gender: </label>
+            <div class="btn-group" style="display:inline-block">
+                <button class="gender btn btn-primary" data-val="T">Total</button>
+                <button class="gender btn" data-val="M">Male</button>
+                <button class="gender btn" data-val="F">Female</button>
+            </div>
+        </div>
+        <div >
+            <label style="width:80px;vertical-align:text-bottom;display:inline-block">Age:</label>
+            <div class="btn-group" style="display:inline-block">
+                <button class="age btn btn-primary" data-val="Y15-24">15-24</button>
+                <button class="age btn" data-val="Y-GE25">25+</button>
+            </div>
+        </div>
+        <div>
+            <label style="width:80px;vertical-align:text-bottom;display:inline-block">Chart: </label>
+            <div class="btn-group" style="display:inline-block">
+                <button class="chart btn btn-primary" data-val="PieChart">Pie</button>
+                <button class="chart btn" data-val="StackedBarChart">Bar</button>
+            </div>
+        </div>
     </div>
 <div>
