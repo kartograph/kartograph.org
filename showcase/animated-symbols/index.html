@@ -13,8 +13,8 @@ next: 3d
 
 	$(function() {
 		var map, c, scale, updateMap, symbols,
-			key = 'ViolentCrime2011',
-			maxRad = 40;
+			key = 'ViolentCrime2011Rate',
+			maxRad = 30;
 
 		c = $('#map');
 		c.height(c.width()*.65);
@@ -24,14 +24,14 @@ next: 3d
 		map.loadMap('../bubbles/map-usa.svg', function() {
 			map.addLayer('usa', {
 				styles: {
-					fill: '#ddd',
+					fill: '#dfdcdc',
 					stroke: '#fff'
 				}
 			});
 
 			$.getJSON('../bubbles/us-crime-cities.json', function(crimeCities) {
 
-				crimeCities = crimeCities.sort(function(a,b) {return a.Population - b.Population;}).slice(0, 100);
+				crimeCities = crimeCities.sort(function(a,b) {return a.Population - b.Population;}).slice(0, 150);
 
 				$.each(crimeCities, function(i,city) {
 					$.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
@@ -42,23 +42,28 @@ next: 3d
 				});
 
 				scale = $K.scale.linear(crimeCities, key);
-				colscale = new chroma.Ramp();
+				colscale = new chroma.ColorScale({
+    				colors: chroma.brewer.PiYG.slice().reverse()
+				});
 
 				function symbolAttrs(d) {
 					return {
 						r: Math.sqrt(scale(d[key]))*maxRad,
 						stroke: '#fff',
+						'stroke-width': scale(d[key])*1,
 						fill: colscale.getColor(scale(d[key])),
-						'fill-opacity': 0.3
+						'fill-opacity': 0.5
 					};
 				}
 
-				symbols = new $K.SymbolGroup({
-					map: map,
+				symbols = map.addSymbols({
+					type: $K.Bubble,
 					data: crimeCities,
 					location: function(d) { return d.ll },
-					type: $K.Bubble,
-					attrs: symbolAttrs
+					attrs: symbolAttrs,
+
+
+					title: function(d) { return $.trim(d.City)+' ('+Math.round(d[key] * 100000)+' per 100k)'; }
 				});
 
 				updateMap = function() {
@@ -66,10 +71,10 @@ next: 3d
 						+ $('.year.btn-primary').html()
 						+ $('.type.btn-primary').data('val');
 					scale = $K.scale.linear(crimeCities, key);
-					maxRad = $('.type.btn-primary').data('maxrad');
 					symbols.update({
-						attrs: symbolAttrs
-					}, true);
+						attrs: symbolAttrs,
+						title: function(d) { return d.City+' ('+d[key]+')'; }
+					}, 500, 'backOut');
 				}
 			});
 		});
@@ -84,15 +89,59 @@ next: 3d
 
 </script>
 
-<div id="map"></div>
-<div class="btn-group" style="display:inline-block">
-	<button class="dataset btn-large btn btn-primary" data-val="ViolentCrime">Violence</button>
-	<button class="dataset btn-large btn" data-val="Rape">Rape</button>
-	<button class="dataset btn-large btn" data-val="Murder">Murder</button>
-</div><div class="btn-group" style="display:none">
-	<button class="year btn btn-primary">2011</button>
-	<button class="year btn">2010</button>
-</div><div class="btn-group" style="display:none">
-	<button class="type btn" data-val="" data-maxrad="50">Quantity</button>
-	<button class="type btn btn-primary" data-val="Rate" data-maxrad="40">Density</button>
+<div style="position:relative">
+   <div id="map">
+
+   </div>
+   <div style="position:absolute;bottom:0px;left:20px;z-index:10">
+   	<label>Select 2011 crime rates for</label> 
+   	<div class="btn-group" style="display:inline-block">
+   		<button class="dataset btn-large btn btn-primary" data-val="ViolentCrime">Violence</button>
+   		<button class="dataset btn-large btn" data-val="Rape">Rape</button>
+   		<button class="dataset btn-large btn" data-val="Murder">Murder</button>
+   	</div><div class="btn-group" style="display:none">
+   		<button class="year btn btn-primary">2011</button>
+   		<button class="year btn">2010</button>
+   	</div><div class="btn-group" style="display:none">
+   		<button class="type btn" data-val="" data-maxrad="50">Quantity</button>
+   		<button class="type btn btn-primary" data-val="Rate" data-maxrad="40">Density</button>
+   	</div>
+   </div>
 </div>
+
+<h2>How to do it</h2>
+
+<p>To change symbols after you added them you need to call <code>symbolgroup.update()</code>.</p>
+
+<pre><code>var key = 'Violence';
+
+// a simple function that returns symbol attributes
+function symbolAttrs(city) {
+   return {
+      r: Math.sqrt(scale(city[key])) * 30,  // radius in pixel
+      fill: colscale.getColor(scale(city[key]))  // color using chroma.js
+   };
+}
+
+// initialize symbols
+symbols = map.addSymbols({
+   type: $K.Bubble,
+   data: crimeCities,
+   location: function(d) { return d.ll },
+   attrs: symbolAttrs
+});
+
+// a function to update the symbols..
+updateMap = function() {
+   key = $('.crime-type').val();
+   scale = $K.scale.linear(crimeCities, key);
+
+   symbols.update({
+      attrs: symbolAttrs
+   }, 500, 'backOut');
+}
+
+// ..which gets called as the user requests it
+$('.crime-type').change(updateMap);</code></pre>
+
+<p>For more details please check the <a href="https://github.com/kartograph/kartograph.org/blob/master/showcase/animated-symbols/index.html#L14">source of this page</a> or look up the <a href="/docs/kartograph.js/symbols.html#updating-symbols">Kartograph.js documentation</a>.</p>

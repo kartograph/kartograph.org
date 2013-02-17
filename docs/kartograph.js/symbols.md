@@ -81,6 +81,32 @@ You can sort by symbol data by passing a function that returns a numerical value
         sortBy: function(d) { return d.someVar; },
     });
 
+## Updating Symbols
+
+Updating the symbols can be done by calling the ``update()`` method of a SymbolGroup. Note that you cannot change the symbol type afterwards.
+
+    var symbols = map.addSymbols(...);
+    symbols.update({
+        radius: 30
+    });
+
+You can also get a reference to the symbol group later using ``map.symbolGroups``.
+
+### Animated updates
+
+Currently there's a quick-fix for animated symbol updates.
+
+    symbols.update({
+        radius: 30
+    }, true);
+
+You can define the animation in more detail. See RaphaelJS documentation on [Element.animate()](http://raphaeljs.com/reference.html#Element.animate) for more information on the parameters.
+
+    symbols.update({
+        radius: 30
+    }, 500, 'ease-out');
+
+
 ## Removing Symbols
 
 To remove a group of symbols from your map, simply call ``map.removeSymbols()``. If you added multiple symbol layers, you can pass and index to specify the one to remove. Otherwise, all symbols will be removed.
