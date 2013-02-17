@@ -106,6 +106,8 @@ You can define the animation in more detail. See RaphaelJS documentation on [Ele
         radius: 30
     }, 500, 'ease-out');
 
+See [this feature in action](/showcase/animated-symbols/).
+
 
 ## Removing Symbols
 
