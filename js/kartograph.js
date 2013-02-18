@@ -40,7 +40,7 @@
 
 
 (function() {
-  var $, Aitoff, Azimuthal, BBox, Balthasart, Behrmann, BlurFilter, Bubble, CEA, CantersModifiedSinusoidalI, Circle, CohenSutherland, Conic, Cylindrical, EckertIV, EquidistantAzimuthal, Equirectangular, Filter, GallPeters, GlowFilter, GoodeHomolosine, Hatano, HoboDyer, HtmlLabel, Icon, Kartograph, LAEA, LCC, LabeledBubble, LatLon, Line, LinearScale, LogScale, LonLat, Loximuthal, MapLayer, MapLayerPath, Mercator, Mollweide, NaturalEarth, Nicolosi, Orthographic, PanAndZoomControl, Path, PieChart, Proj, PseudoConic, PseudoCylindrical, QuantileScale, REbraces, REcomment_string, REfull, REmunged, Robinson, Satellite, Scale, Sinusoidal, SqrtScale, StackedBarChart, Stereographic, SvgLabel, Symbol, SymbolGroup, View, WagnerIV, WagnerV, Winkel3, drawPieChart, filter, kartograph, log, map_layer_path_uid, munge, munged, parsedeclarations, resolve, restore, root, uid, warn, __point_in_polygon, __proj, __type, __verbose__, _base, _base1, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
+  var $, Aitoff, Azimuthal, BBox, Balthasart, Behrmann, BlurFilter, Bubble, CEA, CantersModifiedSinusoidalI, Circle, CohenSutherland, Conic, Cylindrical, EckertIV, EquidistantAzimuthal, Equirectangular, Filter, GallPeters, GlowFilter, GoodeHomolosine, Hatano, HoboDyer, HtmlLabel, Icon, Kartograph, LAEA, LCC, LabeledBubble, LatLon, Line, LinearScale, LogScale, LonLat, Loximuthal, MapLayer, MapLayerPath, Mercator, Mollweide, NaturalEarth, Nicolosi, Orthographic, PanAndZoomControl, Path, PieChart, Proj, PseudoConic, PseudoCylindrical, QuantileScale, REbraces, REcomment_string, REfull, REmunged, Robinson, Satellite, Scale, Sinusoidal, SqrtScale, StackedBarChart, Stereographic, SvgLabel, Symbol, SymbolGroup, View, WagnerIV, WagnerV, Winkel3, drawPieChart, filter, kartograph, log, map_layer_path_uid, munge, munged, parsedeclarations, resolve, restore, root, uid, warn, __point_in_polygon, __proj, __type, _base, _base1, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -54,26 +54,24 @@
 
   $ = root.jQuery;
 
-  __verbose__ = false;
+  kartograph.__verbose = false;
 
   warn = function(s) {
-    if (__verbose__) {
+    try {
+      return console.warn.apply(console, arguments);
+    } catch (e) {
       try {
-        return console.warn.apply(console, arguments);
+        return opera.postError.apply(opera, arguments);
       } catch (e) {
-        try {
-          return opera.postError.apply(opera, arguments);
-        } catch (e) {
-          return alert(Array.prototype.join.call(arguments, ' '));
-        }
+        return alert(Array.prototype.join.call(arguments, ' '));
       }
     }
   };
 
   log = function(s) {
-    if (__verbose__) {
+    if (kartograph.__verbose) {
       try {
-        return console.log.apply(console, arguments);
+        return console.debug.apply(console, arguments);
       } catch (e) {
         try {
           return opera.postError.apply(opera, arguments);
@@ -516,6 +514,7 @@
       }
       me.svgSrc = xml;
       $view = $('view', xml);
+      log('got svg src', me.svgSrc);
       if (!(me.paper != null)) {
         w = me.size.w;
         h = me.size.h;
@@ -526,13 +525,18 @@
         me.viewport = new BBox(0, 0, w, h);
       }
       vp = me.viewport;
+      log('got viewport', me.viewport);
       me.viewAB = AB = kartograph.View.fromXML($view[0]);
+      log('got first view', me.viewAB);
       padding = (_ref5 = me.opts.padding) != null ? _ref5 : 0;
       halign = (_ref6 = me.opts.halign) != null ? _ref6 : 'center';
       valign = (_ref7 = me.opts.valign) != null ? _ref7 : 'center';
+      log('got alignment', halign, valign);
       zoom = (_ref8 = me.opts.zoom) != null ? _ref8 : 1;
       me.viewBC = new kartograph.View(me.viewAB.asBBox(), vp.width * zoom, vp.height * zoom, padding, halign, valign);
+      log('got second view', me.viewBC);
       me.proj = kartograph.Proj.fromXML($('proj', $view)[0]);
+      log('got projection', me.proj);
       if (me.mapLoadCallback != null) {
         me.mapLoadCallback(me);
       }
