@@ -1,113 +1,110 @@
 ---
 layout: showcase
 title: Three-dimensional Mapping
-jsplugins:
-   qtip: '/js/jquery.qtip.min.js'
 ---
 
 <link rel="stylesheet" type="text/css" href="/css/jquery.qtip.css">
+<script type="text/javascript" src="/js/jquery.qtip.min.js"></script>
 
 <script type="text/javascript">
-$script.ready(['kartograph', 'qtip'], function() {
-    $(function() {
-        var map, c, scale, updateMap, symbols = [];
+$(function() {
+    var map, c, scale, updateMap, symbols = [];
 
-        $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
-        $.fn.qtip.defaults.style.def = false;
+    $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+    $.fn.qtip.defaults.style.def = false;
 
-        c = $('#map');
-        c.height(c.width()*.5);
+    c = $('#map');
+    c.height(c.width()*.5);
 
-        map = $K.map('#map');
+    map = $K.map('#map');
 
-        map.loadMap('map-usa.svg', function() {
+    map.loadMap('map-usa.svg', function() {
 
-            map.loadCSS('style.css', function() {
+        map.loadCSS('style.css', function() {
 
-                map.addLayer('graticule');
-                map.addLayer('graticule_1');
-                map.addLayer('usa');
+            map.addLayer('graticule');
+            map.addLayer('graticule_1');
+            map.addLayer('usa');
 
-                $.getJSON('us-crime-cities.json', function(crimeCities) {
+            $.getJSON('us-crime-cities.json', function(crimeCities) {
 
-                    $.each(crimeCities, function(i,city) {
-                        $.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
-                            $.each(['2011','2010'], function(i,yr) {
-                                city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
-                            });
+                $.each(crimeCities, function(i,city) {
+                    $.each(['ViolentCrime','Rape','Murder'], function(i,prop) {
+                        $.each(['2011','2010'], function(i,yr) {
+                            city[prop+yr+'Rate'] = city[prop+yr] / city.Population;
                         });
                     });
-
-                    updateMap = function() {
-
-                        var prop = $('.dataset.btn-primary').data('val')
-                            + $('.year.btn-primary').html()
-                            + $('.type.btn-primary').data('val'),
-
-                        maxRad = $('.type.btn-primary').data('maxrad');
-
-                        scale = $K.scale.linear(crimeCities, prop);
-
-                        $.each(crimeCities, function(i, c) {
-                            var bar, pts;
-
-                            pts = [c.ll, [c.ll[0], c.ll[1], scale(c[prop])*maxRad]];
-
-                            if (symbols[i]) {
-
-                                bar = symbols[i];
-                                if (Raphael.svg) bar.animate({ path: map.getGeoPathStr(pts) }, 500);
-                                else bar.attr('path', map.getGeoPathStr(pts));
-
-                            } else {
-
-                                bar = map.addGeoPath([c.ll,c.ll]);
-                                bar.attr({
-                                    stroke: '#024',
-                                    opacity: .6,
-                                    'stroke-width': 4,
-                                    fill: 'none',
-                                    'stroke-linecap': 'square'
-                                });
-
-                                if (Raphael.svg) {
-                                    bar.animate({ path: map.getGeoPathStr(pts) }, 500);
-                                    bar.node.setAttribute('title', c.City);
-                                    setTimeout(function() {
-                                        $(bar.node).qtip({
-                                            content: {
-                                                title: c.City,
-                                                text: c[prop]
-                                            },
-                                            position: {
-                                                target: 'mouse',
-                                                viewport: $(window),
-                                                adjust: { x:7, y:7}
-                                            },
-                                        }, 800);
-                                    });
-                                } else {
-                                    bar.attr('path', map.getGeoPathStr(pts));
-                                }
-                                symbols.push(bar);
-                            }
-                        });
-
-                    }
-
-                    updateMap();
-
                 });
-            });
- 
-        }, { padding: -150 });
 
-        $('.btn').click(function(event) {
-            var tgt = $(event.target), par = tgt.parent();
-            $('.btn', par).removeClass('btn-primary');
-            tgt.addClass('btn-primary');
-            updateMap();
+                updateMap = function() {
+
+                    var prop = $('.dataset.btn-primary').data('val')
+                        + $('.year.btn-primary').html()
+                        + $('.type.btn-primary').data('val'),
+
+                    maxRad = $('.type.btn-primary').data('maxrad');
+
+                    scale = $K.scale.linear(crimeCities, prop);
+
+                    $.each(crimeCities, function(i, c) {
+                        var bar, pts;
+
+                        pts = [c.ll, [c.ll[0], c.ll[1], scale(c[prop])*maxRad]];
+
+                        if (symbols[i]) {
+
+                            bar = symbols[i];
+                            if (Raphael.svg) bar.animate({ path: map.getGeoPathStr(pts) }, 500);
+                            else bar.attr('path', map.getGeoPathStr(pts));
+
+                        } else {
+
+                            bar = map.addGeoPath([c.ll,c.ll]);
+                            bar.attr({
+                                stroke: '#024',
+                                opacity: .6,
+                                'stroke-width': 4,
+                                fill: 'none',
+                                'stroke-linecap': 'square'
+                            });
+
+                            if (Raphael.svg) {
+                                bar.animate({ path: map.getGeoPathStr(pts) }, 500);
+                                bar.node.setAttribute('title', c.City);
+                                setTimeout(function() {
+                                    $(bar.node).qtip({
+                                        content: {
+                                            title: c.City,
+                                            text: c[prop]
+                                        },
+                                        position: {
+                                            target: 'mouse',
+                                            viewport: $(window),
+                                            adjust: { x:7, y:7}
+                                        },
+                                    }, 800);
+                                });
+                            } else {
+                                bar.attr('path', map.getGeoPathStr(pts));
+                            }
+                            symbols.push(bar);
+                        }
+                    });
+
+                }
+
+                updateMap();
+
+            });
         });
+
+    }, { padding: -150 });
+
+    $('.btn').click(function(event) {
+        var tgt = $(event.target), par = tgt.parent();
+        $('.btn', par).removeClass('btn-primary');
+        tgt.addClass('btn-primary');
+        updateMap();
     });
 });
 </script>
