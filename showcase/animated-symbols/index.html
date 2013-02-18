@@ -15,7 +15,7 @@ title: Animated Symbols
 
       map = window.m = $K.map('#map');
 
-      map.loadMap('../bubbles/map-usa.svg', function() {
+      map.loadMap('map-usa.svg', function() {
          map.addLayer('usa', {
             styles: {
                fill: '#dfdcdc',
@@ -23,7 +23,7 @@ title: Animated Symbols
             }
          });
 
-         $.getJSON('../bubbles/us-crime-cities.json', function(crimeCities) {
+         $.getJSON('us-crime-cities.json', function(crimeCities) {
 
             crimeCities = crimeCities.sort(function(a,b) {return a.Population - b.Population;}).slice(0, 150);
 
