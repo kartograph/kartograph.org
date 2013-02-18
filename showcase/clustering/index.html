@@ -1,94 +1,91 @@
 ---
 layout: showcase
 title: Clustering Map Symbols
-jsplugins:
-   qtip: '/js/jquery.qtip.min.js'
 ---
 
 <link rel="stylesheet" type="text/css" href="/css/jquery.qtip.css">
+<script type="text/javascript" src="/js/jquery.qtip.min.js"></script>
 <script type="text/javascript">
 
-$script.ready(['kartograph'], function() {
-$script.ready(['qtip'], function() {
 
-    $(function() {
+$(function() {
 
-        // initialize tooltips
-        $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
-        $.fn.qtip.defaults.style.def = false;
+    // initialize tooltips
+    $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
+    $.fn.qtip.defaults.style.def = false;
 
-        $.getJSON('uk-visits.json', function(cities) {
+    $.getJSON('uk-visits.json', function(cities) {
 
-            function map(cont, clustering) {
+        function map(cont, clustering) {
 
-                var map = $K.map(cont);
+            var map = $K.map(cont);
 
-                map.loadMap('GBR.svg', function() {
-                    map.addLayer('context', {
-                        styles: {
-                            stroke: '#aaa',
-                            fill: '#f6f4f2'
-                        }
-                    });
-                    map.addLayer('regions', {
-                        id: 'bg',
-                        styles: {
-                            stroke: '#d8d6d4',
-                            'stroke-width': 10,
-                            'stroke-linejoin': 'round'
-                        }
-                    });
+            map.loadMap('GBR.svg', function() {
+                map.addLayer('context', {
+                    styles: {
+                        stroke: '#aaa',
+                        fill: '#f6f4f2'
+                    }
+                });
+                map.addLayer('regions', {
+                    id: 'bg',
+                    styles: {
+                        stroke: '#d8d6d4',
+                        'stroke-width': 10,
+                        'stroke-linejoin': 'round'
+                    }
+                });
 
-                    map.addLayer('regions', {
-                        title: function(d) { return d.name },
-                        styles: {
-                            stroke: '#333',
-                            fill: '#fff'
-                        }
-                    });
+                map.addLayer('regions', {
+                    title: function(d) { return d.name },
+                    styles: {
+                        stroke: '#333',
+                        fill: '#fff'
+                    }
+                });
 
-                    var scale = $K.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([2, 30]);
+                var scale = $K.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([2, 30]);
 
-                    map.addSymbols({
-                        type: $K.Bubble,
-                        data: cities,
-                        clustering: clustering,
-                        aggregate: function(cities) {
-                            var nc = { nb_visits: 0, city_names: [] };
-                            $.each(cities, function(i, c) {
-                                nc.nb_visits += c.nb_visits;
-                                nc.city_names = nc.city_names.concat(c.city_names ? c.city_names : [c.city_name]);
-                            });
-                            nc.city_name = nc.city_names[0] + ' and ' + (nc.city_names.length-1) + ' others';
-                            return nc;
-                        },
-                        location: function(city) {
-                            return [city.long, city.lat];
-                        },
-                        radius: function(city) {
-                            return scale(city.nb_visits);
-                        },
-                        tooltip: function(city) {
-                            return '<h3>'+city.city_name+'</h3>'+city.nb_visits+' visits';
-                        },
-                        sortBy: 'radius desc',
-                        style: 'fill:#800; stroke: #fff; fill-opacity: 0.5;',
-                    });
-                }, { padding: -75 });
+                map.addSymbols({
+                    type: $K.Bubble,
+                    data: cities,
+                    clustering: clustering,
+                    aggregate: function(cities) {
+                        var nc = { nb_visits: 0, city_names: [] };
+                        $.each(cities, function(i, c) {
+                            nc.nb_visits += c.nb_visits;
+                            nc.city_names = nc.city_names.concat(c.city_names ? c.city_names : [c.city_name]);
+                        });
+                        nc.city_name = nc.city_names[0] + ' and ' + (nc.city_names.length-1) + ' others';
+                        return nc;
+                    },
+                    location: function(city) {
+                        return [city.long, city.lat];
+                    },
+                    radius: function(city) {
+                        return scale(city.nb_visits);
+                    },
+                    tooltip: function(city) {
+                        return '<h3>'+city.city_name+'</h3>'+city.nb_visits+' visits';
+                    },
+                    sortBy: 'radius desc',
+                    style: 'fill:#800; stroke: #fff; fill-opacity: 0.5;',
+                });
+            }, { padding: -75 });
 
-            }
+        }
 
-            map('#map0');
-            map('#map1', 'k-means');
-            map('#map2', 'noverlap');
-
-        });
-
+        map('#map0');
+        map('#map1', 'k-means');
+        map('#map2', 'noverlap');
 
     });
 
+
 });
-});
+
+
+
 </script>
 
 <p>These maps demonstrate the map symbol clustering features built into Kartograph.js. They all show the same dataset of UK cities sized by the number of people that have visited this website in 2012.</p>
