@@ -55,8 +55,6 @@ title: Animated Symbols
                data: crimeCities,
                location: function(d) { return d.ll },
                attrs: symbolAttrs,
-
-
                title: function(d) { return $.trim(d.City)+' ('+Math.round(d[key] * 100000)+' per 100k)'; }
             });
 
@@ -67,7 +65,7 @@ title: Animated Symbols
                scale = $K.scale.linear(crimeCities, key);
                symbols.update({
                   attrs: symbolAttrs,
-                  title: function(d) { return d.City+' ('+d[key]+')'; }
+                  title: function(d) { return $.trim(d.City)+' ('+Math.round(d[key] * 100000)+' per 100k)'; }
                }, 500, 'backOut');
             }
          });
