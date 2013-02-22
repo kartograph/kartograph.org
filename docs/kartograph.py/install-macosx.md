@@ -51,7 +51,12 @@ Create a very basic map configuration by creating a new text file named "world.j
     {
        "layers": [{
            "src": "ne_50m_admin_0_countries.shp"
-       }]
+       }],
+        "bounds": {
+            "mode": "bbox",
+            "data": [-10, 40, 20, 60],
+            "padding": 1
+        }
     }
 
 
