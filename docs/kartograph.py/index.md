@@ -111,7 +111,7 @@ Sometimes you don't want your entire shapefile to be added to the map but only s
         "filter": { "ISO3": "FRA" }
     }
     
-You can build more complex filters, too. Read more about it in the [filter documentation](/docs/kartograph.py/filter.html).
+You can build more complex filters, too. Read more about it in the [filter documentation](/docs/kartograph.py/filter.md).
 
 **Hint:** If you use Kartograph as a Python module you might pass a function as well:
 
