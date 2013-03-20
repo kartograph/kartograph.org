@@ -17,7 +17,7 @@ This is how install Kartograph.py on a fresh Ubuntu 12.10 system. Might work on 
 
 Install Kartograph.py directly from Github
 
-    sudo pip install https://github.com/kartograph/kartograph.py/zipball/master
+    sudo pip install https://github.com/kartograph/kartograph.py/zipball/master -r https://raw.github.com/kartograph/kartograph.py/master/requirements.txt
 
 ## Test Installation
 
