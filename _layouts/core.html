@@ -21,7 +21,7 @@
       $script(['{{ scripts[1] }}'{% for s in scripts offset:2 %}, '{{ s }}'{% endfor %}], '{{ scripts[0] }}');
    {% endfor %}{% if page.jsplugins %}
       {% for k in page.jsplugins %}
-      $script(['{{ k[1] }}'], '{{ k[0] }}');
+        $script(['{{ k[1] }}'], '{{ k[0] }}');
       {% endfor %}
    {% endif %}
    </script>

@@ -1,7 +1,8 @@
 ---
 layout: showcase
 title: Visual Map Configurator
-jsplugins: ['dat.gui.js']
+jsplugins:
+    datgui: 'dat.gui.js'
 ---
 
 <style type="text/css">
@@ -23,7 +24,7 @@ jsplugins: ['dat.gui.js']
 </style>
 <script type="text/javascript" src="zeroclipboard.js"></script>
 <script type="text/javascript">
-$script.ready(['kartograph'], function() {
+$script.ready(['kartograph', 'datgui'], function() {
 
     var clip;
 
@@ -85,7 +86,7 @@ $script.ready(['kartograph'], function() {
             return ctx;
         },
         showMap = function(p, coastlines) {
-            P = new kartograph.proj[p](globeopt);
+            P = new Kartograph.proj[p](globeopt);
             xy = P.project(13,14);
             if (isNaN(xy[0]) || isNaN(xy[1])) {
                 console.error(p, P, xy);
@@ -104,7 +105,7 @@ $script.ready(['kartograph'], function() {
             len = ctx.measureText(p.toUpperCase()).width;
             ctx.beginPath();
             ctx.fillStyle ="#fff";
-            view = new kartograph.View(bbox, w, h, 10);
+            view = new Kartograph.View(bbox, w, h, 10);
             for (i=0;i<sea.length;i++) {
                 xy = view.project(sea[i]);
                 if (i==0) ctx.moveTo(xy[0], xy[1]);
@@ -183,7 +184,7 @@ $script.ready(['kartograph'], function() {
             // projection
             cfg['proj'] = { id: globeopt.proj };
             $.each(projopts, function(key, val) {
-                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                if (Kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
                     cfg.proj[key] = globeopt[key];
                 }
             });
@@ -236,7 +237,7 @@ $script.ready(['kartograph'], function() {
 
         gui.remember(globeopt);
         var proj = [];
-        $.each(kartograph.proj, function(p) {
+        $.each(Kartograph.proj, function(p) {
             proj.push(p);
         })
         proj = proj.sort();
@@ -277,13 +278,13 @@ $script.ready(['kartograph'], function() {
                 renderFrame();
             });
             $.each(projopts, function(key, val) {
-                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                if (Kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
                     var s = f.add(globeopt, key, val[0], val[1]);
                     if (val.length == 3) s.step(val[2]);
                     s.onChange(renderFrame);
                 }
             });
-            // $('#k-proj-title').html(kartograph.proj[globeopt.proj].title);
+            // $('#k-proj-title').html(Kartograph.proj[globeopt.proj].title);
             var url = location.href.split('#');
             location.href = url[0]+'#'+globeopt.proj;
 
@@ -386,7 +387,6 @@ $script.ready(['kartograph'], function() {
 
 <div class="row">
     <div class="span7">
-        <div class="page-header" style="margin-top:0"><h1 id="k-proj-title">Visual Map Configurator</h1></div>
         <p>Here's the JSON config that you can pass to Kartograph. Note that you probably need to update the path of the shapefile. This example uses the <a href="http://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/">admin0 countries</a> of the natural earth project.</p>
         <p>
             <div id="d_clip_container" style="position:relative; float: left; margin-right: 1ex; margin-bottom:1ex">
