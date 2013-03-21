@@ -109,6 +109,14 @@ In Kartograph SVG maps, each path can hold a range of data attributes. In some s
 
 	map.addLayer('mylayer', { key: 'ISO' });
 
+### Prevent blocking of UI
+
+Sometimes when you're dealing with large maps containing lots of features, it happens that running *addLayer* will block the user interface for a second or so. To prevent this you can tell Kartograph.js to add the layer paths in smaller chunks, and giving the browser a chance to do other stuff in between.
+
+The following call will add the layer paths in chunks of 50 paths.
+
+    map.addLayer('mylayer', { chunks: 50 });
+
 
 ## Map Styling
 
