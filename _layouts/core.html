@@ -14,18 +14,7 @@
    <link rel="apple-touch-icon" href="/img/apple-touch-57.png">
    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-touch-72.png">
    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-touch-114.png">
-{% if page.scripts %}
-   <script type="text/javascript" src="/js/script.min.js"></script>
-   <script type="text/javascript">
-   {% for scripts in page.scripts %}
-      $script(['{{ scripts[1] }}'{% for s in scripts offset:2 %}, '{{ s }}'{% endfor %}], '{{ scripts[0] }}');
-   {% endfor %}{% if page.jsplugins %}
-      {% for k in page.jsplugins %}
-        $script(['{{ k[1] }}'], '{{ k[0] }}');
-      {% endfor %}
-   {% endif %}
-   </script>
-{% endif %}
+
 {% for style in page.styles %}
    <link rel="stylesheet" href="{{ style }}" type="text/css" />
 {% endfor %}

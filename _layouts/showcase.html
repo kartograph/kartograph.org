@@ -1,6 +1,5 @@
 ---
 layout: default
-scripts: [[kartograph, '/js/jquery.min.js', '/js/raphael.min.js', '/js/kartograph.js', '/js/chroma.min.js'], [highlightjs, '/js/highlight/highlight.pack.js']]
 styles: ['/js/highlight/styles/github.css']
 toctitle: Showcases
 toc:
@@ -27,9 +26,9 @@ toc:
 
 </div>
 
+<script type="text/javascript" src="/js/highlight/highlight.pack.js"></script>
 <script type="text/javascript">
 
-$script.ready('highlightjs', function() {
     $('pre code').each(function(i, e) {
         var code = $(e).html().trim(), 
             code2 = code.replace(/\s/g, ''),
@@ -48,6 +47,5 @@ $script.ready('highlightjs', function() {
 
         hljs.highlightBlock(e)
     });
-});
 
 </script>

@@ -29,7 +29,7 @@
 
   kartograph = root.$K = (_ref = root.Kartograph) != null ? _ref : root.Kartograph = {};
 
-  kartograph.version = "0.5.3";
+  kartograph.version = "0.6.1";
 
   $ = root.jQuery;
 
@@ -620,7 +620,11 @@
           return layer.tooltips(opts.tooltips);
         }
       };
-      setTimeout(nextPaths, 0);
+      if (opts.chunks != null) {
+        setTimeout(nextPaths, 0);
+      } else {
+        nextPaths();
+      }
       return me;
     };
 
