@@ -3,6 +3,8 @@ layout: showcase
 title: Animated Symbols
 ---
 
+<script type="text/javascript" src="/js/chroma.min.js"></script>
+
 <script type="text/javascript">
 
    $(function() {
@@ -36,16 +38,14 @@ title: Animated Symbols
             });
 
             scale = $K.scale.linear(crimeCities, key);
-            colscale = new chroma.ColorScale({
-               colors: chroma.brewer.PiYG.slice().reverse()
-            });
+            colscale = chroma.scale(chroma.brewer.PiYG.slice().reverse());
 
             function symbolAttrs(d) {
                return {
                   r: Math.sqrt(scale(d[key]))*maxRad,
                   stroke: '#fff',
                   'stroke-width': scale(d[key])*1,
-                  fill: colscale.getColor(scale(d[key])),
+                  fill: colscale(scale(d[key])),
                   'fill-opacity': 0.5
                };
             }
@@ -111,7 +111,7 @@ title: Animated Symbols
 function symbolAttrs(city) {
    return {
       r: Math.sqrt(scale(city[key])) * 30,  // radius in pixel
-      fill: colscale.getColor(scale(city[key]))  // color using chroma.js
+      fill: colscale(scale(city[key]))  // color using chroma.js
    };
 }
 
