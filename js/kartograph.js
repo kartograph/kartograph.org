@@ -3906,7 +3906,7 @@
   hex2rgb = function(hex) {
     var b, g, r, u;
 
-    if (hex.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
+    if (hex.trim().match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
       if (hex.length === 4 || hex.length === 7) {
         hex = hex.substr(1);
       }
@@ -3918,9 +3918,9 @@
       r = u >> 16;
       g = u >> 8 & 0xFF;
       b = u & 0xFF;
-      [r, g, b];
+      return [r, g, b];
     }
-    throw 'unknown color format';
+    throw 'unknown color format: "' + hex + '"';
   };
 
   GlowFilter = (function(_super) {
@@ -3942,7 +3942,7 @@
       blur = (_ref17 = me.params.blur) != null ? _ref17 : 4;
       strength = (_ref18 = me.params.strength) != null ? _ref18 : 1;
       rgb = (_ref19 = me.params.color) != null ? _ref19 : '#D1BEB0';
-      if (typeof color === 'string') {
+      if (__type(rgb) === 'string') {
         rgb = hex2rgb(rgb);
       }
       inner = (_ref20 = me.params.inner) != null ? _ref20 : false;
@@ -4116,7 +4116,7 @@
     */
 
     me = this;
-    if (type(cmds) === 'string') {
+    if (__type(cmds) === 'string') {
       cmds = cmds.split("");
     }
     if (cmds.length === 0) {
