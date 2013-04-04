@@ -2,9 +2,6 @@
 layout: showcase
 title: Map Projections
 about: This examples shows the map projections built in Kartograph.js. Feel free to play around with the projections and their parameters. Drag the map to change the projection center.
-jsplugins:
-    datgui: 'dat.gui.js'
-prev: 3d
 ---
 
 <style type="text/css">
@@ -27,8 +24,8 @@ prev: 3d
     text-align: center;
 }
 </style>
+<script type="text/javascript" src="dat.gui.js"></script>
 <script type="text/javascript">
-$script.ready(['kartograph', 'datgui'], function() {
 
     var GlobeOpt = function() {
         this.lon0 = 20;
@@ -273,7 +270,7 @@ $script.ready(['kartograph', 'datgui'], function() {
         });
 
     });
-});
+
 </script>
 
 
