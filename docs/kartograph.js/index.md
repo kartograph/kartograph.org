@@ -29,7 +29,7 @@ Once the document has loaded you can initialize your Kartograph map using:
 
 If the namespace ``Kartograph`` sounds too long for you, you can use the alias ``$K`` instead.
 
-	var map = $K.map('#div');
+	var map = $K.map('#map');
 
 By default Kartograph.js will try to fit the map into the container element. If the container element has a height of 0, the map will be sized to fit the width while maintaining the aspect ratio of the map data. However, you can override this by providing explicit ``width`` and ``height``.
 
