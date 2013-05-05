@@ -2,8 +2,6 @@
 class: docs
 layout: default
 toc: true
-scripts: [[jquery, '/js/jquery.min.js'], [highlightjs, '/js/highlight/highlight.pack.js']]
-
 styles: ['/js/highlight/styles/github.css']
 ---
 
@@ -14,8 +12,8 @@ styles: ['/js/highlight/styles/github.css']
 
 {{ content }}
 
+<script type="text/javascript" src="/js/highlight/highlight.pack.js"></script>
 <script type="text/javascript">
-$script.ready('jquery', function() {
 
 	$(function() {
 		var toc = $('.toc');
@@ -92,7 +90,7 @@ $script.ready('jquery', function() {
 		highlightSection();
 
 	});
-	$script.ready('highlightjs', function() {
+	
 		$('pre code').each(function(i, e) {
 			var code = $(e).html().trim(), 
 				code2 = code.replace(/\s/g, ''),
@@ -110,9 +108,9 @@ $script.ready('jquery', function() {
 			}
 
 			hljs.highlightBlock(e)
-		});
 	});
-});
+
+
 
 
 
