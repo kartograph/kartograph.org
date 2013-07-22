@@ -171,7 +171,7 @@ In noverlap clustering you can control the ``tolerance`` to which overlapping is
 
 ## Dorling cartograms
 
-See [Dorling cartogram tutorial](doring) for more information.
+See [Dorling cartogram tutorial](dorling) for more information.
 
     symbols = map.addSymbols({
         // ...
