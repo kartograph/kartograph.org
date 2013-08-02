@@ -34,7 +34,7 @@ title: Dot Grid Maps
 			
 			var 
 				scale_type = $('.scale.btn-primary').data('type'),
-				scale = Kartograph.scale[scale_type](dep_data, 'density'),
+				scale = kartograph.scale[scale_type](dep_data, 'density'),
 				max_dot_size = Number($('.scale.btn-primary').data('mds')),
 				dotsize = function(d) {
 					return 1+Math.sqrt(scale(d.density))*max_dot_size;
@@ -45,7 +45,7 @@ title: Dot Grid Maps
 				key: 'id',
 				gridsize: 11,
 				size: dotsize,
-				duration: $.browser.webkit ? 300 : 0,
+				duration: 300,
 				style: function(d) {
 					return {
 						fill: '#804',

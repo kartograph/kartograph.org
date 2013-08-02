@@ -70,7 +70,7 @@ about: This examples shows the map projections built in Kartograph.js. Feel free
             return ctx;
         },
         showMap = function(p, coastlines) {
-            P = new Kartograph.proj[p](globeopt);
+            P = new kartograph.proj[p](globeopt);
             xy = P.project(13,14);
             if (isNaN(xy[0]) || isNaN(xy[1])) {
                 console.error(p, P, xy);
@@ -88,7 +88,7 @@ about: This examples shows the map projections built in Kartograph.js. Feel free
             len = ctx.measureText(p.toUpperCase()).width;
             ctx.beginPath();
             ctx.fillStyle ="#fff";
-            view = new Kartograph.View(bbox, w, h, 10);
+            view = new kartograph.View(bbox, w, h, 10);
             for (i=0;i<sea.length;i++) {
                 xy = view.project(sea[i]);
                 if (i==0) ctx.moveTo(xy[0], xy[1]);
@@ -180,7 +180,7 @@ about: This examples shows the map projections built in Kartograph.js. Feel free
 
         gui.remember(globeopt);
         var proj = [];
-        $.each(Kartograph.proj, function(p) {
+        $.each(kartograph.proj, function(p) {
             proj.push(p);
         })
         proj = proj.sort();
@@ -207,13 +207,13 @@ about: This examples shows the map projections built in Kartograph.js. Feel free
                 renderFrame();
             });
             $.each(projopts, function(key, val) {
-                if (Kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
                     var s = val == 'str' ? gui.add(globeopt, key) : gui.add(globeopt, key, val[0], val[1]);
                     if (val != 'str' && val.length == 3) s.step(val[2]);
                     s.onChange(renderFrame);
                 }
             });
-            $('#k-proj-title').html(Kartograph.proj[globeopt.proj].title);
+            $('#k-proj-title').html(kartograph.proj[globeopt.proj].title);
             var url = location.href.split('#');
             location.href = url[0]+'#'+globeopt.proj;
         };

@@ -39,7 +39,7 @@ title: Choropleth Maps
                     var div = $('<div />').addClass('mapnail');
                     $('#map').append(div);
 
-                    var map = Kartograph.map(div, w * 0.32, w/3),
+                    var map = kartograph.map(div, w * 0.32, w/3),
                         color = chroma.scale(brewer).domain(departments, 7, 'quantiles', 'density');
 
                     map.setMap(svg);
