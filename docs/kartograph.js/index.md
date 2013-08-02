@@ -320,7 +320,7 @@ To learn more about SVG paths, please read the RaphaelJS documentation.
 
 
     function pt(lon, lat) {
-        return new Kartograph.LonLat(lon, lat);
+        return new kartograph.LonLat(lon, lat);
     }
     map.addGeoPath([pt(52.1, 11), pt(51.3, 10)]);
 

@@ -31,7 +31,7 @@ To label a layer in your map you can use . If ``location()`` returns a string in
 
 
     map.addSymbols({
-        type: Kartograph.Label,
+        type: kartograph.Label,
         data: map.getLayer('countries').getPathsData(),
         location: function(d) { return 'countries.' + d.id; },
         text: function(d) { return d.name; }
@@ -45,7 +45,7 @@ To label a layer in your map you can use . If ``location()`` returns a string in
 See this example
 
     map.addSymbols({
-        type: Kartograph.Bubble,
+        type: kartograph.Bubble,
         data: map.getLayer('countries').getPathsData(),
         location: function(d) { return 'countries.' + d.id; },
         radius: function(d) { return 20; },
@@ -67,7 +67,7 @@ You can use the symbol API to add image marker to your map.
 Sometimes it's useful to control the order in which symbols are drawn to the map. A typical example are sized circles that are more usable when drawn from largest to smallest.
 
     map.addSymbols({
-        type: Kartograph.Bubble,
+        type: kartograph.Bubble,
         sortBy: 'radius desc',
         radius: function(d) { return Math.sqrt(d.value); }
     });
@@ -75,7 +75,7 @@ Sometimes it's useful to control the order in which symbols are drawn to the map
 You can sort by symbol data by passing a function that returns a numerical value or string:
 
     map.addSymbols({
-        type: Kartograph.Bubble,
+        type: kartograph.Bubble,
         sortBy: function(d) { return d.someVar; },
     });
 
@@ -131,7 +131,7 @@ In some cases where you have too many symbols to show, it makes sense to cluster
     }
 
     map.addSymbols({
-        type: Kartograph.Bubble,
+        type: kartograph.Bubble,
         data: cities,
         location: function(city) { return [city.lon, city.lat]; },
         radius: function(d) { return Math.sqrt(city.nb_visits); },
@@ -175,6 +175,6 @@ See [Dorling cartogram tutorial](dorling) for more information.
 
     symbols = map.addSymbols({
         // ...
-        type: Kartograph.Bubble
+        type: kartograph.Bubble
     });
-    Kartograph.dorlingLayout(symbols);
+    kartograph.dorlingLayout(symbols);

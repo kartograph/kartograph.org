@@ -25,7 +25,7 @@ It's up to you whether you want to show the geographical map or not. If you don'
 Now add symbols of the type ``Bubble`` to your map.
 
     symbols = map.addSymbols({
-        type: Kartograph.Bubble,
+        type: kartograph.Bubble,
         data: ...
         location: function(d) {
             // return id of a map layer path to position
@@ -40,4 +40,4 @@ Now add symbols of the type ``Bubble`` to your map.
 
 Last thing you need to do is to run the dorlingLayout helper on your symbols:
 
-    Kartograph.dorlingLayout(symbols);
+    kartograph.dorlingLayout(symbols);
