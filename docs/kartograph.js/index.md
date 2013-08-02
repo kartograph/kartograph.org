@@ -25,15 +25,15 @@ The first step is to create an empty HTML document, include ``jQuery``, ``Raphae
 
 Once the document has loaded you can initialize your Kartograph map using:
 
-	var map = Kartograph.map('#map');
+	var map = kartograph.map('#map');
 
-If the namespace ``Kartograph`` sounds too long for you, you can use the alias ``$K`` instead.
+If the namespace ``kartograph`` sounds too long for you, you can use the alias ``$K`` instead.
 
 	var map = $K.map('#map');
 
 By default Kartograph.js will try to fit the map into the container element. If the container element has a height of 0, the map will be sized to fit the width while maintaining the aspect ratio of the map data. However, you can override this by providing explicit ``width`` and ``height``.
 
-	var map = Kartograph.map('#map', 600, 400);
+	var map = kartograph.map('#map', 600, 400);
 
 ## Loading SVG maps
 
@@ -60,7 +60,7 @@ In case that your callback function lives outside the scope of your map the map 
 
 Kartograph now supports the [Deferred object syntax](http://api.jquery.com/category/deferred-object/), too.
 
-    var mymap = Kartograph.map('#map');
+    var mymap = kartograph.map('#map');
     mymap.loadMap('mymap.svg').done(function() {
         // do something with your map
     });
