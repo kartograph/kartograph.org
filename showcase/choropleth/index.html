@@ -26,11 +26,7 @@ title: Choropleth Maps
         $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
         $.fn.qtip.defaults.style.def = false;
 
-        $.getJSON('departments.json', function(data) {
-
-            $.each(data, function(i, r) {
-                departments[r.id] = r;
-            });
+        $.getJSON('departments.json', function(departments) {
 
             $.get('france-departments.svg', function(svg) {
 
