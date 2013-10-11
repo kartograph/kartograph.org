@@ -516,7 +516,7 @@ Then you can add per-class styles just as you would do in HTML.
     
 ### Conditional styling
 
-Sometimes you want to apply some styles depending on data attributes. Therefor Kartograph.py supports a CSS3 attribute selector-like\* syntax. The following style is applied to all all paths with an attribute 'highway' equals "*motorway*"
+Sometimes you want to apply some styles depending on data attributes. Therefor Kartograph.py supports a CSS3 attribute selector-like\* syntax. The following style is applied to all paths with an attribute "highway" that equals "motorway".
 
     .roads[highway=motorway] {
         stroke-width: 4px;
@@ -541,7 +541,7 @@ Using the numerical comparators you could easily apply a choropleth-like styling
 
 ## Setting Export Parameters
 
-In the ``export`` section you can customize.
+In the ``export`` section you can customize the following things.
 
 ### Map size
 
