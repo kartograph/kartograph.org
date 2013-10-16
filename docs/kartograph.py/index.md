@@ -127,7 +127,7 @@ You can build more complex filters, too. Read more about it in the [filter docum
         }
     }
     K = Kartograph()
-    K.generate(cfg, output='mymap.svg')
+    K.generate(cfg, outfile='mymap.svg')
 
 ### Storing data attributes in SVG output
 
