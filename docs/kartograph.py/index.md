@@ -201,7 +201,7 @@ Although you can use the built in [filtering](#filtering) of Kartograph.py on Po
 
     "mylayer": {
         "src": "postgis:dbname=osm",
-        "table": "planet_osm_polygon"
+        "table": "planet_osm_polygon",
         "query": "boundary = 'administrative'"
     }        
     
