@@ -305,6 +305,15 @@ By passing a dictionary you can define new attribute values for each joined feat
         }
     }
 
+### Buffer polygons before joining
+
+Sometimes, when adjacent features in the source geometries are not using the exact coordinates the joining of map features results in ugly lines inside of the joined polygons. To get around this you actually should try to get higher quality geo data, as there is no easy way to fix the topology automatically. However, there is a simple trick that sometimes works, which is to apply a tiny buffering to the polygons before joining them. The buffering moves the polygon border to the outside, and thus eleminates 'holes' between adjacent features. Usually you only need very very small buffering to fix these issues.
+
+    "join": {
+        "group-by": "REGION_ID",
+        "buffer": 0.0000001
+    }
+
 ## Layer Subtraction and Cropping
 
 Sometimes you need to subtract polygons from one layer from the polygons of another layer. One example use case is when you have state boundaries and lakes in different shapefiles. You can make Kartograph do this by setting the ``layer.subtract-from`` attribute to the id of the layer you want to subtract from. You can also subtract a layer from more than one other layers by providing an array of layer ids.
