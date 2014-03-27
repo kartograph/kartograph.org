@@ -49,4 +49,26 @@ title: USA Projection
 
 <div id="map"></div>
 
-<a href="http://jsfiddle.net/vis4/d8m9A/" target="_blank">Edit on JsFiddle</a>
+<p style="text-align:right">(<a href="http://jsfiddle.net/vis4/d8m9A/" target="_blank">edit on JsFiddle</a>)</p>
+
+<p>This is the YAML configuration used to <a href="http://kartograph.org/docs/kartograph.py/#using-kartograph-py">create</a> the <a href="usa.svg">SVG map</a>. The shapefiles are taken from <a href="http://gadm.org/download">GADM</a> and <a href="http://www.naturalearthdata.com/downloads/10m-physical-vectors">Natural Earth</a>:</p>
+
+<pre><code class="yaml">proj:
+    id: laea-usa
+layers:
+    layer0:
+        src: 'shp/USA_adm1.shp'
+        attributes:
+            key: code
+            label: NAME_1
+        simplify: 1
+    lakes:
+        src: 'shp/ne_10m_lakes.shp'
+        subtract-from: 'layer0'
+        filter:
+            scalerank: 0
+export:
+    round: 0
+    width: 1000
+    crop: false
+</code></pre>
