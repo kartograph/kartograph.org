@@ -2,6 +2,7 @@
 layout: default
 title: Kartograph.org
 showcase:
+ - usa-projection
  - animated-symbols
  - italia
  - choropleth
@@ -17,7 +18,6 @@ toc:
       - ['docs/kartograph.py/', 'Kartograph.py']
       - ['docs/kartograph.js/', 'Kartograph.js']
    Quick Links:
-      - ['http://blog.kartograph.org/', 'Latest News / Blog']
       - ['https://github.com/kartograph/', 'Kartograph @ Github']
       - ['http://twitter.com/kartographjs', 'Kartograph @ Twitter']
 ---
@@ -78,8 +78,7 @@ toc:
 {% for item in page.showcase %}
     <li class="span3">
         <a href="/showcase/{{ item }}/" class="thumbnail">
-            <img style="display:inline-block;background:url(/showcase/{{ item }}/t.png) no-repeat; width:260px; height:180px;border-radius:3px" src="blank" />
-            <!-- <img src="/showcase/{{ item }}/t.png" alt="{{ item }}" />-->
+            <div style="display:inline-block;background:url(/showcase/{{ item }}/t.png) no-repeat; width:260px; height:180px;border-radius:3px;background-size: 260px;" src="blank"></div>
         </a>
     </li>
 {% endfor %}

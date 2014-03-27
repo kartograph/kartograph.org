@@ -1,0 +1,32 @@
+---
+layout: showcase
+title: USA Projection
+---
+
+<script type="text/javascript">
+
+    $(function() {
+
+        var map = $K.map('#map');
+
+        map.loadMap('usa.svg', function() {
+            map.addLayer('layer0', {
+                styles: {
+                    stroke: '#aaa',
+                    fill: '#f6f4f2'
+                },
+                mouseenter: function(d, path) {
+                    path.attr('fill', Math.random() < 0.5 ? '#c04' : '#04c');
+                },
+                mouseleave: function(d, path) {
+                    path.animate({ fill: '#f6f4f2' }, 1000);
+                }
+            });
+        }, { padding: 30 });
+    });
+
+</script>
+
+<div id="map"></div>
+
+<a href="">Edit on JsFiddle</a>

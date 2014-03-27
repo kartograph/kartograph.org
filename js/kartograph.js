@@ -19,7 +19,7 @@
 
 
 (function() {
-  var $, Aitoff, Azimuthal, BBox, Balthasart, Behrmann, BlurFilter, Bubble, CEA, CantersModifiedSinusoidalI, Circle, CohenSutherland, Conic, Cylindrical, EckertIV, EquidistantAzimuthal, Equirectangular, Filter, GallPeters, GlowFilter, GoodeHomolosine, Hatano, HoboDyer, HtmlLabel, Icon, Kartograph, LAEA, LCC, LabeledBubble, LatLon, Line, LinearScale, LogScale, LonLat, Loximuthal, MapLayer, MapLayerPath, Mercator, Mollweide, NaturalEarth, Nicolosi, Orthographic, Path, PieChart, Proj, PseudoConic, PseudoCylindrical, QuantileScale, REbraces, REcomment_string, REfull, REmunged, Robinson, Satellite, Scale, Sinusoidal, SqrtScale, StackedBarChart, Stereographic, SvgLabel, Symbol, SymbolGroup, View, WagnerIV, WagnerV, Winkel3, drawPieChart, filter, hex2rgb, kartograph, log, map_layer_path_uid, munge, munged, parsedeclarations, resolve, restore, root, uid, warn, __point_in_polygon, __proj, __type, _base, _base1, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref2, _ref20, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9,
+  var $, Aitoff, Azimuthal, BBox, Balthasart, Behrmann, BlurFilter, Bubble, CEA, CantersModifiedSinusoidalI, Circle, CohenSutherland, Conic, Cylindrical, EckertIV, EquidistantAzimuthal, Equirectangular, Filter, GallPeters, GlowFilter, GoodeHomolosine, Hatano, HoboDyer, HtmlLabel, Icon, K, Kartograph, LAEA, LAEA_Alaska, LAEA_Hawaii, LAEA_USA, LCC, LabeledBubble, LatLon, Line, LinearScale, LogScale, LonLat, Loximuthal, MapLayer, MapLayerPath, Mercator, Mollweide, NaturalEarth, Nicolosi, Orthographic, Path, PieChart, Proj, PseudoConic, PseudoCylindrical, QuantileScale, REbraces, REcomment_string, REfull, REmunged, Robinson, Satellite, Scale, Sinusoidal, SqrtScale, StackedBarChart, Stereographic, SvgLabel, Symbol, SymbolGroup, View, WagnerIV, WagnerV, Winkel3, drawPieChart, filter, hex2rgb, kartograph, log, map_layer_path_uid, munge, munged, parsedeclarations, resolve, restore, root, uid, warn, __area, __is_clockwise, __point_in_polygon, __proj, __type, _base, _base1, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref2, _ref20, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -29,7 +29,7 @@
 
   kartograph = root.$K = (_ref = root.kartograph) != null ? _ref : root.kartograph = {};
 
-  kartograph.version = "0.7.1";
+  kartograph.version = "0.8.5";
 
   $ = root.jQuery;
 
@@ -453,7 +453,7 @@
       return div;
     };
 
-    Kartograph.prototype.loadMap = function(mapurl, callback, opts) {
+    Kartograph.prototype.load = function(mapurl, callback, opts) {
       var def, me, _base2, _ref4;
 
       me = this;
@@ -480,6 +480,10 @@
         });
       }
       return def.promise();
+    };
+
+    Kartograph.prototype.loadMap = function() {
+      return this.load.apply(this, arguments);
     };
 
     Kartograph.prototype.setMap = function(svg, opts) {
@@ -749,7 +753,7 @@
       forces redraw of every layer
       */
 
-      var cnt, halign, id, layer, me, padding, sg, valign, vp, zoom, _i, _len, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var cnt, halign, id, layer, me, padding, sg, valign, vp, zoom, _i, _len, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
 
       me = this;
       cnt = me.container;
@@ -763,21 +767,27 @@
       if (me.paper != null) {
         me.paper.setSize(vp.width, vp.height);
       }
-      vp = me.viewport;
-      padding = (_ref4 = me.opts.padding) != null ? _ref4 : 0;
-      halign = (_ref5 = me.opts.halign) != null ? _ref5 : 'center';
-      valign = (_ref6 = me.opts.valign) != null ? _ref6 : 'center';
+      _ref4 = me.layers;
+      for (id in _ref4) {
+        layer = _ref4[id];
+        if ((layer.paper != null) && layer.paper !== me.paper) {
+          layer.paper.setSize(vp.width, vp.height);
+        }
+      }
+      padding = (_ref5 = me.opts.padding) != null ? _ref5 : 0;
+      halign = (_ref6 = me.opts.halign) != null ? _ref6 : 'center';
+      valign = (_ref7 = me.opts.valign) != null ? _ref7 : 'center';
       zoom = me.opts.zoom;
       me.viewBC = new kartograph.View(me.viewAB.asBBox(), vp.width * zoom, vp.height * zoom, padding, halign, valign);
-      _ref7 = me.layers;
-      for (id in _ref7) {
-        layer = _ref7[id];
+      _ref8 = me.layers;
+      for (id in _ref8) {
+        layer = _ref8[id];
         layer.setView(me.viewBC);
       }
       if (me.symbolGroups != null) {
-        _ref8 = me.symbolGroups;
-        for (_i = 0, _len = _ref8.length; _i < _len; _i++) {
-          sg = _ref8[_i];
+        _ref9 = me.symbolGroups;
+        for (_i = 0, _len = _ref9.length; _i < _len; _i++) {
+          sg = _ref9[_i];
           sg.onResize();
         }
       }
@@ -940,15 +950,19 @@
 
   })();
 
-  kartograph.Kartograph = Kartograph;
+  K = kartograph;
+
+  root.kartograph = function(container, width, height) {
+    return new Kartograph(container, width, height);
+  };
 
   kartograph.map = function(container, width, height) {
-    /* short-hand constructor
-    */
     return new Kartograph(container, width, height);
   };
 
   kartograph.__mapCache = {};
+
+  $.extend(root.kartograph, K);
 
   /*
       kartograph - a svg mapping library 
@@ -1164,38 +1178,47 @@
       return _results;
     };
 
-    MapLayer.prototype.style = function(prop, value, duration, delay) {
-      var anim, at, dly, dur, key, me, path, val, _i, _len, _ref4;
+    MapLayer.prototype.style = function(props, value, duration, delay) {
+      var key, me;
 
       me = this;
-      if (__type(prop) === "object") {
-        for (key in prop) {
-          val = prop[key];
-          me.style(key, val);
-        }
-        return me;
+      if (__type(props) === "string") {
+        key = props;
+        props = {};
+        props[key] = value;
+      } else if (__type(props) === "object") {
+        delay = duration;
+        duration = value;
       }
       if (duration == null) {
         duration = 0;
       }
-      if (delay == null) {
-        delay = 0;
-      }
-      _ref4 = me.paths;
-      for (_i = 0, _len = _ref4.length; _i < _len; _i++) {
-        path = _ref4[_i];
-        val = resolve(value, path.data);
+      $.each(me.paths, function(i, path) {
+        var anim, attrs, dly, dur, prop, val;
+
+        attrs = {};
+        for (prop in props) {
+          val = props[prop];
+          attrs[prop] = resolve(val, path.data);
+        }
         dur = resolve(duration, path.data);
         dly = resolve(delay, path.data);
-        if (dur > 0) {
-          at = {};
-          at[prop] = val;
-          anim = Raphael.animation(at, dur * 1000);
-          path.svgPath.animate(anim.delay(dly * 1000));
-        } else {
-          path.svgPath.attr(prop, val);
+        if (dly == null) {
+          dly = 0;
         }
-      }
+        if (dur > 0) {
+          anim = Raphael.animation(attrs, dur * 1000);
+          return path.svgPath.animate(anim.delay(dly * 1000));
+        } else {
+          if (delay === 0) {
+            return setTimeout(function() {
+              return path.svgPath.attr(attrs);
+            }, 0);
+          } else {
+            return path.svgPath.attr(attrs);
+          }
+        }
+      });
       return me;
     };
 
@@ -1589,14 +1612,21 @@
     	represents complex polygons (aka multi-polygons)
     */
     function Path(type, contours, closed) {
-      var self;
+      var cnt, self, _i, _len;
 
       if (closed == null) {
         closed = true;
       }
       self = this;
       self.type = type;
-      self.contours = contours;
+      self.contours = [];
+      for (_i = 0, _len = contours.length; _i < _len; _i++) {
+        cnt = contours[_i];
+        if (!__is_clockwise(cnt)) {
+          cnt.reverse();
+        }
+        self.contours.push(cnt);
+      }
       self.closed = closed;
     }
 
@@ -1641,7 +1671,7 @@
     };
 
     Path.prototype.area = function() {
-      var area, cnt, i, me, _i, _j, _len, _ref5, _ref6;
+      var area, cnt, me, _i, _len, _ref5;
 
       me = this;
       if (me.areas != null) {
@@ -1652,12 +1682,7 @@
       _ref5 = me.contours;
       for (_i = 0, _len = _ref5.length; _i < _len; _i++) {
         cnt = _ref5[_i];
-        area = 0;
-        for (i = _j = 0, _ref6 = cnt.length - 2; 0 <= _ref6 ? _j <= _ref6 : _j >= _ref6; i = 0 <= _ref6 ? ++_j : --_j) {
-          area += cnt[i][0] * cnt[i + 1][1] - cnt[i + 1][0] * cnt[i][1];
-        }
-        area *= .5;
-        area = area;
+        area = __area(cnt);
         me.areas.push(area);
         me._area += area;
       }
@@ -1677,6 +1702,11 @@
         cnt_orig = me.contours[i];
         cnt = [];
         l = cnt_orig.length;
+        a = me.areas[i];
+        k = a / area;
+        if (k === 0) {
+          continue;
+        }
         for (j = _j = 0, _ref6 = l - 1; 0 <= _ref6 ? _j <= _ref6 : _j >= _ref6; j = 0 <= _ref6 ? ++_j : --_j) {
           p0 = cnt_orig[j];
           p1 = cnt_orig[(j + 1) % l];
@@ -1696,7 +1726,6 @@
             }
           }
         }
-        a = me.areas[i];
         x = y = x_ = y_ = 0;
         l = cnt.length;
         _lengths = [];
@@ -1716,7 +1745,6 @@
           x += w * p0[0];
           y += w * p0[1];
         }
-        k = a / area;
         cx += x * k;
         cy += y * k;
       }
@@ -1919,6 +1947,25 @@
       angle += dtheta;
     }
     return Math.abs(angle) >= pi;
+  };
+
+  __is_clockwise = function(contour) {
+    return __area(contour) > 0;
+  };
+
+  __area = function(contour) {
+    var i, n, s, x1, x2, y1, y2, _i;
+
+    s = 0;
+    n = contour.length;
+    for (i = _i = 0; 0 <= n ? _i < n : _i > n; i = 0 <= n ? ++_i : --_i) {
+      x1 = contour[i][0];
+      y1 = contour[i][1];
+      x2 = contour[(i + 1) % n][0];
+      y2 = contour[(i + 1) % n][1];
+      s += x1 * y2 - x2 * y1;
+    }
+    return s *= 0.5;
   };
 
   /*
@@ -3120,6 +3167,82 @@
 
   __proj['laea'] = LAEA;
 
+  LAEA_Alaska = (function(_super) {
+    __extends(LAEA_Alaska, _super);
+
+    function LAEA_Alaska() {
+      var opts;
+
+      opts = {
+        lon0: -150,
+        lat0: 90
+      };
+      LAEA_Alaska.__super__.constructor.call(this, opts);
+      this.scale = Math.sqrt(2) * 0.5 * 0.33;
+    }
+
+    return LAEA_Alaska;
+
+  })(LAEA);
+
+  LAEA_Hawaii = (function(_super) {
+    __extends(LAEA_Hawaii, _super);
+
+    function LAEA_Hawaii(opts) {
+      opts = {
+        lon0: -157,
+        lat0: 20
+      };
+      LAEA_Hawaii.__super__.constructor.call(this, opts);
+    }
+
+    return LAEA_Hawaii;
+
+  })(LAEA);
+
+  LAEA_USA = (function(_super) {
+    __extends(LAEA_USA, _super);
+
+    function LAEA_USA(opts) {
+      opts.lon0 = -100;
+      opts.lat0 = 45;
+      LAEA_USA.__super__.constructor.call(this, opts);
+      this.laea_alaska = new LAEA_Alaska();
+      this.laea_hawaii = new LAEA_Hawaii();
+    }
+
+    LAEA_USA.prototype.project = function(lon, lat) {
+      var alaska, hawaii, x, y, _ref11, _ref12, _ref13;
+
+      alaska = lat > 44 && (lon < -127 || lon > 170);
+      hawaii = lon < -127 && lat < 44;
+      if (alaska) {
+        if (lon > 170) {
+          lon -= 380;
+        }
+        _ref11 = this.laea_alaska.project(lon, lat), x = _ref11[0], y = _ref11[1];
+      } else if (hawaii) {
+        _ref12 = this.laea_hawaii.project(lon, lat), x = _ref12[0], y = _ref12[1];
+      } else {
+        _ref13 = LAEA_USA.__super__.project.call(this, lon, lat), x = _ref13[0], y = _ref13[1];
+      }
+      if (alaska) {
+        x += -180;
+        y += 100;
+      }
+      if (hawaii) {
+        y += 220;
+        x += -80;
+      }
+      return [x, y];
+    };
+
+    return LAEA_USA;
+
+  })(LAEA);
+
+  __proj['laea-usa'] = LAEA_USA;
+
   Stereographic = (function(_super) {
     __extends(Stereographic, _super);
 
@@ -3637,7 +3760,7 @@
   */
 
 
-  kartograph.Kartograph.prototype.dotgrid = function(opts) {
+  Kartograph.prototype.dotgrid = function(opts) {
     var anim, data, data_col, data_key, delay, dly, dotgrid, dotstyle, ds, dur, f, g, gridsize, id, layer, layer_id, me, path, pathData, paths, pd, row, size, sizes, x, y, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _n, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref20, _ref21, _ref22, _ref23, _ref24, _ref25, _ref26;
 
     me = this;
@@ -3789,7 +3912,7 @@
     return el;
   };
 
-  kartograph.Kartograph.prototype.addFilter = function(id, type, params) {
+  Kartograph.prototype.addFilter = function(id, type, params) {
     var doc, fltr, me;
 
     if (params == null) {
@@ -4093,7 +4216,7 @@
   */
 
 
-  kartograph.Kartograph.prototype.addGeoPath = function(points, cmds, className) {
+  Kartograph.prototype.addGeoPath = function(points, cmds, className) {
     var me, path, path_str;
 
     if (cmds == null) {
@@ -4114,7 +4237,7 @@
     return path;
   };
 
-  kartograph.Kartograph.prototype.getGeoPathStr = function(points, cmds) {
+  Kartograph.prototype.getGeoPathStr = function(points, cmds) {
     var cmd, i, me, path_str, pt, xy, _ref17;
 
     if (cmds == null) {
@@ -4143,7 +4266,7 @@
     return path_str;
   };
 
-  kartograph.Kartograph.prototype.addGeoPolygon = function(points, className) {
+  Kartograph.prototype.addGeoPolygon = function(points, className) {
     /* converts a set of
     */
 
@@ -4999,7 +5122,7 @@
 
   kartograph.SymbolGroup = SymbolGroup;
 
-  kartograph.Kartograph.prototype.addSymbols = function(opts) {
+  Kartograph.prototype.addSymbols = function(opts) {
     opts.map = this;
     return new SymbolGroup(opts);
   };
