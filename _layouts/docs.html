@@ -55,6 +55,7 @@ styles: ['/js/highlight/styles/github.css']
 		var tocTop = $('.toc').offset().top, tocTimeout;
 
 		function moveTOC() {
+         if (window.innerWidth < 780) return;
 			var sy = $(document).scrollTop(),
 				top = sy > 1000 ? sy - tocTop + 30 : 0;
 			$('.toc').css({
