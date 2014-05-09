@@ -22,17 +22,8 @@ jsplugins:
     font: 11px 'Lucida Grande', sans-serif;
 }
 </style>
-<script type="text/javascript" src="zeroclipboard.js"></script>
+<script type="text/javascript" src="dat.gui.js"></script>
 <script type="text/javascript">
-$script.ready(['kartograph', 'datgui'], function() {
-
-    var clip;
-
-    // initialize copy button
-    ZeroClipboard.setMoviePath( 'zeroclipboard.swf' );
-    clip = new ZeroClipboard.Client();
-    clip.setHandCursor( true );
-    clip.glue('d_clip_button', 'd_clip_container');
 
     var GlobeOpt = function() {
         this.lon0 = 20;
@@ -86,7 +77,7 @@ $script.ready(['kartograph', 'datgui'], function() {
             return ctx;
         },
         showMap = function(p, coastlines) {
-            P = new Kartograph.proj[p](globeopt);
+            P = new kartograph.proj[p](globeopt);
             xy = P.project(13,14);
             if (isNaN(xy[0]) || isNaN(xy[1])) {
                 console.error(p, P, xy);
@@ -105,7 +96,7 @@ $script.ready(['kartograph', 'datgui'], function() {
             len = ctx.measureText(p.toUpperCase()).width;
             ctx.beginPath();
             ctx.fillStyle ="#fff";
-            view = new Kartograph.View(bbox, w, h, 10);
+            view = new kartograph.View(bbox, w, h, 10);
             for (i=0;i<sea.length;i++) {
                 xy = view.project(sea[i]);
                 if (i==0) ctx.moveTo(xy[0], xy[1]);
@@ -184,7 +175,7 @@ $script.ready(['kartograph', 'datgui'], function() {
             // projection
             cfg['proj'] = { id: globeopt.proj };
             $.each(projopts, function(key, val) {
-                if (Kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
                     cfg.proj[key] = globeopt[key];
                 }
             });
@@ -217,7 +208,7 @@ $script.ready(['kartograph', 'datgui'], function() {
 
             var jsn = JSON.stringify(cfg, undefined, 2);
             $('#cfg').html(jsn);
-            clip.setText(jsn);
+
         },
         renderFrame = function() {
             showMap(globeopt.proj, coastlines);
@@ -237,7 +228,7 @@ $script.ready(['kartograph', 'datgui'], function() {
 
         gui.remember(globeopt);
         var proj = [];
-        $.each(Kartograph.proj, function(p) {
+        $.each(kartograph.proj, function(p) {
             proj.push(p);
         })
         proj = proj.sort();
@@ -278,7 +269,7 @@ $script.ready(['kartograph', 'datgui'], function() {
                 renderFrame();
             });
             $.each(projopts, function(key, val) {
-                if (Kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
+                if (kartograph.proj[globeopt.proj].parameters.indexOf(key) >= 0) {
                     var s = f.add(globeopt, key, val[0], val[1]);
                     if (val.length == 3) s.step(val[2]);
                     s.onChange(renderFrame);
@@ -377,27 +368,24 @@ $script.ready(['kartograph', 'datgui'], function() {
         });
     }
 
-});
+
 </script>
 
 <div class="row">
-    <div class="span12" id="map-parent">
+    <div class="span9" id="map-parent">
     </div>
 </div>
 
 <div class="row">
-    <div class="span7">
+    <div class="span5">
         <p>Here's the JSON config that you can pass to Kartograph. Note that you probably need to update the path of the shapefile. This example uses the <a href="http://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/">admin0 countries</a> of the natural earth project.</p>
         <p>
-            <div id="d_clip_container" style="position:relative; float: left; margin-right: 1ex; margin-bottom:1ex">
-               <a class="btn" id="d_clip_button">copy json</a>
-            </div>
-            <a class="btn btn-primary" id="generate">generate svg map</a></p>
+
         <pre id="cfg" style="clear:both;">
 
         </pre>
     </div>
-    <div class="span5">
+    <div class="span4">
         <div class="k-gui"></div>
     </div>
 </div>
