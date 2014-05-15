@@ -7,7 +7,7 @@ title: USA Projection
 
     $(function() {
 
-        var map = $K.map('#map');
+        var map = kartograph.map('#map');
 
         map.loadMap('usa.svg', function() {
 
@@ -31,7 +31,7 @@ title: USA Projection
             ];
 
             map.addSymbols({
-                type: $K.LabeledBubble,
+                type: kartograph.LabeledBubble,
                 data: points_of_interest,
                 location: function(d) { return [d.lon, d.lat] },
                 title: function(d) { return d.name; },

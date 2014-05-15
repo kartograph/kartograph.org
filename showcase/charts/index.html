@@ -10,7 +10,7 @@ $(function() {
     var map, updateMap, symbols,
         mc = $('#map');
 
-    map = $K.map('#map');
+    map = kartograph.map('#map');
 
     map.loadCSS('style.css', function() {
 
@@ -28,7 +28,7 @@ $(function() {
                         prop = $('.gender.btn-primary').data('val')+'-'+$('.age.btn-primary').data('val'),
                         type = $('.chart.btn-primary').data('val');
 
-                    scale = $K.scale.linear(data.rows, 'AREA');
+                    scale = kartograph.scale.linear(data.rows, 'AREA');
 
                     if (symbols) symbols.remove();
 

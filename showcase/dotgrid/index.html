@@ -17,7 +17,7 @@ title: Dot Grid Maps
 			success: function(data) {
 				dep_data = data;
 	
-				window.m = map = $K.map('#map', w, w);	
+				window.m = map = kartograph.map('#map', w, w);	
 				map.loadMap('france-departments.svg', function() {	
 					map.addLayer('departments', {
 						key: 'id'

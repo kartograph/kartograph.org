@@ -8,7 +8,7 @@ title: La Bella Italia
 
     $(function() {
         // import some classes
-        window.map = $K.map('#map');
+        window.map = kartograph.map('#map');
 
         var resize = function() {
             var c = $('#map');
@@ -62,31 +62,31 @@ title: La Bella Italia
             resize();
 
             var cities = [
-                [new $K.LonLat(12.469482,41.869561), 'Roma', true],
-                [new $K.LonLat(11.3598, 44.4808), 'Bologna'],
-                [new $K.LonLat(14.241028, 40.86368), 'Napoli'],
-                [new $K.LonLat(13.359375, 38.08269), 'Palermo'],
-                [new $K.LonLat(9.162598, 45.444717), 'Milano'],
-                [new $K.LonLat(12.340393, 45.448571), 'Venezia'],
-                [new $K.LonLat(9.492188, 40.896906), 'Olbia'],
-                [new $K.LonLat(9.107666, 39.215231), 'Cagliari'],
-                [new $K.LonLat(15.500586,38.169114), 'Messina']
+                [new kartograph.LonLat(12.469482,41.869561), 'Roma', true],
+                [new kartograph.LonLat(11.3598, 44.4808), 'Bologna'],
+                [new kartograph.LonLat(14.241028, 40.86368), 'Napoli'],
+                [new kartograph.LonLat(13.359375, 38.08269), 'Palermo'],
+                [new kartograph.LonLat(9.162598, 45.444717), 'Milano'],
+                [new kartograph.LonLat(12.340393, 45.448571), 'Venezia'],
+                [new kartograph.LonLat(9.492188, 40.896906), 'Olbia'],
+                [new kartograph.LonLat(9.107666, 39.215231), 'Cagliari'],
+                [new kartograph.LonLat(15.500586,38.169114), 'Messina']
             ];
 
             var regions = [
-                [new $K.LonLat(9.030762, 40.128491), 'Sardegna', 18],
-                [new $K.LonLat(9.052734, 42.265607), 'Corse', 18],
-                [new $K.LonLat(9.824023, 35.613561), 'Tunisia', 22],
-                [new $K.LonLat(17.819824, 44.245199), 'Bosnia', 20],
-                [new $K.LonLat(14.589844, 45.996962), 'Slovenia', 19],
-                [new $K.LonLat(16.413574, 45.721522), 'Croatia', 19],
-                [new $K.LonLat(17.709961, 46.845164), 'Hungary', 17],
-                [new $K.LonLat(14.172363, 47.323931), 'Austria', 17],
-                [new $K.LonLat(5.088672, 45.640219), 'France', 20]
+                [new kartograph.LonLat(9.030762, 40.128491), 'Sardegna', 18],
+                [new kartograph.LonLat(9.052734, 42.265607), 'Corse', 18],
+                [new kartograph.LonLat(9.824023, 35.613561), 'Tunisia', 22],
+                [new kartograph.LonLat(17.819824, 44.245199), 'Bosnia', 20],
+                [new kartograph.LonLat(14.589844, 45.996962), 'Slovenia', 19],
+                [new kartograph.LonLat(16.413574, 45.721522), 'Croatia', 19],
+                [new kartograph.LonLat(17.709961, 46.845164), 'Hungary', 17],
+                [new kartograph.LonLat(14.172363, 47.323931), 'Austria', 17],
+                [new kartograph.LonLat(5.088672, 45.640219), 'France', 20]
             ];
 
             map.addSymbols({
-                type: $K.Label,
+                type: kartograph.Label,
                 data: regions,
                 class: 'clblbg',
                 location: function(d) { return d[0]; },
@@ -95,7 +95,7 @@ title: La Bella Italia
             });
 
             map.addSymbols({
-                type: $K.Label,
+                type: kartograph.Label,
                 data: regions,
                  class: 'clblfg',
                 location: function(d) { return d[0]; },
@@ -104,7 +104,7 @@ title: La Bella Italia
             });
 
             map.addSymbols({
-                type: $K.Label,
+                type: kartograph.Label,
                 data: cities,
                  class: 'citylbl',
                 location: function(d) { return d[0]; },
@@ -114,7 +114,7 @@ title: La Bella Italia
             });
 
             map.addSymbols({
-                type: $K.Icon,
+                type: kartograph.Icon,
                 data: cities,
                 class: 'cityico',
                 location: function(d) { return d[0]; },

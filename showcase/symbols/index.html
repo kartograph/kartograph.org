@@ -17,7 +17,7 @@ jsplugins:
         $.fn.qtip.defaults.style.classes = 'ui-tooltip-bootstrap';
         $.fn.qtip.defaults.style.def = false;
 
-        var map = $K.map('#map');
+        var map = kartograph.map('#map');
 
         map.loadMap('DE.svg', function() {
             map.addLayer('context', {
@@ -48,10 +48,10 @@ jsplugins:
                 dataType: 'json',
                 success: function(cities) {
 
-                    var scale = $K.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([0, 60]);
+                    var scale = kartograph.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([0, 60]);
 
                     map.addSymbols({
-                        type: $K.Bubble,
+                        type: kartograph.Bubble,
                         data: cities,
                         location: function(city) {
                             return [city.long, city.lat];
@@ -84,11 +84,11 @@ jsplugins:
 cities = [{ city_name: "Berlin", nb_visits: 1496, lon: 13.4, lat: 52.517 }, ...];
 
 // create a scale for radii
-var scale = $K.scale.sqrt(cities, 'nb_visits').range([0, 40]);
+var scale = kartograph.scale.sqrt(cities, 'nb_visits').range([0, 40]);
 
 // add bubbles to the map
 map.addSymbols({
-    type: $K.Bubble,
+    type: kartograph.Bubble,
     data: cities,
     location: function(city) {
         return [city.lon, city.lat];

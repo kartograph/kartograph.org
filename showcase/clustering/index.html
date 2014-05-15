@@ -18,7 +18,7 @@ $(function() {
 
         function map(cont, clustering) {
 
-            var map = $K.map(cont);
+            var map = kartograph.map(cont);
 
             map.loadMap('GBR.svg', function() {
                 map.addLayer('context', {
@@ -44,10 +44,10 @@ $(function() {
                     }
                 });
 
-                var scale = $K.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([2, 30]);
+                var scale = kartograph.scale.sqrt(cities.concat([{ nb_visits: 0 }]), 'nb_visits').range([2, 30]);
 
                 map.addSymbols({
-                    type: $K.Bubble,
+                    type: kartograph.Bubble,
                     data: cities,
                     clustering: clustering,
                     aggregate: function(cities) {

@@ -15,7 +15,7 @@ title: Animated Symbols
       c = $('#map');
       c.height(c.width()*.65);
 
-      map = window.m = $K.map('#map');
+      map = window.m = kartograph.map('#map');
 
       map.loadMap('map-usa.svg', function() {
          map.addLayer('usa', {
@@ -37,7 +37,7 @@ title: Animated Symbols
                });
             });
 
-            scale = $K.scale.linear(crimeCities, key);
+            scale = kartograph.scale.linear(crimeCities, key);
             colscale = chroma.scale(chroma.brewer.PiYG.slice().reverse());
 
             function symbolAttrs(d) {
@@ -51,7 +51,7 @@ title: Animated Symbols
             }
 
             symbols = map.addSymbols({
-               type: $K.Bubble,
+               type: kartograph.Bubble,
                data: crimeCities,
                location: function(d) { return d.ll },
                attrs: symbolAttrs,
@@ -62,7 +62,7 @@ title: Animated Symbols
                key = $('.dataset.btn-primary').data('val')
                   + $('.year.btn-primary').html()
                   + $('.type.btn-primary').data('val');
-               scale = $K.scale.linear(crimeCities, key);
+               scale = kartograph.scale.linear(crimeCities, key);
                symbols.update({
                   attrs: symbolAttrs,
                   title: function(d) { return $.trim(d.City)+' ('+Math.round(d[key] * 100000)+' per 100k)'; }
@@ -117,7 +117,7 @@ function symbolAttrs(city) {
 
 // initialize symbols
 symbols = map.addSymbols({
-   type: $K.Bubble,
+   type: kartograph.Bubble,
    data: crimeCities,
    location: function(d) { return d.ll },
    attrs: symbolAttrs
@@ -126,7 +126,7 @@ symbols = map.addSymbols({
 // a function to update the symbols..
 updateMap = function() {
    key = $('.crime-type').val();
-   scale = $K.scale.linear(crimeCities, key);
+   scale = kartograph.scale.linear(crimeCities, key);
 
    symbols.update({
       attrs: symbolAttrs

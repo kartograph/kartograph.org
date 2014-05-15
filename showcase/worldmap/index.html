@@ -30,7 +30,7 @@ $script.ready(['kartograph', 'qtip'], function() {
 					dep_data[r.id] = r;
 				})
 
-				map = $K.map('#map', w, w);
+				map = kartograph.map('#map', w, w);
 				map.loadMap('france-departments.svg', function() {
 					map.addLayer('departments', {
 						titles: function(d) { return d.id },

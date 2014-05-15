@@ -8,7 +8,7 @@ plugins: [jquery.csv]
 $script.ready('kartograph', function() {
 
     $(function() {
-        window.map = $K.map('#map');
+        window.map = kartograph.map('#map');
         map.loadMap('map.svg', function() {
             map.addLayer({
                 id: 'nuts',

@@ -16,7 +16,7 @@ $(function() {
     c = $('#map');
     c.height(c.width()*.5);
 
-    map = $K.map('#map');
+    map = kartograph.map('#map');
 
     map.loadMap('map-usa.svg', function() {
 
@@ -44,7 +44,7 @@ $(function() {
 
                     maxRad = $('.type.btn-primary').data('maxrad');
 
-                    scale = $K.scale.linear(crimeCities, prop);
+                    scale = kartograph.scale.linear(crimeCities, prop);
 
                     $.each(crimeCities, function(i, c) {
                         var bar, pts;
