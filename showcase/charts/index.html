@@ -34,7 +34,7 @@ $(function() {
 
                     symbols = map.addSymbols({
                         data: data.rows,
-                        type: $K[type],
+                        type: kartograph[type],
                         colors: ['#1f68b4', '#aaceff'],
                         border: '#fff',
                         values: function(d) { return [d[prop],100-d[prop]] },

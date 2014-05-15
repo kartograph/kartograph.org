@@ -1029,9 +1029,9 @@
 
   })(LonLat);
 
-  kartograph.LonLat = LonLat;
+  root.kartograph.LonLat = LonLat;
 
-  kartograph.LatLon = LatLon;
+  root.kartograph.LatLon = LatLon;
 
   /*
       kartograph - a svg mapping library 
@@ -5492,7 +5492,7 @@ function kdtree() {
 
   Bubble.layers = [];
 
-  kartograph.Bubble = Bubble;
+  root.kartograph.Bubble = Bubble;
 
   /*
       kartograph - a svg mapping library 
@@ -5585,7 +5585,7 @@ function kdtree() {
 
   Icon.layers = [];
 
-  kartograph.Icon = Icon;
+  root.kartograph.Icon = Icon;
 
   /*
       kartograph - a svg mapping library
@@ -5664,7 +5664,7 @@ function kdtree() {
 
   SvgLabel.layers = [];
 
-  kartograph.Label = SvgLabel;
+  root.kartograph.Label = SvgLabel;
 
   HtmlLabel = (function(_super) {
     __extends(HtmlLabel, _super);
@@ -5741,7 +5741,7 @@ function kdtree() {
     }
   ];
 
-  kartograph.HtmlLabel = HtmlLabel;
+  root.kartograph.HtmlLabel = HtmlLabel;
 
   /*
       kartograph - a svg mapping library
@@ -5865,7 +5865,7 @@ function kdtree() {
 
   LabeledBubble.layers = [];
 
-  kartograph.LabeledBubble = LabeledBubble;
+  root.kartograph.LabeledBubble = LabeledBubble;
 
   /*
       kartograph - a svg mapping library
@@ -6004,7 +6004,7 @@ function kdtree() {
 
   PieChart.layers = [];
 
-  kartograph.PieChart = PieChart;
+  root.kartograph.PieChart = PieChart;
 
   /*
   pie chart extension for RaphaelJS
@@ -6248,6 +6248,6 @@ drawStackedBars = function (cx, cy, w, h, values, labels, colors, stroke) {
 
   StackedBarChart.layers = [];
 
-  kartograph.StackedBarChart = StackedBarChart;
+  root.kartograph.StackedBarChart = StackedBarChart;
 
 }).call(this);
