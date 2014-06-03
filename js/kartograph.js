@@ -4804,7 +4804,7 @@
 
     SymbolGroup.prototype.tooltips = function(cb) {
       me = this;
-      me.tooltips = cb;
+      me.tooltip = cb;
       me._initTooltips();
       return me;
     };
