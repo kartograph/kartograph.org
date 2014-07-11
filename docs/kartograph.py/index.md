@@ -14,6 +14,7 @@ To install Kartograph.py you need to run Python (something like 2.7) and a coupl
 * Installing on [Ubuntu](install-ubuntu.html)
 * Installing on [Mac OS X](install-macosx.html)
 * Installing on [Windows](install-windows.html)
+* Installing using [Docker](install-docker.html)
 
 After you installed all the pre-requisites, installing Kartograph.py should be as easy as
 
