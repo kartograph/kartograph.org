@@ -348,6 +348,8 @@ Another use case is that you need to crop a layer to a existing layer. You can d
 
 ## Special Layers: Graticule and Sea
 
+Currently special layers require [bounds](#framing-the-map) to be defined or they will throw an error.
+
 ### Graticule
 
 The following would add graticule lines for every 5°.
