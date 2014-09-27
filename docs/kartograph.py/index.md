@@ -197,7 +197,7 @@ Please refer to [Psycopg documentation](http://initd.org/psycopg/docs/module.htm
 
 ### Querying the database
 
-Although you can use the built in [filtering](#filtering) of Kartograph.py on PostGIS layers, too, sometimes it is a lot faster to let PostGIS do the filtering. Therefor you can provide the ``layer.query`` attribute.
+Although you can use the built in [filtering](#filtering-map-features) of Kartograph.py on PostGIS layers, too, sometimes it is a lot faster to let PostGIS do the filtering. Therefor you can provide the ``layer.query`` attribute.
 
     "mylayer": {
         "src": "postgis:dbname=osm",
@@ -211,7 +211,7 @@ Kartograph.py will add the provided string to the WHERE part of the query.
 
 ### Keeping meta attributes of PostGIS geometries
 
-Keeping the attributes (read: non-geometry columns) of your PostGIS table works exactly the same way as for [shapefile layers](#keeping-data-attributes).
+Keeping the attributes (read: non-geometry columns) of your PostGIS table works exactly the same way as for [shapefile layers](#storing-data-attributes-in-svg-output).
 
 
 ### Creating Maps from OpenStreetMap data
@@ -437,7 +437,7 @@ In some situations you don't want to mess around with lon/lat bounding boxes, bu
 
 ![clipping to China](crop-polygon.png)
     
-Sometimes you just want to focus the map on one feature while keeping other features visible around it. Therefor you can add ``filter`` to the bounds data attribute. It uses the same filter syntax as seen in the [layer section](#filtering).
+Sometimes you just want to focus the map on one feature while keeping other features visible around it. Therefor you can add ``filter`` to the bounds data attribute. It uses the same filter syntax as seen in the [layer section](#filtering-map-features).
 
     "bounds": {
         "mode": "polygons",
@@ -449,7 +449,7 @@ Sometimes you just want to focus the map on one feature while keeping other feat
 
 
 
-The **layer** option refers to the id of a layer defined in the [layers section](#layers).
+The **layer** option refers to the id of a layer defined in the [layers section](#adding-map-layers).
 
 ### Omitting tiny islands in boundary calculation
 
