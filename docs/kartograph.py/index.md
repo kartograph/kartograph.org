@@ -67,7 +67,10 @@ The second way is to include Kartograph in a Python script. You could
     K = Kartograph()
     K.generate(config, outfile='mymap.svg')
 
-The following chapters will cover the details of the map configuration syntax. The example configurations are shown in JSON format.
+The following chapters will cover the details of the map configuration syntax. The example configurations are shown in JSON format. It's crucial to note that Python dictionaries are unordered, which means that to retain layer order the layer definitions in the config **must** be defined as ``OrderedDict``. When loading an external file this can be achieved by defining ``object_pairs_hook`` in the ``json.loads`` function as follows
+
+    from collections import OrderedDict
+    config = json.loads(file, object_pairs_hook=OrderedDict)
 
 ## Adding Map Layers
 
