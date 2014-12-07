@@ -30,7 +30,7 @@ Activate PostGIS on that database. You need to know where you installed PostGIS 
 
 Download a fresh OpenStreetMap dump. You can use either the XML version (.osm) or the binary version (.osm.pbf).
 
-    > wget http://download.geofabrik.de/osm/europe/germany/berlin.osm.pbf
+    > wget http://download.geofabrik.de/europe/germany/berlin-latest.osm.pbf
 
 
 Install [osm2pgsql](http://wiki.openstreetmap.org/wiki/Osm2pgsql) and import the OSM dump into the database. 
