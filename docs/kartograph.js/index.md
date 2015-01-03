@@ -301,7 +301,35 @@ To learn more about symbol maps, please check out the [symbol map documentation]
 
 ## Dot-Grids
 
-???
+Kartograph.js provides ``dotgrid`` as an easy API for creating [dot grid maps](/showcase/dotgrid/). You at least need to pass a dictionary with the following properties:
+
+* ``data`` — an array of data objects of which each will be represented by a dot-grid
+* ``gridsize`` — a number representing density of a dot-grid
+* ``size`` — a function which determines the dot size depending on data
+* ``style`` — a dictionary specifying the dot style
+
+For example:
+
+    map.dotgrid({
+        data: dep_data,
+        gridsize: 11,
+        size: dotsize,
+        style: function(d) {
+            return {
+                fill: '#804',
+                stroke: '#fff',
+            }
+        }
+    });
+
+In the above example, *dotsize* is a scale defined as:
+
+    scale = kartograph.scale.[scale_type](dep_data, [density]),
+    dotsize = function(d) {
+        return 1+Math.sqrt(scale(d.density))*[max_dot_size];
+    };
+
+You can employ different scale types as shown in [dot grid maps example](/showcase/dotgrid/).
 
 ## SVG Filter
 
