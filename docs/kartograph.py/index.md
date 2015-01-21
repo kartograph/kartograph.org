@@ -363,7 +363,7 @@ The following would add graticule lines for every 5°.
 The sea layer is especially useful in non-rectangular world maps, where the 'background' layer could be a circle, a cone or whatever geometry.
 
     "background": {
-        "special": "sea",
+        "special": "sea"
     }
 
 ## Projection 
@@ -429,7 +429,7 @@ In some situations you don't want to mess around with lon/lat bounding boxes, bu
     "bounds": {
         "mode": "polygons",
         "data": {
-            "layer": "countries",
+            "layer": "countries"
         }
     }
 
