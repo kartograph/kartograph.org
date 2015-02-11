@@ -30,7 +30,7 @@ Activate PostGIS on that database. You need to know where you installed PostGIS 
 
 Download a fresh OpenStreetMap dump. You can use either the XML version (.osm) or the binary version (.osm.pbf).
 
-    > wget http://download.geofabrik.de/osm/europe/germany/berlin.osm.pbf
+    > wget http://download.geofabrik.de/europe/germany/berlin-latest.osm.pbf
 
 
 Install [osm2pgsql](http://wiki.openstreetmap.org/wiki/Osm2pgsql) and import the OSM dump into the database. 
@@ -45,9 +45,11 @@ This can take quite a while (and consume lots of RAM), depending on the actual s
 And that's it. Now you can create a map using the [latest bleeding edge version of Kartograph](https://github.com/kartograph/kartograph.py/tree/kartograph-2) and the following minimal map configuration:
 
     {
-        "roads": {
-            "src": "postgis:dbname=osm",
-            "table": "planet_osm_roads"
+        "layers": {
+            "roads": {
+                "src": "postgis:dbname=osm",
+                "table": "planet_osm_roads"
+            }
         }
     }
 
