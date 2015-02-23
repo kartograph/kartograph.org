@@ -157,14 +157,13 @@ title: La Bella Italia
 
         }, { padding: -6 });
 
+        $('.k-layer-toggle input').change(function(evt) {
+            var paths = $('#map .' + evt.target.value);
+            if (evt.target.checked) paths.show();
+            else paths.hide();
+        });
 
     });
-
-    $('.k-layer-toggle input').change(function(evt) {
-        var paths = $('#map .'+evt.target.value);
-        if (evt.target.checked) paths.show();
-        else paths.hide();
-    })
 
 </script>
 
