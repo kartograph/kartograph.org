@@ -104,7 +104,7 @@ Internally, Kartograph.py works with WGS84 coordinate system (EPSG:4326). It wil
 
 ### Filtering map features
 
-Sometimes you don't want your entire shapefile to be added to the map but only some selected featues. You can use ``layer.filter`` to define which shapes you want. For instance, the following definition would add only those shapes that have the data attribute *ISO3* set to "*FRA*".
+Sometimes you don't want your entire shapefile to be added to the map but only some selected features. You can use ``layer.filter`` to define which shapes you want. For instance, the following definition would add only those shapes that have the data attribute *ISO3* set to "*FRA*".
 
     "mylayer":  {
         "src": "countries.shp",
