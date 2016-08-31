@@ -451,7 +451,7 @@ The **layer** option refers to the id of a layer defined in the [layers section]
 
 ### Omitting tiny islands in boundary calculation
 
-But wait, now comes the tricky part of using automatically calculated bounding boxes for geographic polygons. Since many geographic regions consist of multiple polygons, you often don't want to crop your map to the full extends. If you, for instance, want to crop the map to Spain you probably don't want have all these tiny islands included (see image above). Therefore, Kartograph allows you to set the parameter **min_area**. The bounding box calculation will ignore every polygon whose area is less than **min_area** multiplied with the area of the largest polygon.
+But wait, now comes the tricky part of using automatically calculated bounding boxes for geographic polygons. Since many geographic regions consist of multiple polygons, you often don't want to crop your map to the full extends. If you, for instance, want to crop the map to Spain you probably don't want have all these tiny islands included (see image below). Therefore, Kartograph allows you to set the parameter **min_area**. The bounding box calculation will ignore every polygon whose area is less than **min_area** multiplied with the area of the largest polygon.
 
     "bounds": {
         "mode": "polygons",
