@@ -574,7 +574,7 @@ If you leave out either the width or height and have no ratio specified, Kartogr
 
 ### Round coordinates
 
-If you set ``export.round`` to other values than **false** (which is the default), all point coordinates will be rounded to the specified number of digits. The following would force Kartograph to round all coordinates to the first decimal digit (e.g. 115.4 instead of 115.38749493). This significantly reduces the file size of the resulting maps.
+If you set ``export.round`` to other values than **false** (which is the default), all point coordinates will be rounded to the specified number of digits.  would force Kartograph to round all coordinates to the first decimal digit (e.g. 115.4 instead of 115.38749493). This significantly reduces the file size of the resulting maps.
 
     "export": {
        "round": 1
