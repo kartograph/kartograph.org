@@ -7,7 +7,7 @@ title: Installing Kartograph.py on Mac OS X
 
 # Installing Kartograph.py on Mac OS X
 
-Before installing Kartograph, please install the GDAL Complete Framework as provided by William Kyngesburye on kyngchaos.com: [http://www.kyngchaos.com/software/frameworks](http://www.kyngchaos.com/software/frameworks) <b>OR</b> use [HomeBrew](http://brew.sh) to install GDAL as detailed in this [blog post](http://www.davidlemayian.com/post/60791205171/how-to-install-python-gdal-on-os-x) by David Lemayian. 
+Before installing Kartograph, please install the GDAL Complete Framework as provided by William Kyngesburye on kyngchaos.com: [http://www.kyngchaos.com/software/frameworks](http://www.kyngchaos.com/software/frameworks) <b>OR</b> use [HomeBrew](http://brew.sh) to install GDAL as detailed in this [blog post](https://web.archive.org/web/20150216022534/http://www.davidlemayian.com/post/60791205171/how-to-install-python-gdal-on-os-x) by David Lemayian. 
 
 I recommend to install Kartograph in its own [virtualenv](http://www.virtualenv.org/en/latest/). Otherwise you need to ``sudo`` every **pip** call.
     
